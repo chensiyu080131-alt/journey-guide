@@ -120,8 +120,8 @@ export async function generateGuideServer(
   }
 
   const apiKey = process.env.LLM_API_KEY!
-  const baseUrl = process.env.LLM_BASE_URL || 'https://api.deepseek.com/v1'
-  const model = process.env.LLM_MODEL || 'deepseek-chat'
+  const baseUrl = process.env.LLM_BASE_URL || 'https://api.openai-next.com/v1'
+  const model = process.env.LLM_MODEL || 'gpt-4o-mini'
   const prompt = buildPrompt(city, days, interests, budget)
 
   const response = await fetch(`${baseUrl}/chat/completions`, {
