@@ -32,7 +32,7 @@ const shajiabangSpots: Spot[] = [
   },
   {
     id: 'sjb-3', name: '阳澄湖大闸蟹', desc: '就在阳澄湖边，吃的就是湖里捞上来的',
-    duration: '1.5小时', tags: ['美食'], timeSlot: '中午',
+    duration: '1.5小时', tags: ['美食'], timeSlot: '下午',
     location: { lat: 31.5300, lng: 120.7400 }, address: '沙家浜镇蟹庄',
     story: '沙家浜就在阳澄湖畔，这里是阳澄湖大闸蟹的核心产区。不同于上海苏州的蟹庄溢价，在产地吃不仅更新鲜，价格也实在。九月开捕季来，一蟹三吃（清蒸、蟹粉豆腐、蟹黄面）能鲜到怀疑人生。',
     type: '美食', budgetHint: '人均100-180元', goodNow: false, goodNowReason: '9-11月蟹季最佳', emoji: '🦀',
@@ -98,7 +98,7 @@ const niehaifengSpots: Spot[] = [
   },
   {
     id: 'nhf-3', name: '蕈油面', desc: '虞山野蕈熬的浇头面，鲜到眉毛掉',
-    duration: '1小时', tags: ['美食'], timeSlot: '中午',
+    duration: '1小时', tags: ['美食'], timeSlot: '下午',
     location: { lat: 31.6510, lng: 120.7380 }, address: '虞山脚下兴福寺旁',
     story: '蕈油面是常熟独有的面食，用虞山上采的野生蕈（一种菌菇）熬成浇头。蕈的鲜味是人工菌菇无法比的，每年只在特定季节才有。兴福寺旁的面馆是老常熟人的首选，一碗面、一壶茶，就是常熟文人最惬意的午后。',
     type: '美食', budgetHint: '25-40元', goodNow: true, goodNowReason: '午时最新鲜', emoji: '🍜',
@@ -164,7 +164,7 @@ const wengtongheSpots: Spot[] = [
   },
   {
     id: 'wth-3', name: '蕈油面', desc: '帝师也爱的一碗面，虞山野蕈浇头',
-    duration: '1小时', tags: ['美食'], timeSlot: '中午',
+    duration: '1小时', tags: ['美食'], timeSlot: '下午',
     location: { lat: 31.6510, lng: 120.7380 }, address: '虞山脚下兴福寺旁',
     story: '翁同龢日记中多次提到虞山脚下的素面。他罢官回乡后常去兴福寺，寺旁的素面就是今天的蕈油面的前身。用虞山野蕈做浇头，不加荤油，清鲜无比。这碗面连接着两代帝师和常素百姓共同的味觉记忆。',
     type: '美食', budgetHint: '25-40元', goodNow: true, goodNowReason: '午时现做最鲜', emoji: '🍜',
@@ -236,7 +236,7 @@ export const mockGuides: Record<string, Guide> = {
     city: '常熟',
     province: '江苏·苏州',
     days: 1,
-    interests: ['文化', '历史', '自然'],
+    interests: ['文化', '体验', '自然'],
     budget: '舒适',
     dayPlans: buildDayPlans(shajiabangSpots, 1),
     dialect: [
@@ -247,7 +247,7 @@ export const mockGuides: Record<string, Guide> = {
       { dialect: '吃茶', meaning: '喝茶', scenario: '阿庆嫂请你吃茶' },
     ],
     localExperiences: [
-      { name: '芦苇荡手摇船', desc: '船娘摇橹穿行芦苇丛，感受水上迷宫', type: '体验' as const, schedule: '全天' },
+      { name: '芦苇荡手摇船', desc: '船娘摇橹穿行芦苇丛，感受水上迷宫', type: '手艺', schedule: '全天' },
       { name: '阳澄湖蟹季', desc: '9-11月开捕，在产地吃第一手湖蟹', type: '时令', schedule: '9-11月' },
       { name: '沙家浜京剧表演', desc: '景区内定时上演《沙家浜》经典选段', type: '民俗', schedule: '每日下午' },
     ],
@@ -304,7 +304,7 @@ export const mockGuides: Record<string, Guide> = {
     city: '常熟',
     province: '江苏·苏州',
     days: 1,
-    interests: ['文化', '历史', '美食'],
+    interests: ['文化', '体验', '美食'],
     budget: '舒适',
     dayPlans: buildDayPlans(wengtongheSpots, 1),
     dialect: [

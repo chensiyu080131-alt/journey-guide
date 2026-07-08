@@ -81,11 +81,10 @@ export function Badge({ children, variant = 'default', className }: BadgeProps) 
         'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap',
         {
           'bg-ink-100 text-ink-600': variant === 'default',
-          'bg-indigo/10 text-indigo': variant === '文化',
+          'bg-indigo/10 text-indigo': variant === '文化' || variant === '景点',
           'bg-vermilion/10 text-vermilion': variant === '美食',
           'bg-jade/10 text-jade': variant === '自然',
           'bg-xuncheng-100 text-xuncheng-700': variant === '体验',
-          'bg-indigo/10 text-indigo': variant === '景点',
           'bg-xuncheng-500 text-white': variant === 'active',
         },
         className
