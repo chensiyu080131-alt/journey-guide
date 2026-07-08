@@ -12,6 +12,25 @@ export type TimeSlot = '上午' | '中午' | '下午' | '晚上'
 /** 入口类型 */
 export type EntryType = '书籍' | '人物' | '目的地'
 
+/** 互动任务类型 */
+export type InteractiveTaskType = '诗词诵读' | '知识问答' | '古籍寻宝' | '书法临摹'
+
+/** 互动任务 */
+export interface InteractiveTask {
+  type: InteractiveTaskType
+  title: string
+  description: string
+  /** 知识问答专用 */
+  questions?: { question: string; options: string[]; answer: number }[]
+  /** 诗词诵读专用 */
+  poem?: string
+  /** 书法临摹专用 */
+  calligraphyText?: string
+  /** 古籍寻宝专用：原文和含错字的版本 */
+  treasureOriginal?: string
+  treasureTampered?: string
+}
+
 /** 景点/美食卡片 */
 export interface Spot {
   id: string
@@ -48,6 +67,8 @@ export interface Spot {
   originalSource?: string
   /** ★ v2新增：实景对照说明 */
   realityNote?: string
+  /** ★ v2新增：互动任务 */
+  interactiveTask?: InteractiveTask
 }
 
 /** 一天的行程 */

@@ -217,6 +217,10 @@ const qianliuSpots: Spot[] = [
     originalText: '"逢人已觉无意味，遇汝方知有此生。"',
     originalSource: '钱谦益《半野堂赠柳如是》',
     realityNote: '半野堂原址在虞山南麓，现已不存。虞山南路沿途有指示牌标注历史遗迹位置，可驻足遥想当年。',
+    interactiveTask: {
+      type: '诗词诵读', title: '诵读钱柳定情诗', description: '品读钱谦益与柳如是初遇时的诗词',
+      poem: '逢人已觉无意味，遇汝方知有此生。\n——钱谦益《半野堂赠柳如是》',
+    },
   },
   {
     id: 'ql-2', name: '红豆山庄', desc: '钱柳定情之地，三百年红豆树犹在',
@@ -227,6 +231,10 @@ const qianliuSpots: Spot[] = [
     originalText: '"红豆初生，如相思之渐深。"',
     originalSource: '钱谦益《红豆诗》',
     realityNote: '红豆山庄已修复开放，庄内红豆树为清代补植，但树龄仍超百年。4-5月花期最盛，绛红色花簇如旧。',
+    interactiveTask: {
+      type: '诗词诵读', title: '诵读红豆诗词', description: '在红豆树下，品读钱谦益的红豆诗和王维的相思',
+      poem: '红豆生南国，春来发几枝。\n愿君多采撷，此物最相思。\n——王维《相思》',
+    },
   },
   {
     id: 'ql-3', name: '尚湖风景区', desc: '钱柳泛舟唱和之地，湖光山色如旧',
@@ -237,6 +245,10 @@ const qianliuSpots: Spot[] = [
     originalText: '"有恨寒潮，无情残照，正是萧萧南浦。"',
     originalSource: '柳如是《金明池·咏寒柳》',
     realityNote: '尚湖是常熟最大湖泊，可租电动船或手划船环湖。推荐从拂水堤上船，沿钱柳当年可能泛舟的水域行进。',
+    interactiveTask: {
+      type: '诗词诵读', title: '诗词唱和', description: 'AI与你对诗——吟出上句，等你接下句',
+      poem: '有恨寒潮，无情残照，正是萧萧南浦。\n更吹起，霜条孤影，还记得，旧时飞絮。\n——柳如是《金明池·咏寒柳》',
+    },
   },
   {
     id: 'ql-4', name: '铁琴铜剑楼', desc: '清末四大藏书楼之一，钱氏文脉绵延',
@@ -247,6 +259,11 @@ const qianliuSpots: Spot[] = [
     originalText: '"绛云楼上万余卷，半是平生心血来。"',
     originalSource: '钱谦益《绛云楼题跋》',
     realityNote: '铁琴铜剑楼已修复为纪念馆，展示瞿氏藏书历史和部分善本。古里镇本身也是江南水乡，值得慢慢走走。',
+    interactiveTask: {
+      type: '古籍寻宝', title: '古籍寻宝游戏', description: '古文中藏着一处错字，你能找出来吗？',
+      treasureOriginal: '铁琴铮铮，铜剑光寒。藏书万卷，不负青山。',
+      treasureTampered: '铁琴铮铮，铜剑光寒。藏书万卷，不负青川。',
+    },
   },
   {
     id: 'ql-5', name: '虞山钱柳墓', desc: '乱世情缘的最后归宿，比邻而葬',
@@ -257,6 +274,10 @@ const qianliuSpots: Spot[] = [
     originalText: '"此去泉台应不远，一丘一壑任悠悠。"',
     originalSource: '钱谦益绝笔',
     realityNote: '钱柳墓在虞山南麓深处，需沿山路步行约15分钟。墓区清幽，游客稀少，适合静思。建议傍晚前往，夕阳下的虞山格外肃穆。',
+    interactiveTask: {
+      type: '诗词诵读', title: '诵读绝命词', description: '钱谦益临终之作，字字泣血',
+      poem: '此去泉台应不远，一丘一壑任悠悠。\n——钱谦益绝笔',
+    },
   },
   {
     id: 'ql-6', name: '蕈油面', desc: '虞山三宝之一，菌菇鲜到眉毛掉',
@@ -277,6 +298,14 @@ const qianliuSpots: Spot[] = [
     originalText: '"桂花香里说丰年，听取蛙声一片。"',
     originalSource: '辛弃疾《西江月》',
     realityNote: '方塔街上多家老店都有，推荐"桂花坊"，手工圆子现煮，桂花酱是自家酿的。',
+    interactiveTask: {
+      type: '知识问答', title: '钱柳知识问答', description: '关于钱谦益与柳如是的故事，你知道多少？',
+      questions: [
+        { question: '钱谦益与柳如是初遇的地方叫什么？', options: ['半野堂', '红豆山庄', '绛云楼', '尚湖'], answer: 0 },
+        { question: '柳如是原姓什么？', options: ['杨', '柳', '钱', '陈'], answer: 0 },
+        { question: '钱谦益绛云楼的藏书最终遭遇了什么？', options: ['毁于火灾', '被朝廷没收', '捐赠天一阁', '流传至今'], answer: 0 },
+      ],
+    },
   },
   {
     id: 'ql-8', name: '虞山碑刻博物馆', desc: '钱谦益笔墨犹存，柳如是书法可辨',
@@ -287,6 +316,10 @@ const qianliuSpots: Spot[] = [
     originalText: '"虞山之石可刻字，虞山之人不可忘。"',
     originalSource: '虞山志',
     realityNote: '碑刻博物馆在虞山国家森林公园入口附近，与兴福寺相邻。可先看碑刻再登山，约需1.5小时。',
+    interactiveTask: {
+      type: '书法临摹', title: '书法临摹', description: '试一笔钱谦益风格，感受文人笔墨',
+      calligraphyText: '牧斋',
+    },
   },
 ]
 
