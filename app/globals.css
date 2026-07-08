@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 253 246 236;
+    --foreground: 42 38 35;
+    --card: 255 255 255;
+    --card-foreground: 42 38 35;
+    --primary: 249 115 22;
+    --primary-foreground: 255 255 255;
+    --secondary: 254 215 170;
+    --secondary-foreground: 42 38 35;
+    --muted: 232 230 225;
+    --muted-foreground: 140 131 118;
+    --accent: 229 77 66;
+    --accent-foreground: 255 255 255;
+    --border: 209 205 196;
+    --ring: 249 115 22;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-ink-200;
+  }
+
+  body {
+    @apply bg-paper text-ink-900 font-sans antialiased;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #D1CDC4;
+    border-radius: 2px;
+  }
+}
+
+@layer components {
+  .xc-card {
+    @apply bg-white rounded-xl shadow-sm border border-ink-100 p-4 transition-all duration-200;
+  }
+  .xc-card:hover {
+    @apply shadow-md -translate-y-0.5;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
