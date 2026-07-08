@@ -109,7 +109,10 @@ function GuidePageContent({ guideId }: { guideId: string }) {
           <button
             onClick={() => {
               navigator.clipboard?.writeText(window.location.href)
-              alert('链接已复制！')
+              const btn = document.activeElement as HTMLButtonElement
+              const original = btn.textContent
+              btn.textContent = '已复制 ✓'
+              setTimeout(() => { btn.textContent = original }, 1500)
             }}
             className="text-ink-400 hover:text-ink-600 transition-colors text-sm"
           >

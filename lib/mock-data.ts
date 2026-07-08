@@ -212,8 +212,8 @@ function buildDayPlans(spots: Spot[], days: number) {
   const dayPlans = []
   // 按上午/下午/晚上排序后分组
   const sorted = [...spots].sort((a, b) => {
-    const order = { '上午': 0, '下午': 1, '晚上': 2 }
-    return order[a.timeSlot] - order[b.timeSlot]
+    const order: Record<string, number> = { '上午': 0, '中午': 1, '下午': 2, '晚上': 3 }
+    return (order[a.timeSlot] ?? 0) - (order[b.timeSlot] ?? 0)
   })
   const spotsPerDay = Math.ceil(sorted.length / days)
   for (let i = 0; i < days; i++) {

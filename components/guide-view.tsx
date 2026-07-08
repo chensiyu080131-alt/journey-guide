@@ -2,6 +2,7 @@
 
 import { Guide, DialectItem, LocalExperience } from '@/types'
 import { DayGroup } from './day-group'
+import { GuideMap } from './guide-map'
 import { Badge, Card } from './ui'
 
 interface GuideViewProps {
@@ -69,6 +70,9 @@ export function GuideView({ guide }: GuideViewProps) {
           </ul>
         </Card>
       )}
+
+      {/* 路线地图 */}
+      <GuideMap guide={guide} />
 
       {/* 每日行程 */}
       <div className="space-y-8">

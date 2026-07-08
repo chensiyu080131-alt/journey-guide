@@ -8,9 +8,10 @@ interface DayGroupProps {
 }
 
 export function DayGroup({ dayPlan }: DayGroupProps) {
-  const timeSlots = ['上午', '下午', '晚上'] as const
+  const timeSlots = ['上午', '中午', '下午', '晚上'] as const
   const slotEmojis: Record<string, string> = {
     '上午': '🌅',
+    '中午': '🍜',
     '下午': '☀️',
     '晚上': '🌙',
   }

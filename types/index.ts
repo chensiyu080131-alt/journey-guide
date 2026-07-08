@@ -7,7 +7,7 @@ export type InterestTag = '文化' | '美食' | '自然' | '体验'
 export type BudgetLevel = '穷游' | '舒适' | '轻奢'
 
 /** 时段 */
-export type TimeSlot = '上午' | '下午' | '晚上'
+export type TimeSlot = '上午' | '中午' | '下午' | '晚上'
 
 /** 入口类型 */
 export type EntryType = '书籍' | '人物' | '目的地'
@@ -107,7 +107,7 @@ export interface DialectItem {
 export interface LocalExperience {
   name: string
   desc: string
-  type: '赶集' | '时令' | '民俗' | '手艺'
+  type: '赶集' | '时令' | '民俗' | '手艺' | '体验'
   schedule?: string
 }
 
