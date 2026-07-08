@@ -108,96 +108,31 @@ function simulateDelay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-/**
- * 从书籍片段中识别地点并生成路线
- * 客户端直连 LLM API，分析文字中提到的地点
- */
-export async function recognizeAndGenerateGuide(text: string): Promise<Guide> {
-  try {
-    const systemPrompt = `你是"寻城"的AI旅行顾问——一个"跟着书本去旅行"的平台。
+export async function recognizeAndGenerateGuide(bookText: string): Promise<Guide> {
+  const systemPrompt = `你是"寻城"的AI旅行顾问——一个"跟着书本去旅行"的平台。
+用户会粘贴一段书籍文字，你需要从中识别出城市、地点、人物，并生成一份可落地的旅行攻略 JSON。
+每个景点必须关联原文片段和实景对照。返回纯 JSON，不要 markdown 代码块。`
 
-你的核心原则：
-1. 每个景点必须关联文学作品中的原文片段或历史文献
-2. 不推荐网红店，推荐本地人真正去的地方
-3. 每个景点都有"原文片段"+"实景对照"的双重视角
-4. 行程安排要考虑地理位置和时间合理性
-5. 用温暖但不夸张的语言
-6. 原文引用必须真实，不可编造
+  const userPrompt = `请分析以下书籍片段，识别其中的地点并生成旅行攻略：
 
-你必须返回JSON格式的攻略数据。`
+"""
+${bookText}
+"""
 
-    const userPrompt = `以下是用户粘贴的一段书中的文字：
+返回格式与 generateGuide 相同，包含 title、subtitle、entryType、city、province、routeIntro、dayPlans、dialect、localExperiences、tips 等字段。
+dayPlans 中每个 spot 需含 originalText、originalSource、realityNote。`
 
----
-${text}
----
+  const result = await chatCompletion(
+    [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ],
+    { temperature: 0.8, max_tokens: 4000 }
+  )
 
-请分析这段文字，提取其中提到的地点（城市、景区、街道、建筑等），然后生成一份"跟着书本去旅行"的攻略。
-
-要求：
-1. 找出文字中提到的所有可游览地点
-2. 如果文字提到的是某个城市/区域，以该城市为核心生成路线
-3. 如果文字只提到某个景点，围绕该景点所在城市生成路线
-4. 每个景点必须有originalText（优先引用用户提供的原文片段）和realityNote
-5. 美食推荐至少占30%
-
-请返回以下JSON格式（不要包含markdown代码块标记）：
-{
-  "city": "识别出的城市名",
-  "province": "省份",
-  "title": "攻略标题（关联原文内容）",
-  "subtitle": "副标题",
-  "entryType": "书籍",
-  "relatedBook": "如果文字明显来自某本书，填写书名",
-  "relatedAuthor": "作者",
-  "routeIntro": "路线引言（关联原文内容，100-200字）",
-  "dayPlans": [
-    {
-      "day": 1,
-      "title": "第1天",
-      "spots": [
-        {
-          "id": "唯一标识",
-          "name": "景点/美食名",
-          "desc": "一句话描述（20字以内）",
-          "duration": "停留时间",
-          "tags": ["标签1", "标签2"],
-          "timeSlot": "上午/下午/晚上",
-          "address": "具体地址",
-          "story": "故事（50-100字）",
-          "type": "景点/美食/体验",
-          "budgetHint": "花费提示",
-          "emoji": "一个emoji",
-          "originalText": "用户原文中相关片段或历史文献",
-          "originalSource": "出处",
-          "realityNote": "实景对照说明"
-        }
-      ],
-      "budgetEstimate": "当日预算估算"
-    }
-  ],
-  "dialect": [{"dialect": "方言词", "meaning": "意思", "scenario": "使用场景"}],
-  "localExperiences": [{"name": "体验名", "desc": "描述", "type": "赶集/时令/民俗/手艺", "schedule": "时间"}],
-  "tips": ["实用贴士1", "实用贴士2"]
-}`
-
-    const result = await chatCompletion(
-      [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      { temperature: 0.7, max_tokens: 4000 }
-    )
-
-    let cleanResult = result.trim()
-    if (cleanResult.startsWith('```')) {
-      cleanResult = cleanResult.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
-    }
-
-    const parsed = JSON.parse(cleanResult)
-    return parsed as Guide
-  } catch (error) {
-    console.error('文字识别API调用失败，回退到Mock数据:', error)
-    return getMockGuide('常熟', 2, ['文化', '美食'], '舒适')
+  let cleanResult = result.trim()
+  if (cleanResult.startsWith('```')) {
+    cleanResult = cleanResult.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
   }
-}
+
+  return JSON.parse(cleanResult) as Guide

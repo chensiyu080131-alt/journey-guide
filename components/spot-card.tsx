@@ -49,6 +49,7 @@ export function SpotCard({ spot, index }: SpotCardProps) {
       {spot.originalText && (
         <div className="mb-3">
           <button
+            type="button"
             onClick={() => setShowOriginal(!showOriginal)}
             className="w-full text-left"
           >

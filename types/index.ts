@@ -71,6 +71,19 @@ export interface Spot {
   interactiveTask?: InteractiveTask
 }
 
+/** 互动任务 */
+export interface InteractiveTask {
+  type: '诗词诵读' | '知识问答' | '古籍寻宝' | '书法临摹'
+  title: string
+  description: string
+  poem?: string
+  questions?: { question: string; options: string[]; answer: number }[]
+  treasureOriginal?: string
+  treasureTampered?: string
+  calligraphyText?: string
+}
+}
+
 /** 一天的行程 */
 export interface DayPlan {
   day: number
