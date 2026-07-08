@@ -107,3 +107,34 @@ export async function generateGuide(
 function simulateDelay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
+
+/** 从书籍片段识别地点并生成攻略 */
+export async function recognizeAndGenerateGuide(bookText: string): Promise<Guide> {
+  const systemPrompt = `你是"寻城"的AI旅行顾问——一个"跟着书本去旅行"的平台。
+用户会粘贴一段书籍文字，你需要从中识别出城市、地点、人物，并生成一份可落地的旅行攻略 JSON。
+每个景点必须关联原文片段和实景对照。返回纯 JSON，不要 markdown 代码块。`
+
+  const userPrompt = `请分析以下书籍片段，识别其中的地点并生成旅行攻略：
+
+"""
+${bookText}
+"""
+
+返回格式与 generateGuide 相同，包含 title、subtitle、entryType、city、province、routeIntro、dayPlans、dialect、localExperiences、tips 等字段。
+dayPlans 中每个 spot 需含 originalText、originalSource、realityNote。`
+
+  const result = await chatCompletion(
+    [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ],
+    { temperature: 0.8, max_tokens: 4000 }
+  )
+
+  let cleanResult = result.trim()
+  if (cleanResult.startsWith('```')) {
+    cleanResult = cleanResult.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
+  }
+
+  return JSON.parse(cleanResult) as Guide
+}

@@ -48,6 +48,20 @@ export interface Spot {
   originalSource?: string
   /** ★ v2新增：实景对照说明 */
   realityNote?: string
+  /** 互动任务（可选） */
+  interactiveTask?: InteractiveTask
+}
+
+/** 互动任务 */
+export interface InteractiveTask {
+  type: '诗词诵读' | '知识问答' | '古籍寻宝' | '书法临摹'
+  title: string
+  description: string
+  poem?: string
+  questions?: { question: string; options: string[]; answer: number }[]
+  treasureOriginal?: string
+  treasureTampered?: string
+  calligraphyText?: string
 }
 
 /** 一天的行程 */
