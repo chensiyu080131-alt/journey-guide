@@ -35,6 +35,12 @@ const config: Config = {
           900: '#2A2623',
         },
         'paper': '#FDF6EC',
+        'charcoal': {
+          DEFAULT: '#1A1A1A',
+          50: '#2A2A2A',
+          100: '#333333',
+          900: '#0F0F0F',
+        },
         'vermilion': '#E54D42',
         'jade': '#5B8C5A',
         'indigo': '#4A6FA5',

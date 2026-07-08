@@ -5,6 +5,8 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Guide, InterestTag, BudgetLevel } from '@/types'
 import { generateGuide } from '@/lib/llm-service'
+import { SiteHeader } from '@/components/site-header'
+import { SiteFooter } from '@/components/site-footer'
 import { GuideView } from '@/components/guide-view'
 import { Button } from '@/components/ui'
 
@@ -93,26 +95,19 @@ function DestinationGuideContent() {
   ]
 
   return (
-    <main className="min-h-screen pb-8">
-      <div className="sticky top-1 z-40 bg-paper/80 backdrop-blur-md border-b border-ink-100">
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
-          <Link href="/" className="text-ink-400 hover:text-ink-600 transition-colors">
-            ← 返回
-          </Link>
-          <div className="flex-1 text-center">
-            <span className="font-bold text-ink-900 text-sm">自定义目的地</span>
+    <>
+      <SiteHeader variant="light" />
+      <main className="min-h-screen pb-8 bg-ink-50">
+        <div className="bg-charcoal py-12 sm:py-16">
+          <div className="xc-container max-w-2xl">
+            <Link href="/" className="text-white/50 text-sm hover:text-white">← 返回首页</Link>
+            <h1 className="mt-4 text-3xl font-serif font-bold text-white">搜一座城</h1>
+            <p className="mt-2 text-white/60 text-sm">AI 生成「跟着书本去旅行」攻略</p>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-lg mx-auto px-4 pt-6 space-y-6">
-        <section className="rounded-2xl border border-ink-100 bg-white p-5 shadow-sm space-y-4">
-          <div>
-            <h1 className="text-xl font-serif font-bold text-ink-900">搜一座城，生成文学旅行攻略</h1>
-            <p className="text-sm text-ink-500 mt-1">输入任意中国县城或小城市，AI 会生成可落地的路线</p>
-          </div>
-
-          <div className="space-y-3">
+        <div className="xc-container max-w-2xl -mt-6">
+          <section className="rounded-3xl border border-ink-100 bg-white p-6 sm:p-8 shadow-lg space-y-4">
             <input
               type="text"
               value={city}
@@ -173,50 +168,52 @@ function DestinationGuideContent() {
                 ))}
               </div>
             </div>
-          </div>
 
-          <Button
-            onClick={() => handleGenerate()}
-            disabled={loading || !city.trim()}
-            className="w-full"
-          >
-            {loading ? '生成中...' : '生成攻略'}
-          </Button>
-        </section>
-
-        {loading && (
-          <div className="text-center space-y-6 py-10 animate-fade-in">
-            <h2 className="text-xl font-serif font-bold text-ink-900">
-              正在为你<span className="text-xuncheng-500">寻城</span>
-            </h2>
-            <div className="space-y-4">
-              {stageTexts.map((text, i) => (
-                <div
-                  key={text}
-                  className={`transition-all duration-500 ${
-                    i <= loadingStage ? 'opacity-100' : 'opacity-0 h-0'
-                  }`}
-                >
-                  <span className="text-lg">{['📖', '🗺️', '🍜', '✨'][i]}</span>
-                  <p className="text-sm text-ink-500 mt-2">{text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {error && (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-center space-y-3">
-            <p className="text-sm text-red-700">{error}</p>
-            <Button variant="outline" onClick={() => handleGenerate()}>
-              重试
+            <Button
+              onClick={() => handleGenerate()}
+              disabled={loading || !city.trim()}
+              className="w-full"
+            >
+              {loading ? '生成中...' : '生成攻略'}
             </Button>
-          </div>
-        )}
+          </section>
 
-        {guide && !loading && <GuideView guide={guide} />}
-      </div>
-    </main>
+          {loading && (
+            <div className="text-center space-y-6 py-10 animate-fade-in mt-8">
+              <h2 className="text-xl font-serif font-bold text-charcoal">
+                正在为你<span className="text-xuncheng-500">寻城</span>
+              </h2>
+              <div className="space-y-4">
+                {stageTexts.map((text, i) => (
+                  <div
+                    key={text}
+                    className={`transition-all duration-500 ${
+                      i <= loadingStage ? 'opacity-100' : 'opacity-0 h-0'
+                    }`}
+                  >
+                    <p className="text-sm text-ink-500 mt-2">{text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {error && (
+            <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-center space-y-3 mt-8">
+              <p className="text-sm text-red-700">{error}</p>
+              <Button variant="outline" onClick={() => handleGenerate()}>重试</Button>
+            </div>
+          )}
+
+          {guide && !loading && (
+            <div className="mt-10">
+              <GuideView guide={guide} />
+            </div>
+          )}
+        </div>
+      </main>
+      <SiteFooter />
+    </>
   )
 }
 

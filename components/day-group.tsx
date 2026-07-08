@@ -20,7 +20,7 @@ export function DayGroup({ dayPlan }: DayGroupProps) {
     <div className="space-y-4">
       {/* 天数标题 */}
       <div className="flex items-center gap-3">
-        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-xuncheng-500 text-white flex items-center justify-center font-bold text-sm">
+        <div className="flex-shrink-0 w-11 h-11 rounded-2xl bg-charcoal text-white flex items-center justify-center font-bold text-sm">
           D{dayPlan.day}
         </div>
         <div className="flex-1">

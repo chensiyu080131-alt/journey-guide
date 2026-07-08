@@ -348,6 +348,9 @@ export const entryCards: EntryCard[] = [
     tags: ['红色经典', '芦苇荡', '阳澄湖'],
     route: '/guide/shajiabang',
     gradient: 'from-red-500/10 via-xuncheng-400/10 to-xuncheng-300/10',
+    coverImage: 'https://images.unsplash.com/photo-1501785888041-af3bcb1dd4?w=800&q=80',
+    days: 1,
+    priceHint: '约150元/天',
   },
   {
     id: 'niehaifeng',
@@ -360,6 +363,9 @@ export const entryCards: EntryCard[] = [
     tags: ['谴责小说', '藏书楼', '虞山'],
     route: '/guide/niehaifeng',
     gradient: 'from-indigo-500/10 via-purple-400/10 to-xuncheng-300/10',
+    coverImage: 'https://images.unsplash.com/photo-1599579676330-89393406983e?w=800&q=80',
+    days: 2,
+    priceHint: '约200元/天',
   },
   {
     id: 'wengtonghe',
@@ -372,6 +378,9 @@ export const entryCards: EntryCard[] = [
     tags: ['帝师', '戊戌变法', '书法'],
     route: '/guide/wengtonghe',
     gradient: 'from-jade/10 via-emerald-400/10 to-xuncheng-300/10',
+    coverImage: 'https://images.unsplash.com/photo-1529928520614-829854c79449?w=800&q=80',
+    days: 1,
+    priceHint: '约180元/天',
   },
 ]
 

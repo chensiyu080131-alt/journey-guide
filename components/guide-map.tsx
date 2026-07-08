@@ -114,7 +114,7 @@ export function GuideMap({ guide }: GuideMapProps) {
               地图加载中...
             </div>
           )}
-          <div ref={containerRef} className="h-72 w-full rounded-xl border border-ink-100 overflow-hidden" />
+          <div ref={containerRef} className="h-80 w-full rounded-3xl border border-ink-100 overflow-hidden shadow-sm" />
         </div>
       )}
     </div>

@@ -2,25 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
 
 @layer base {
   :root {
     --background: 253 246 236;
-    --foreground: 42 38 35;
+    --foreground: 26 26 26;
     --card: 255 255 255;
-    --card-foreground: 42 38 35;
     --primary: 249 115 22;
-    --primary-foreground: 255 255 255;
-    --secondary: 254 215 170;
-    --secondary-foreground: 42 38 35;
-    --muted: 232 230 225;
-    --muted-foreground: 140 131 118;
-    --accent: 229 77 66;
-    --accent-foreground: 255 255 255;
-    --border: 209 205 196;
-    --ring: 249 115 22;
-    --radius: 0.75rem;
+    --radius: 1rem;
   }
 
   * {
@@ -28,32 +18,84 @@
   }
 
   body {
-    @apply bg-paper text-ink-900 font-sans antialiased;
+    @apply bg-white text-charcoal antialiased;
   }
 
   ::-webkit-scrollbar {
     width: 4px;
+    height: 4px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
     background: #D1CDC4;
-    border-radius: 2px;
+    border-radius: 999px;
   }
 }
 
 @layer components {
-  .xc-card {
-    @apply bg-white rounded-xl shadow-sm border border-ink-100 p-4 transition-all duration-200;
+  .xc-container {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-  .xc-card:hover {
-    @apply shadow-md -translate-y-0.5;
+
+  .xc-pill {
+    @apply inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-200;
+  }
+
+  .xc-pill-active {
+    @apply bg-charcoal text-white shadow-lg;
+  }
+
+  .xc-pill-inactive {
+    @apply bg-white text-ink-600 border border-ink-100 hover:border-ink-300 hover:bg-ink-50;
+  }
+
+  .xc-section-title {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-charcoal tracking-tight;
+  }
+
+  .xc-section-subtitle {
+    @apply mt-3 text-sm sm:text-base text-ink-400 max-w-xl mx-auto leading-relaxed;
+  }
+
+  .xc-dark-card {
+    @apply relative overflow-hidden rounded-3xl p-6 sm:p-8 transition-all duration-300;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%);
+  }
+
+  .xc-dark-card-light {
+    @apply bg-white text-charcoal shadow-xl;
+  }
+
+  .xc-dark-card-dark {
+    @apply bg-charcoal-50 text-white border border-white/10;
+  }
+
+  .xc-hero-gradient {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.15) 0%,
+      rgba(0, 0, 0, 0.45) 55%,
+      rgba(0, 0, 0, 0.75) 100%
+    );
+  }
+
+  .xc-image-card {
+    @apply relative overflow-hidden rounded-3xl aspect-[3/4] min-w-[200px] sm:min-w-[240px] flex-shrink-0 cursor-pointer transition-transform duration-300 hover:scale-[1.02];
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }

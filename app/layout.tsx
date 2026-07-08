@@ -11,7 +11,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#F97316',
+  themeColor: '#1A1A1A',
 }
 
 export default function RootLayout({
@@ -21,9 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN">
-      <body className="min-h-screen bg-paper">
-        {/* 顶部装饰线 */}
-        <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-xuncheng-400 via-vermilion to-xuncheng-600 z-50" />
+      <body className="min-h-screen bg-white">
         {children}
       </body>
     </html>

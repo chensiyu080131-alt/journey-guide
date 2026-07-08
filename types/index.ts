@@ -136,6 +136,12 @@ export interface EntryCard {
   route: string
   /** 背景渐变色 */
   gradient: string
+  /** 封面图 */
+  coverImage: string
+  /** 行程天数 */
+  days: number
+  /** 预算提示 */
+  priceHint: string
 }
 
 /** LLM请求配置 */

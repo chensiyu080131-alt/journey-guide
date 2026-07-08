@@ -18,15 +18,15 @@ export function Button({
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-xuncheng-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none',
+        'inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-xuncheng-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none',
         {
-          'bg-xuncheng-500 text-white hover:bg-xuncheng-600 active:bg-xuncheng-700 shadow-sm':
+          'bg-charcoal text-white hover:bg-charcoal-50 shadow-md rounded-full':
             variant === 'primary',
-          'bg-xuncheng-100 text-xuncheng-700 hover:bg-xuncheng-200':
+          'bg-xuncheng-100 text-xuncheng-700 hover:bg-xuncheng-200 rounded-xl':
             variant === 'secondary',
-          'bg-transparent hover:bg-ink-50 text-ink-600':
+          'bg-transparent hover:bg-ink-50 text-ink-600 rounded-xl':
             variant === 'ghost',
-          'border-2 border-ink-200 bg-white text-ink-700 hover:bg-ink-50':
+          'border-2 border-ink-200 bg-white text-ink-700 hover:bg-ink-50 rounded-full':
             variant === 'outline',
         },
         {

@@ -1,9 +1,13 @@
 'use client'
 
 import { useState, useEffect, Suspense } from 'react'
+import Image from 'next/image'
 import { Guide } from '@/types'
 import { getGuideById } from '@/lib/llm-service'
+import { entryCards } from '@/lib/mock-data'
 import { GuideView } from '@/components/guide-view'
+import { SiteHeader } from '@/components/site-header'
+import { SiteFooter } from '@/components/site-footer'
 import { Button } from '@/components/ui'
 import Link from 'next/link'
 
@@ -13,6 +17,8 @@ function GuidePageContent({ guideId }: { guideId: string }) {
   const [loadingStage, setLoadingStage] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
+  const entryMeta = entryCards.find(c => c.id === guideId)
+
   useEffect(() => {
     let cancelled = false
 
@@ -20,25 +26,18 @@ function GuidePageContent({ guideId }: { guideId: string }) {
       try {
         setLoading(true)
         setError(null)
-
         const stageInterval = setInterval(() => {
           setLoadingStage(prev => Math.min(prev + 1, 3))
         }, 500)
-
         const result = await getGuideById(guideId)
-
         clearInterval(stageInterval)
-
         if (!cancelled) {
           await new Promise(resolve => setTimeout(resolve, 600))
-          if (result) {
-            setGuide(result)
-          } else {
-            setError('未找到该路线')
-          }
+          if (result) setGuide(result)
+          else setError('未找到该路线')
           setLoading(false)
         }
-      } catch (err) {
+      } catch {
         if (!cancelled) {
           setError('攻略加载失败，请重试')
           setLoading(false)
@@ -51,31 +50,25 @@ function GuidePageContent({ guideId }: { guideId: string }) {
   }, [guideId])
 
   if (loading) {
-    const stageTexts = [
-      '翻开这本书...',
-      '找到书中写到的地方...',
-      '对照现实中的风景...',
-      '攻略即将呈现！',
-    ]
-
+    const stageTexts = ['翻开这本书...', '找到书中写到的地方...', '对照现实中的风景...', '攻略即将呈现！']
     return (
-      <main className="min-h-screen flex items-center justify-center px-4">
-        <div className="text-center space-y-8 animate-fade-in">
-          <h2 className="text-2xl font-serif font-bold text-ink-900">
-            正在为你<span className="text-xuncheng-500">寻城</span>
+      <main className="min-h-screen bg-charcoal flex items-center justify-center px-4">
+        <div className="text-center space-y-8 animate-fade-in max-w-md">
+          <h2 className="text-2xl font-serif font-bold text-white">
+            正在为你<span className="text-xuncheng-400">寻城</span>
           </h2>
           <div className="space-y-5">
             {stageTexts.map((text, i) => (
-              <div
-                key={i}
-                className={`transition-all duration-600 ${
-                  i <= loadingStage ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 h-0'
-                }`}
-              >
-                <span className="text-lg">{['📖', '🗺️', '🔍', '✨'][i]}</span>
-                <p className="text-sm text-ink-500 mt-2">{text}</p>
+              <div key={i} className={`transition-all duration-600 ${i <= loadingStage ? 'opacity-100' : 'opacity-0 h-0'}`}>
+                <p className="text-sm text-white/60 mt-2">{text}</p>
               </div>
             ))}
+          </div>
+          <div className="h-1 w-32 mx-auto bg-white/10 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-xuncheng-500 transition-all duration-500 rounded-full"
+              style={{ width: `${((loadingStage + 1) / 4) * 100}%` }}
+            />
           </div>
         </div>
       </main>
@@ -86,58 +79,63 @@ function GuidePageContent({ guideId }: { guideId: string }) {
     return (
       <main className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center space-y-4">
-          <span className="text-4xl">😔</span>
           <p className="text-ink-600">{error || '攻略未找到'}</p>
-          <Link href="/">
-            <Button variant="outline">返回首页</Button>
-          </Link>
+          <Link href="/"><Button variant="outline">返回首页</Button></Link>
         </div>
       </main>
     )
   }
 
   return (
-    <main className="min-h-screen pb-8">
-      <div className="sticky top-1 z-40 bg-paper/80 backdrop-blur-md border-b border-ink-100">
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
-          <Link href="/" className="text-ink-400 hover:text-ink-600 transition-colors">
-            ← 返回
+    <>
+      <SiteHeader variant="light" />
+
+      {/* 攻略 Hero */}
+      <section className="relative h-64 sm:h-80 overflow-hidden bg-charcoal">
+        {entryMeta?.coverImage && (
+          <Image
+            src={entryMeta.coverImage}
+            alt={guide.title}
+            fill
+            className="object-cover opacity-60"
+            unoptimized
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/50 to-transparent" />
+        <div className="relative z-10 h-full xc-container flex flex-col justify-end pb-8">
+          <Link href="/" className="text-white/60 text-sm hover:text-white mb-4 inline-block">
+            ← 返回首页
           </Link>
-          <div className="flex-1 text-center">
-            <span className="font-bold text-ink-900 text-sm">{guide.title}</span>
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-white">{guide.title}</h1>
+          <p className="mt-2 text-white/70">{guide.subtitle}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className="xc-pill bg-white/10 text-white text-xs py-1 px-3 border border-white/20">
+              {guide.days}天行程
+            </span>
+            <span className="xc-pill bg-white/10 text-white text-xs py-1 px-3 border border-white/20">
+              {guide.budget}
+            </span>
+            {entryMeta && (
+              <span className="xc-pill bg-xuncheng-500 text-white text-xs py-1 px-3">
+                {entryMeta.priceHint}
+              </span>
+            )}
           </div>
-          <button
-            onClick={() => {
-              navigator.clipboard?.writeText(window.location.href)
-              const btn = document.activeElement as HTMLButtonElement
-              const original = btn.textContent
-              btn.textContent = '已复制 ✓'
-              setTimeout(() => { btn.textContent = original }, 1500)
-            }}
-            className="text-ink-400 hover:text-ink-600 transition-colors text-sm"
-          >
-            分享 ↗
-          </button>
         </div>
-      </div>
-      <div className="max-w-lg mx-auto px-4 pt-4">
+      </section>
+
+      <div className="xc-container max-w-2xl py-10">
         <GuideView guide={guide} />
       </div>
-    </main>
+      <SiteFooter />
+    </>
   )
 }
 
 export default function GuideClient({ city }: { city: string }) {
   const guideId = decodeURIComponent(city)
-
   return (
-    <Suspense
-      fallback={
-        <main className="min-h-screen flex items-center justify-center">
-          <div className="animate-pulse text-ink-400">加载中...</div>
-        </main>
-      }
-    >
+    <Suspense fallback={<main className="min-h-screen flex items-center justify-center"><div className="animate-pulse text-ink-400">加载中...</div></main>}>
       <GuidePageContent guideId={guideId} />
     </Suspense>
   )
