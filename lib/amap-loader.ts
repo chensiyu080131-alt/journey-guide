@@ -13,7 +13,7 @@ export interface AMapMarker {
 let loadPromise: Promise<void> | null = null
 
 export function loadAmapScript(): Promise<void> {
-  const key = process.env.NEXT_PUBLIC_AMAP_KEY
+  const key = process.env.NEXT_PUBLIC_AMAP_KEY || '20903bacc9ffd51b2e57b969992e533c'
   if (!key) {
     return Promise.reject(new Error('未配置 NEXT_PUBLIC_AMAP_KEY'))
   }
@@ -37,5 +37,5 @@ export function loadAmapScript(): Promise<void> {
 }
 
 export function hasAmapKey(): boolean {
-  return Boolean(process.env.NEXT_PUBLIC_AMAP_KEY)
+  return Boolean(process.env.NEXT_PUBLIC_AMAP_KEY || '20903bacc9ffd51b2e57b969992e533c')
 }

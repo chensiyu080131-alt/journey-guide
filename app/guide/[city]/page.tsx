@@ -5,6 +5,7 @@ export function generateStaticParams() {
     { city: 'shajiabang' },
     { city: 'niehaifeng' },
     { city: 'wengtonghe' },
+    { city: 'qianliu' },
   ]
 }
 

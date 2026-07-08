@@ -204,6 +204,93 @@ const wengtongheSpots: Spot[] = [
   },
 ]
 
+// ──────────────────────────────────────
+//  路线4：钱谦益与柳如是 — 乱世情缘
+// ──────────────────────────────────────
+const qianliuSpots: Spot[] = [
+  {
+    id: 'ql-1', name: '半野堂旧址', desc: '钱柳初遇之处，虞山脚下的一场惊鸿',
+    duration: '1.5小时', tags: ['文化', '历史'], timeSlot: '上午',
+    location: { lat: 31.6480, lng: 120.7400 }, address: '常熟市虞山南路',
+    story: '崇祯十三年（1640年），柳如是女扮男装，以"柳儒士"之名拜访钱谦益于半野堂。钱谦益见其才情惊人，当即赋诗相赠，两人从此结缘。半野堂虽已不存，但虞山南路一带仍可寻踪。',
+    type: '景点', budgetHint: '免费', emoji: '🏯',
+    originalText: '"逢人已觉无意味，遇汝方知有此生。"',
+    originalSource: '钱谦益《半野堂赠柳如是》',
+    realityNote: '半野堂原址在虞山南麓，现已不存。虞山南路沿途有指示牌标注历史遗迹位置，可驻足遥想当年。',
+  },
+  {
+    id: 'ql-2', name: '红豆山庄', desc: '钱柳定情之地，三百年红豆树犹在',
+    duration: '2小时', tags: ['文化', '自然'], timeSlot: '上午',
+    location: { lat: 31.6350, lng: 120.7680 }, address: '常熟市古里镇红豆山庄',
+    story: '钱谦益为柳如是建红豆山庄，庄中植红豆树一株。据传钱谦益曾在红豆花开时赋诗："红豆生南国，春来发几枝"——虽化用王维，却有了新的情意。如今红豆树仍在，春季深红如绛。',
+    type: '景点', budgetHint: '30元', goodNow: true, goodNowReason: '春季红豆花开时最美', photoSpot: true, emoji: '🌿',
+    originalText: '"红豆初生，如相思之渐深。"',
+    originalSource: '钱谦益《红豆诗》',
+    realityNote: '红豆山庄已修复开放，庄内红豆树为清代补植，但树龄仍超百年。4-5月花期最盛，绛红色花簇如旧。',
+  },
+  {
+    id: 'ql-3', name: '尚湖风景区', desc: '钱柳泛舟唱和之地，湖光山色如旧',
+    duration: '3小时', tags: ['自然', '体验'], timeSlot: '下午',
+    location: { lat: 31.6300, lng: 120.7200 }, address: '常熟市尚湖风景区',
+    story: '钱谦益与柳如是常在尚湖上泛舟唱和，留下大量诗篇。柳如是尤善填词，"金明池·咏寒柳"便是在尚湖舟中所作。如今尚湖仍可泛舟，湖面开阔，远望虞山如屏。',
+    type: '景点', budgetHint: '80元（含船票）', goodNow: true, goodNowReason: '下午光线好，适合泛舟拍照', emoji: '🚣',
+    originalText: '"有恨寒潮，无情残照，正是萧萧南浦。"',
+    originalSource: '柳如是《金明池·咏寒柳》',
+    realityNote: '尚湖是常熟最大湖泊，可租电动船或手划船环湖。推荐从拂水堤上船，沿钱柳当年可能泛舟的水域行进。',
+  },
+  {
+    id: 'ql-4', name: '铁琴铜剑楼', desc: '清末四大藏书楼之一，钱氏文脉绵延',
+    duration: '1.5小时', tags: ['文化'], timeSlot: '下午',
+    location: { lat: 31.6380, lng: 120.7650 }, address: '常熟市古里镇',
+    story: '铁琴铜剑楼是瞿氏家族的藏书楼，与钱谦益的绛云楼一脉相承。钱谦益绛云楼藏书为当世之冠，后毁于大火；瞿氏承其遗风，使常熟藏书传统绵延不绝。楼内现存古籍善本数千册。',
+    type: '景点', budgetHint: '免费', emoji: '📚',
+    originalText: '"绛云楼上万余卷，半是平生心血来。"',
+    originalSource: '钱谦益《绛云楼题跋》',
+    realityNote: '铁琴铜剑楼已修复为纪念馆，展示瞿氏藏书历史和部分善本。古里镇本身也是江南水乡，值得慢慢走走。',
+  },
+  {
+    id: 'ql-5', name: '虞山钱柳墓', desc: '乱世情缘的最后归宿，比邻而葬',
+    duration: '1小时', tags: ['文化', '历史'], timeSlot: '下午',
+    location: { lat: 31.6450, lng: 120.7350 }, address: '虞山南麓',
+    story: '钱谦益与柳如是合葬于虞山南麓，两墓相距数十步。钱谦益墓碑简朴，柳如是墓稍偏——即使在死后，礼教的阴影仍让这位奇女子无法与夫君并肩。但两墓近在咫尺，也算是一种沉默的抗争。',
+    type: '景点', budgetHint: '免费', emoji: '🪦',
+    originalText: '"此去泉台应不远，一丘一壑任悠悠。"',
+    originalSource: '钱谦益绝笔',
+    realityNote: '钱柳墓在虞山南麓深处，需沿山路步行约15分钟。墓区清幽，游客稀少，适合静思。建议傍晚前往，夕阳下的虞山格外肃穆。',
+  },
+  {
+    id: 'ql-6', name: '蕈油面', desc: '虞山三宝之一，菌菇鲜到眉毛掉',
+    duration: '1小时', tags: ['美食'], timeSlot: '中午',
+    location: { lat: 31.6500, lng: 120.7410 }, address: '虞山脚下兴福寺旁',
+    story: '蕈油面用虞山野生菌菇熬制浇头，是常熟最有特色的早餐。松蕈、桂花蕈、栗蕈——不同季节有不同的菌，但都鲜到让人闭眼。柳如是当年是否也在这山间吃过一碗热蕈面？史料无载，但风物犹存。',
+    type: '美食', budgetHint: '25-40元', emoji: '🍜',
+    originalText: '"山中之蕈，味胜肉食。"',
+    originalSource: '常熟方志',
+    realityNote: '兴福寺旁的望岳楼老面馆最正宗，用当天采摘的虞山鲜蕈做浇头。午餐高峰需排队，建议11点前到。',
+  },
+  {
+    id: 'ql-7', name: '桂花酒酿圆子', desc: '柳如是也写过的甜蜜滋味',
+    duration: '30分钟', tags: ['美食'], timeSlot: '晚上',
+    location: { lat: 31.6520, lng: 120.7420 }, address: '方塔街老店',
+    story: '常熟的桂花酒酿圆子是江南甜食的代表作。小圆子软糯，酒酿清甜，桂花飘香——这种温柔的味道，和柳如是笔下的"桂棹兰舟"意象不谋而合。',
+    type: '美食', budgetHint: '15元', emoji: '🍡',
+    originalText: '"桂花香里说丰年，听取蛙声一片。"',
+    originalSource: '辛弃疾《西江月》',
+    realityNote: '方塔街上多家老店都有，推荐"桂花坊"，手工圆子现煮，桂花酱是自家酿的。',
+  },
+  {
+    id: 'ql-8', name: '虞山碑刻博物馆', desc: '钱谦益笔墨犹存，柳如是书法可辨',
+    duration: '1.5小时', tags: ['文化'], timeSlot: '上午',
+    location: { lat: 31.6500, lng: 120.7380 }, address: '虞山国家森林公园内',
+    story: '虞山碑林中存有钱谦益等多位文人的手迹碑刻。钱谦益书法遒劲，柳如是虽无碑刻传世，但其书法风格在同时代文人题跋中可窥一斑。碑林清幽，是山中最佳的静思之处。',
+    type: '景点', budgetHint: '免费', emoji: '🖋️',
+    originalText: '"虞山之石可刻字，虞山之人不可忘。"',
+    originalSource: '虞山志',
+    realityNote: '碑刻博物馆在虞山国家森林公园入口附近，与兴福寺相邻。可先看碑刻再登山，约需1.5小时。',
+  },
+]
+
+
 // ============================================================
 //  组装完整攻略
 // ============================================================
@@ -330,6 +417,40 @@ export const mockGuides: Record<string, Guide> = {
     relatedCharacter: '翁同龢',
     routeIntro: '翁同龢（1830-1904），常熟人，同治、光绪两代帝师，戊戌变法的重要推手。他被慈禧太后罢官后回到常熟，在虞山下度过了余生。这条路线从他的出生地彩衣堂开始，到他少年读书的读书台，再到他最终归葬的虞山墓——一天走完一个帝师的一生。每一个地点都有他亲笔写下的文字为证。',
   },
+  'qianliu': {
+    id: 'qianliu',
+    title: '钱柳乱世情缘',
+    subtitle: '钱谦益与柳如是的虞山足迹，一段明末乱世中的传奇情缘',
+    city: '常熟',
+    province: '江苏·苏州',
+    days: 2,
+    interests: ['文化', '美食', '自然'],
+    budget: '舒适',
+    dayPlans: buildDayPlans(qianliuSpots, 2),
+    dialect: [
+      { dialect: '好勒', meaning: '好的/行了', scenario: '答应别人时说' },
+      { dialect: '白相', meaning: '玩', scenario: '去白相 = 去玩' },
+      { dialect: '弗要', meaning: '不要', scenario: '弗要客气 = 别客气' },
+      { dialect: '蛮好', meaning: '很好', scenario: '评价风景美食' },
+      { dialect: '阿要', meaning: '要不要', scenario: '阿要吃茶 = 要不要喝茶' },
+    ],
+    localExperiences: [
+      { name: '尚湖泛舟', desc: '在钱柳泛舟之处租一小船，感受湖光山色', type: '体验', schedule: '全天' },
+      { name: '红豆山庄赏花', desc: '春季红豆花开，深红如旧，三百年情缘在花间', type: '时令', schedule: '4-5月' },
+      { name: '虞山书法体验', desc: '在碑林旁体验毛笔书写，感受钱谦益的笔墨意境', type: '手艺', schedule: '周末' },
+    ],
+    createdAt: new Date().toISOString(),
+    tips: [
+      '红豆山庄春季最美，红豆花开如绛云',
+      '尚湖景区较大，建议乘船游湖，步行会很累',
+      '钱谦益墓与柳如是墓相距数十步，都在虞山南麓深处',
+      '铁琴铜剑楼在古里镇，距市区约20分钟车程',
+    ],
+    entryType: '书籍',
+    relatedBook: '《柳如是别传》',
+    relatedAuthor: '陈寅恪',
+    routeIntro: '钱谦益（1582-1664），明末文坛领袖，"江左三大家"之一；柳如是（1618-1664），明末"秦淮八艳"之首，才情绝世。两人的爱情跨越了乱世，从南京秦淮到常熟虞山，从半野堂到红豆山庄，留下无数诗篇与传奇。陈寅恪以双目失明之躯，穷十年之力撰写《柳如是别传》，为这对乱世情人立传。这条路线带你走进他们的世界——红豆树下的定情、尚湖上的唱和、虞山南麓的合葬——每一个地点都有诗词为证。',
+  },
 }
 
 // ============================================================
@@ -381,6 +502,21 @@ export const entryCards: EntryCard[] = [
     coverImage: 'https://images.unsplash.com/photo-1529928520614-829854c79449?w=800&q=80',
     days: 1,
     priceHint: '约180元/天',
+  },
+  {
+    id: 'qianliu',
+    type: '书籍',
+    title: '《柳如是别传》',
+    subtitle: '乱世情缘·钱柳风骨',
+    emoji: '🌿',
+    target: 'qianliu',
+    desc: '跟着陈寅恪的笔触，寻访钱谦益与柳如是的虞山足迹',
+    tags: ['明末清初', '红豆山庄', '虞山'],
+    route: '/guide/qianliu',
+    gradient: 'from-rose-500/10 via-pink-400/10 to-xuncheng-300/10',
+    coverImage: 'https://images.unsplash.com/photo-1585435557343-aa53f57c7d00?w=800&q=80',
+    days: 2,
+    priceHint: '约200元/天',
   },
 ]
 
