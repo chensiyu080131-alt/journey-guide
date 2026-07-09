@@ -207,8 +207,9 @@ export function PlanItineraryExplorer({ guide, aspect }: PlanItineraryExplorerPr
           guide={guide}
           spots={mapSpots}
           showChips={false}
+          layout="explorer"
           mapTitle="行程点位"
-          theme="literary"
+          mapClassName="h-[min(44vh,440px)] sm:h-[min(48vh,480px)]"
           onSpotSelect={(spot, idx) => {
             setSelectedSpot(spot)
             setSelectedIndex(idx)
@@ -222,7 +223,6 @@ export function PlanItineraryExplorer({ guide, aspect }: PlanItineraryExplorerPr
         onClose={() => setSelectedSpot(null)}
         checkedIn={selectedSpot ? checkedIn.has(selectedSpot.id) : false}
         onCheckIn={selectedSpot ? () => handleCheckIn(selectedSpot.id) : undefined}
-        theme="literary"
       />
     </div>
   )

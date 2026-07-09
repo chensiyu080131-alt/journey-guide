@@ -243,6 +243,36 @@
            flex items-center justify-center flex-shrink-0 shadow-sm;
   }
 
+  /* ── 攻略探索页（参考烟花三月下扬州） ── */
+  .xc-explorer-bg {
+    background-color: #F7F3EB;
+  }
+
+  .xc-explorer-sidebar-item {
+    @apply flex items-start gap-3 px-4 py-4 rounded-xl border transition-all duration-200 no-underline;
+  }
+
+  .xc-explorer-sidebar-active {
+    @apply border-celadon-300/60 bg-camel-light shadow-sm;
+  }
+
+  .xc-explorer-sidebar-inactive {
+    @apply border-celadon-200/40 bg-white/50 hover:bg-camel-light/60 hover:border-celadon-300/50;
+  }
+
+  .xc-explorer-spot-card {
+    @apply flex-shrink-0 snap-start w-[200px] sm:w-[220px] text-left px-4 py-3 rounded-xl border
+           transition-all duration-200;
+  }
+
+  .xc-explorer-spot-active {
+    @apply border-celadon-400 bg-celadon-50/80 shadow-sm;
+  }
+
+  .xc-explorer-spot-inactive {
+    @apply border-celadon-200/50 bg-white/70 hover:border-celadon-300 hover:bg-camel-light/50;
+  }
+
   /* ── 古籍纸首页（旧版保留） ── */
   .xc-parchment-bg {
     background-color: #F5F0E6;

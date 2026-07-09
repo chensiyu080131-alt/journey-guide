@@ -19,7 +19,8 @@ interface GuideMapExplorerProps {
   /** 外部接管点位点击（不打开内置抽屉） */
   onSpotSelect?: (spot: Spot, index: number) => void
   /** hero：地图优先展示（地图在上、点位卡片在下） */
-  layout?: 'default' | 'hero'
+  /** explorer：大地图 + 底部横向景点卡片（攻略页参考布局） */
+  layout?: 'default' | 'hero' | 'explorer'
   /** 地图容器高度类名 */
   mapClassName?: string
   /** 视觉主题 */
@@ -179,55 +180,72 @@ export function GuideMapExplorer({
   }
 
   const mapHeightClass = mapClassName ?? (
-    layout === 'hero'
-      ? 'h-[min(56vh,560px)] sm:h-[min(60vh,600px)]'
-      : 'h-[400px] sm:h-[440px]'
+    layout === 'explorer'
+      ? 'h-[min(52vh,520px)] sm:h-[min(58vh,580px)]'
+      : layout === 'hero'
+        ? 'h-[min(56vh,560px)] sm:h-[min(60vh,600px)]'
+        : 'h-[400px] sm:h-[440px]'
   )
 
+  const isExplorer = layout === 'explorer'
+
   const chipsBlock = showChips && (
-    <div className={cn(
-      'space-y-2 overflow-y-auto scrollbar-hide',
-      layout === 'hero' ? 'max-h-[120px]' : 'max-h-[160px]'
-    )}>
+    <div className={cn('space-y-2', isExplorer ? 'mt-4' : '')}>
       <p className={cn(
         'text-[10px] tracking-widest uppercase',
         isLiterary ? 'text-literary-wine' : 'text-celadon-600'
       )}>
-        {mapTitle || 'AI 识别原文落点 · 点击展开详情'}
+        {mapTitle || (isExplorer ? 'AI 识别原文景点 · 点击展开详情' : 'AI 识别原文落点 · 点击展开详情')}
       </p>
-      <div className="flex flex-wrap gap-2">
+      <div className={cn(
+        isExplorer
+          ? 'flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide'
+          : 'flex flex-wrap gap-2 overflow-y-auto scrollbar-hide max-h-[160px]',
+        !isExplorer && layout === 'hero' && 'max-h-[120px]'
+      )}>
         {spots.map((spot, i) => (
           <button
             key={spot.id}
             type="button"
             onClick={() => selectSpot(spot, i)}
             className={cn(
-              'text-left max-w-[200px] px-3 py-2 rounded-xl border transition-all duration-200',
-              isLiterary
-                ? selectedSpot?.id === spot.id
-                  ? 'border-literary-wine/50 bg-literary-sand/70 shadow-sm'
-                  : 'border-literary-sand bg-white/80 hover:border-literary-wine/30'
-                : selectedSpot?.id === spot.id
-                  ? 'border-celadon-400 bg-celadon-50/80 shadow-sm'
-                  : 'border-celadon-200/50 bg-camel-light/40 hover:border-celadon-300'
+              'text-left transition-all duration-200',
+              isExplorer
+                ? cn(
+                    'xc-explorer-spot-card',
+                    selectedSpot?.id === spot.id ? 'xc-explorer-spot-active' : 'xc-explorer-spot-inactive'
+                  )
+                : cn(
+                    'max-w-[200px] px-3 py-2 rounded-xl border',
+                    isLiterary
+                      ? selectedSpot?.id === spot.id
+                        ? 'border-literary-wine/50 bg-literary-sand/70 shadow-sm'
+                        : 'border-literary-sand bg-white/80 hover:border-literary-wine/30'
+                      : selectedSpot?.id === spot.id
+                        ? 'border-celadon-400 bg-celadon-50/80 shadow-sm'
+                        : 'border-celadon-200/50 bg-camel-light/40 hover:border-celadon-300'
+                  )
             )}
           >
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-1.5">
               <span className={cn(
-                'text-[10px] font-medium w-5 h-5 rounded-full flex items-center justify-center',
+                'text-[10px] font-medium w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0',
                 isLiterary
                   ? 'text-literary-wine bg-literary-wine/10'
                   : 'text-celadon-600 bg-celadon-100'
               )}>
                 {i + 1}
               </span>
-              <span className={cn('text-xs font-medium truncate', isLiterary ? 'text-literary-ink' : 'text-warm-gray')}>
+              <span className={cn(
+                'text-xs font-medium truncate',
+                isLiterary ? 'text-literary-ink' : 'text-warm-gray'
+              )}>
                 {spot.name}
               </span>
             </div>
             {spot.originalText && (
               <p className={cn(
-                'text-[10px] font-serif italic line-clamp-2 leading-relaxed',
+                'text-[10px] font-serif italic line-clamp-3 leading-relaxed',
                 isLiterary ? 'text-literary-muted' : 'text-warm-gray-muted'
               )}>
                 「{spot.originalText}」
@@ -314,7 +332,7 @@ export function GuideMapExplorer({
         <>
           {mapError && (
             <p className="absolute top-2 left-2 right-2 z-20 text-[10px] text-warm-gray-muted bg-paper-warm/95 px-2 py-1 rounded-lg border border-celadon-200/40">
-              {mapError}。若需高德地图，请在 .env.local 配置 NEXT_PUBLIC_AMAP_KEY 与 NEXT_PUBLIC_AMAP_SECURITY（安全密钥）。
+              {mapError}。请在 GitHub Actions Secrets 或本地 .env.local 配置 NEXT_PUBLIC_AMAP_KEY 与 NEXT_PUBLIC_AMAP_SECURITY。
             </p>
           )}
           <OsmMapFallback lat={center.lat} lng={center.lng} label={guide.city} />
@@ -329,7 +347,7 @@ export function GuideMapExplorer({
 
   return (
     <div className="flex flex-col gap-3">
-      {layout === 'hero' ? (
+      {layout === 'hero' || layout === 'explorer' ? (
         <>
           {mapBlock}
           {chipsBlock}
