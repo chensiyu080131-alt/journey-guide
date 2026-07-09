@@ -15,7 +15,12 @@ jobs:
           node-version: '20'
 
       - run: npm install
-      - run: npx next build
+      - name: Build static site
+        run: npx next build
+        env:
+          # NEXT_PUBLIC_* 在 build 时写入前端包，必须在 CI 注入（不能只配服务器 .env）
+          NEXT_PUBLIC_AMAP_KEY: ${{ secrets.NEXT_PUBLIC_AMAP_KEY }}
+          NEXT_PUBLIC_AMAP_SECURITY: ${{ secrets.NEXT_PUBLIC_AMAP_SECURITY }}
 
       - uses: appleboy/scp-action@v0.1.7
         with:

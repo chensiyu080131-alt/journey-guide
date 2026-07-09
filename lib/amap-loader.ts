@@ -88,7 +88,7 @@ export function getAmapConfigStatus(): {
   const hasKey = hasAmapKey()
   const hasSecurity = hasAmapSecurity()
   if (!hasKey) {
-    return { hasKey, hasSecurity, ready: false, hint: '请在 .env.local 配置 NEXT_PUBLIC_AMAP_KEY' }
+    return { hasKey, hasSecurity, ready: false, hint: '未配置 NEXT_PUBLIC_AMAP_KEY（本地 .env.local 或 GitHub Actions Secrets）' }
   }
   if (!hasSecurity) {
     return {
