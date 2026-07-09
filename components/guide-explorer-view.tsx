@@ -1,8 +1,9 @@
 'use client'
 
-import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { Guide } from '@/types'
 import { CoverCategory } from '@/lib/home-covers'
+import { getCityBooks } from '@/lib/city-books'
 import { GuideFilterSidebar } from './guide-filter-sidebar'
 import { GuideMapExplorer } from './guide-map-explorer'
 import { GuideExplorerShell } from './guide-explorer-shell'
@@ -13,9 +14,21 @@ interface GuideExplorerViewProps {
 }
 
 export function GuideExplorerView({ guide, category }: GuideExplorerViewProps) {
+  const searchParams = useSearchParams()
+  const fromCity = searchParams.get('from')
+  const cityMeta = fromCity ? getCityBooks(fromCity) : null
+
+  const backHref = cityMeta
+    ? `/guide/${fromCity}/books?cat=城市`
+    : `/?cat=${category}`
+  const backLabel = cityMeta
+    ? `← 返回${cityMeta.cityName}书籍`
+    : '← 返回封面选择'
+
   return (
     <GuideExplorerShell
-      backHref={`/?cat=${category}`}
+      backHref={backHref}
+      backLabel={backLabel}
       title={guide.title}
       subtitle={guide.subtitle}
       sidebar={<GuideFilterSidebar guideId={guide.id} category={category} variant="explorer" />}

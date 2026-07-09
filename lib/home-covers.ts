@@ -22,9 +22,9 @@ const cityCovers: HomeCover[] = [
   {
     id: 'yangzhou',
     category: '城市',
-    title: '烟花三月下扬州',
-    subtitle: '瘦西湖 · 淮左名都',
-    route: '/guide/yangzhou',
+    title: '扬州',
+    subtitle: '烟花三月 · 淮左名都',
+    route: '/guide/yangzhou/books',
     style: {
       bg: 'linear-gradient(165deg, #D4E8E0 0%, #9BBFB2 100%)',
       border: '#4A7A6E',
@@ -36,9 +36,9 @@ const cityCovers: HomeCover[] = [
   {
     id: 'nanjing',
     category: '城市',
-    title: '桨声灯影南京',
-    subtitle: '秦淮河 · 六朝金陵',
-    route: '/guide/nanjing',
+    title: '南京',
+    subtitle: '桨声灯影 · 六朝金陵',
+    route: '/guide/nanjing/books',
     style: {
       bg: 'linear-gradient(165deg, #E0DDD6 0%, #B8B0A4 100%)',
       border: '#6B6560',
@@ -50,9 +50,9 @@ const cityCovers: HomeCover[] = [
   {
     id: 'suzhou',
     category: '城市',
-    title: '姑苏浮生',
-    subtitle: '拙政园 · 平江路',
-    route: '/guide/suzhou',
+    title: '苏州',
+    subtitle: '姑苏浮生 · 园林水巷',
+    route: '/guide/suzhou/books',
     style: {
       bg: 'linear-gradient(165deg, #D8E4E2 0%, #A8BFB8 100%)',
       border: '#5A7D78',
@@ -64,9 +64,9 @@ const cityCovers: HomeCover[] = [
   {
     id: 'wuxi',
     category: '城市',
-    title: '太湖鼋头渚',
-    subtitle: '樱花 · 小笼 · 泥人',
-    route: '/guide/wuxi',
+    title: '无锡',
+    subtitle: '太湖鼋头 · 樱花小笼',
+    route: '/guide/wuxi/books',
     style: {
       bg: 'linear-gradient(165deg, #DDE8F0 0%, #A8C4D8 100%)',
       border: '#5A7A8A',
@@ -78,9 +78,9 @@ const cityCovers: HomeCover[] = [
   {
     id: 'zhenjiang',
     category: '城市',
-    title: '三山镇江',
-    subtitle: '金山寺 · 锅盖面',
-    route: '/guide/zhenjiang',
+    title: '镇江',
+    subtitle: '三山镇江 · 锅盖面',
+    route: '/guide/zhenjiang/books',
     style: {
       bg: 'linear-gradient(165deg, #EDE4D8 0%, #C9BAA8 100%)',
       border: '#8A7B6A',

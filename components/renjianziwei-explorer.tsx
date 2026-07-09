@@ -1,8 +1,10 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Guide, Spot } from '@/types'
 import { CoverCategory } from '@/lib/home-covers'
+import { getCityBooks } from '@/lib/city-books'
 import { GuideMapExplorer } from './guide-map-explorer'
 import { SpotDetailDrawer } from './spot-detail-drawer'
 import { GuideExplorerShell } from './guide-explorer-shell'
@@ -32,6 +34,10 @@ interface RenjianziweiExplorerProps {
 }
 
 export function RenjianziweiExplorer({ guide, category }: RenjianziweiExplorerProps) {
+  const searchParams = useSearchParams()
+  const fromCity = searchParams.get('from')
+  const cityMeta = fromCity ? getCityBooks(fromCity) : null
+
   const [viewMode, setViewMode] = useState<RenjianViewMode>('gaoyou')
   const [region, setRegion] = useState<RenjianRegion>('高邮')
   const [flavor, setFlavor] = useState<RenjianFlavor | null>(null)
@@ -118,8 +124,8 @@ export function RenjianziweiExplorer({ guide, category }: RenjianziweiExplorerPr
   return (
     <>
       <GuideExplorerShell
-        backHref={`/?cat=${category}`}
-        backLabel="← 返回封面选择"
+        backHref={cityMeta ? `/guide/${fromCity}/books?cat=城市` : `/?cat=${category}`}
+        backLabel={cityMeta ? `← 返回${cityMeta.cityName}书籍` : '← 返回封面选择'}
         title={title}
         subtitle={subtitle}
         eyebrow="《人间滋味》"
