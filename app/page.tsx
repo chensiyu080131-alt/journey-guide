@@ -1,114 +1,139 @@
 'use client'
 
-import Image from 'next/image'
+import { useState } from 'react'
 import Link from 'next/link'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
-import { EntryCards } from '@/components/entry-cards'
-import { RoutePackages } from '@/components/route-packages'
-import { HowItWorks } from '@/components/how-it-works'
+import { HomeNav } from '@/components/home-nav'
+import { HomeCoverCarousel } from '@/components/home-cover-carousel'
+import { HomeTab, getCoversForTab } from '@/lib/home-covers'
 
-const HERO_IMAGE = 'https://images.unsplash.com/photo-1516414447565-b14be0adf13e?w=2000&q=80'
+const tabHints: Record<HomeTab, string> = {
+  '首页': '江苏省城市 · 精选推荐',
+  '城市': '搜一座城，寻迹而至',
+  '书籍': '跟着书走，寻迹而至',
+  '音乐': '听一曲江南，走进故事里',
+  '游戏': '互动体验，读懂一座城',
+}
 
-const heroThumbs = [
-  'https://images.unsplash.com/photo-1501785888041-af3bcb1dd4?w=400&q=80',
-  'https://images.unsplash.com/photo-1599579676330-89393406983e?w=400&q=80',
-  'https://images.unsplash.com/photo-1529928520614-829854c79449?w=400&q=80',
-]
+const tabStats: Record<HomeTab, { value: string; label: string }[]> = {
+  '首页': [
+    { value: '5', label: '江苏城市' },
+    { value: '5', label: '文学路线' },
+    { value: '30+', label: '可打卡点' },
+    { value: '9', label: '精选攻略' },
+  ],
+  '城市': [
+    { value: '5', label: '江苏名城' },
+    { value: '20+', label: '地标景点' },
+    { value: '12', label: '美食打卡' },
+    { value: '5', label: '深度路线' },
+  ],
+  '书籍': [
+    { value: '5', label: '文学原著' },
+    { value: '30+', label: '美食散文' },
+    { value: '9', label: '高邮点位' },
+    { value: '19', label: '城市标注' },
+  ],
+  '音乐': [
+    { value: '4', label: '江南曲调' },
+    { value: '3', label: '古琴雅韵' },
+    { value: '2', label: '戏曲唱段' },
+    { value: '5', label: '关联城市' },
+  ],
+  '游戏': [
+    { value: '4', label: '互动体验' },
+    { value: '3', label: '诗词挑战' },
+    { value: '2', label: '书法临摹' },
+    { value: '5', label: '关联路线' },
+  ],
+}
 
 export default function HomePage() {
+  const [activeTab, setActiveTab] = useState<HomeTab>('首页')
+  const covers = getCoversForTab(activeTab)
+  const stats = tabStats[activeTab]
+
   return (
-    <>
-      <SiteHeader variant="transparent" />
-
-      {/* Hero */}
-      <section className="relative min-h-[90vh] flex items-end overflow-hidden">
-        <Image
-          src={HERO_IMAGE}
-          alt="江南山水"
-          fill
-          priority
-          className="object-cover"
-          unoptimized
-        />
-        <div className="absolute inset-0 xc-hero-gradient" />
-
-        <div className="relative z-10 w-full xc-container pb-16 sm:pb-24 pt-32">
-          <div className="max-w-3xl">
-            <p className="text-white/70 text-sm font-medium tracking-widest uppercase mb-4">
-              跟着书本去旅行 · 常熟先行
-            </p>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-white leading-tight">
-              难忘的
-              <br />
-              <span className="italic font-normal">文学</span>
-              <span className="text-xuncheng-400">小城之旅</span>
-            </h1>
-            <p className="mt-6 text-base sm:text-lg text-white/70 max-w-lg leading-relaxed">
-              选一本书、一个人、一座城。AI 把原文和实景连成可落地的旅行路线——2844 个县城，从常熟开始。
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/guide/shajiabang" className="xc-pill bg-white text-charcoal hover:bg-white/90 shadow-xl">
-                探索常熟路线 →
-              </Link>
-              <Link href="/guide/destination" className="xc-pill bg-white/10 text-white border border-white/30 hover:bg-white/20 backdrop-blur">
-                搜一座城
-              </Link>
-            </div>
+    <main className="xc-home-bg min-h-screen flex flex-col">
+      <header className="pt-6 sm:pt-8 pb-3 flex-shrink-0">
+        <div className="xc-home-logo mb-5 sm:mb-6">
+          <div className="xc-home-logo-mark">
+            <span className="text-white font-serif text-lg sm:text-xl leading-none">寻</span>
           </div>
-
-          {/* 底部缩略图 */}
-          <div className="mt-12 flex gap-3">
-            {heroThumbs.map((src, i) => (
-              <div key={i} className="relative h-16 w-24 sm:h-20 sm:w-32 rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg">
-                <Image src={src} alt="" fill className="object-cover" unoptimized sizes="128px" />
-              </div>
-            ))}
-            <div className="flex items-end pb-1 text-white/50 text-xs ml-2">
-              01 / 03
-            </div>
+          <div className="text-left">
+            <div className="font-serif text-lg sm:text-xl text-literary-ink tracking-wide">寻城</div>
+            <div className="text-[10px] text-literary-muted tracking-[0.35em] uppercase">Xun Cheng</div>
           </div>
         </div>
+        <HomeNav active={activeTab} onChange={setActiveTab} />
+      </header>
+
+      <div className="text-center px-6 flex-shrink-0">
+        <p className="text-[11px] sm:text-xs text-literary-wine tracking-[0.25em] font-serif uppercase">
+          {activeTab === '首页' ? 'Featured Routes' : activeTab}
+        </p>
+        <h1 className="mt-2 text-xl sm:text-2xl font-serif font-semibold text-literary-ink tracking-wide">
+          {activeTab === '首页' ? '有迹可循，寻迹而至' : tabHints[activeTab]}
+        </h1>
+        <p className="mt-2 text-xs text-literary-muted tracking-wide font-serif max-w-md mx-auto leading-relaxed">
+          {activeTab === '首页'
+            ? '跟着书本去旅行 · 从一座城、一本书、一曲江南开始'
+            : '左右滑动选择封面，点击进入探索'}
+        </p>
+      </div>
+
+      <section className="flex-1 flex items-center justify-center py-4 sm:py-6 min-h-[50vh]">
+        <HomeCoverCarousel key={activeTab} covers={covers} />
       </section>
 
-      {/* 路线轮播 */}
-      <section className="py-20 sm:py-28 bg-white">
-        <div className="xc-container">
-          <div className="text-center mb-12">
-            <p className="text-xuncheng-500 text-sm font-medium tracking-widest uppercase mb-3">
-              Featured Routes
-            </p>
-            <h2 className="xc-section-title">选你的旅行入口</h2>
-            <p className="xc-section-subtitle">
-              书籍、人物、目的地 — 三种方式进入小城的故事
-            </p>
-          </div>
-          <EntryCards />
-        </div>
-      </section>
-
-      {/* 深色套餐区 */}
-      <RoutePackages />
-
-      {/* 特色 */}
-      <section className="py-16 bg-ink-50">
-        <div className="xc-container grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-          {[
-            { icon: '📖', title: '原文对照', desc: '书中写的就是脚下' },
-            { icon: '🗺️', title: '路线地图', desc: '高德标记 + 时段排序' },
-            { icon: '🍜', title: '在地美食', desc: '本地人吃的，非网红' },
-          ].map(item => (
-            <div key={item.title} className="p-6">
-              <div className="text-3xl mb-3">{item.icon}</div>
-              <h3 className="font-bold text-charcoal">{item.title}</h3>
-              <p className="mt-1 text-sm text-ink-400">{item.desc}</p>
+      <div className="px-4 sm:px-6 pb-6 flex-shrink-0">
+        <div className="xc-home-stats-bar">
+          {stats.map(stat => (
+            <div key={stat.label} className="xc-home-stat">
+              <span className="xc-home-stat-value">{stat.value}</span>
+              <span className="xc-home-stat-label">{stat.label}</span>
             </div>
           ))}
         </div>
-      </section>
+      </div>
 
-      <HowItWorks />
-      <SiteFooter />
-    </>
+      <footer className="px-4 sm:px-6 pb-8 sm:pb-10 flex-shrink-0">
+        <div className="xc-home-quote-banner">
+          <div className="text-center sm:text-left">
+            <p className="text-base sm:text-lg font-serif font-semibold text-literary-ink leading-relaxed">
+              「四方食事，不过一碗人间烟火」
+            </p>
+            <p className="mt-2 text-xs text-literary-muted tracking-wide">
+              从一颗高邮咸鸭蛋开始，跟着书本吃遍中国。
+            </p>
+          </div>
+          <Link
+            href="/guide/renjianziwei?cat=书籍"
+            className="xc-explore-btn whitespace-nowrap flex-shrink-0"
+          >
+            开始高邮之旅
+            <span className="opacity-80">→</span>
+          </Link>
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left max-w-4xl mx-auto">
+          <div>
+            <p className="text-sm font-serif font-medium text-literary-ink">寻城 · 文旅 demo</p>
+            <p className="mt-1 text-xs text-literary-muted leading-relaxed">
+              一本书 · 一个人 · 一座城
+              <br />
+              跟着书本去旅行
+            </p>
+          </div>
+          <div>
+            <p className="text-sm font-serif font-medium text-literary-ink">数据</p>
+            <p className="mt-1 text-xs text-literary-muted">5 城 · 5 书 · 30+ 篇 · 9 高邮点位</p>
+          </div>
+          <div>
+            <p className="text-sm font-serif font-medium text-literary-ink">说明</p>
+            <p className="mt-1 text-xs text-literary-muted">原型演示，原文为摘录/示意，实景为占位</p>
+          </div>
+        </div>
+      </footer>
+    </main>
   )
 }

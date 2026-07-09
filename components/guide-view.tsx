@@ -226,6 +226,11 @@ export function GuideView({ guide }: GuideViewProps) {
 /** 根据攻略内容生成文化勋章 */
 function getCulturalBadge(guide: Guide): { emoji: string; name: string; desc: string } {
   const badges: Record<string, { emoji: string; name: string; desc: string }> = {
+    'yangzhou': { emoji: '🌸', name: '烟花行者', desc: '走过了瘦西湖的二十四桥，在烟花三月的扬州读懂了诗' },
+    'nanjing': { emoji: '🏮', name: '金陵夜泊', desc: '走过了桨声灯影里的秦淮河，听见了六朝的回响' },
+    'suzhou': { emoji: '🏯', name: '姑苏行者', desc: '走过了拙政园的回廊，在平江路听见了夜半钟声' },
+    'wuxi': { emoji: '🌊', name: '太湖游人', desc: '在鼋头渚看樱花飞雪，尝到了小笼的鲜' },
+    'zhenjiang': { emoji: '⛩️', name: '三山过客', desc: '登上了金山与焦山，用一碗锅盖面告别长江' },
     'shajiabang': { emoji: '🌾', name: '芦苇荡卫士', desc: '走过了阿庆嫂的茶馆，穿越了新四军的芦苇迷宫' },
     'niehaifeng': { emoji: '📜', name: '藏书楼守望者', desc: '追寻了曾朴的足迹，探访了五代人守的藏书楼' },
     'wengtonghe': { emoji: '🏛️', name: '帝师门生', desc: '走完了两代帝师的一生，感受了虞山的风骨' },

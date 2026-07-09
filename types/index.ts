@@ -65,23 +65,20 @@ export interface Spot {
   originalText?: string
   /** ★ v2新增：原文出处 */
   originalSource?: string
-  /** ★ v2新增：实景对照说明 */
+  /** 实景对照说明 */
   realityNote?: string
-  /** ★ v2新增：互动任务 */
+  /** 历史照片（AI 对照用） */
+  historicalImage?: string
+  /** 实景照片 */
+  realityImage?: string
+  /** 互动任务（可选） */
   interactiveTask?: InteractiveTask
-}
-
-/** 互动任务 */
-export interface InteractiveTask {
-  type: '诗词诵读' | '知识问答' | '古籍寻宝' | '书法临摹'
-  title: string
-  description: string
-  poem?: string
-  questions?: { question: string; options: string[]; answer: number }[]
-  treasureOriginal?: string
-  treasureTampered?: string
-  calligraphyText?: string
-}
+  /** 书中篇目（如《五味》） */
+  essay?: string
+  /** 地域（如高邮、昆明） */
+  region?: string
+  /** 五味标签：酸/甜/苦/辣/咸 */
+  flavor?: '酸' | '甜' | '苦' | '辣' | '咸'
 }
 
 /** 一天的行程 */
@@ -91,6 +88,73 @@ export interface DayPlan {
   spots: Spot[]
   /** 当日预算估算 */
   budgetEstimate?: string
+}
+
+/** 行程时段类型 */
+export type ScheduleBlockType = '集合' | '上午' | '午饭' | '下午' | '晚饭' | '晚间'
+
+/** 时段内单个点位摘要 */
+export interface ScheduleSpotRef {
+  spotId: string
+  name: string
+  emoji: string
+  duration: string
+  highlight: string
+  travelTime?: string
+  type: Spot['type']
+}
+
+/** 一天中的行程段落 */
+export interface ScheduleBlock {
+  type: ScheduleBlockType
+  label: string
+  timeRange?: string
+  travelTime?: string
+  spots: ScheduleSpotRef[]
+  activity?: string
+  highlight?: string
+}
+
+/** 结构化单日行程（按天数探索） */
+export interface ItineraryDayDetail {
+  day: number
+  title: string
+  meetingPoint: ScheduleBlock
+  blocks: ScheduleBlock[]
+  budgetEstimate?: string
+  /** 地图路线顺序（含可选项） */
+  spotIds: string[]
+}
+
+/** 路线方案（不同天数/预算/喜好） */
+export interface RouteVariant {
+  id: string
+  days: number
+  title: string
+  summary: string
+  pace: '悠闲' | '适中' | '紧凑'
+  budgetHint: string
+}
+
+/** 沿途可选推荐点位（非遗/历史文化） */
+export interface OptionalRecommendSpot {
+  id: string
+  name: string
+  emoji: string
+  desc: string
+  duration: string
+  category: '非遗文化' | '历史文化' | '民俗体验'
+  heritage?: string
+  location?: { lat: number; lng: number }
+  address?: string
+  /** 插入到哪个主点位之后 */
+  insertAfterSpotId?: string
+  insertDay?: number
+  originalText?: string
+  originalSource?: string
+  story?: string
+  tags?: InterestTag[]
+  budgetHint?: string
 }
 
 /** 完整攻略 */

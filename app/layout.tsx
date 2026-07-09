@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { AmapSecurityBootstrap } from '@/components/amap-security-bootstrap'
 
 export const metadata: Metadata = {
   title: '寻城 - 跟着书本去旅行',
@@ -21,7 +22,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN">
-      <body className="min-h-screen bg-white">
+      <head>
+        <AmapSecurityBootstrap />
+      </head>
+      <body className="min-h-screen bg-paper-warm">
         {children}
       </body>
     </html>

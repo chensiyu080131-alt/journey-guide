@@ -9,7 +9,49 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // 寻城暖色系 - 旅行感
+        // 新中式淡雅配色
+        'paper-warm': '#F7F3EB',
+        'camel': {
+          DEFAULT: '#E8DFD0',
+          light: '#F0EAE0',
+          dark: '#D4C8B8',
+        },
+        'celadon': {
+          50: '#EFF5F3',
+          100: '#D8E4E2',
+          200: '#B8CCC4',
+          300: '#96B0A8',
+          400: '#7A9A92',
+          500: '#5A7D78',
+          600: '#4A6A65',
+          700: '#3D5550',
+          800: '#334540',
+          900: '#2A3835',
+        },
+        'warm-gray': {
+          DEFAULT: '#3D3832',
+          light: '#6D6560',
+          muted: '#8A8278',
+        },
+        'seal': '#9E4B42',
+        // 《人间滋味》烟火气配色
+        'food-paper': '#F8F3E8',
+        'food-sauce': '#A65D5D',
+        'food-veg': '#7A8C5A',
+        'food-tofu': '#F0ECE0',
+        // 文学首页参考色
+        'literary': {
+          cream: '#F9F6F1',
+          paper: '#FDFBF7',
+          wine: '#8B4545',
+          'wine-light': '#A65D5D',
+          'wine-dark': '#6B3333',
+          ink: '#3D2E2E',
+          muted: '#8A7A72',
+          card: '#FFFFFF',
+          sand: '#EDE8DF',
+        },
+        // 寻城暖色系 - 旅行感（保留兼容）
         'xuncheng': {
           50: '#FFF8F0',
           100: '#FFEDD5',

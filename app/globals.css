@@ -6,19 +6,19 @@
 
 @layer base {
   :root {
-    --background: 253 246 236;
-    --foreground: 26 26 26;
+    --background: 247 243 235;
+    --foreground: 61 56 50;
     --card: 255 255 255;
-    --primary: 249 115 22;
-    --radius: 1rem;
+    --primary: 90 125 120;
+    --radius: 0.5rem;
   }
 
   * {
-    @apply border-ink-200;
+    @apply border-celadon-200/40;
   }
 
   body {
-    @apply bg-white text-charcoal antialiased;
+    @apply bg-paper-warm text-warm-gray antialiased;
   }
 
   ::-webkit-scrollbar {
@@ -83,6 +83,209 @@
 
   .xc-image-card {
     @apply relative overflow-hidden rounded-3xl aspect-[3/4] min-w-[200px] sm:min-w-[240px] flex-shrink-0 cursor-pointer transition-transform duration-300 hover:scale-[1.02];
+  }
+
+  /* ── 文学风首页（参考人间滋味） ── */
+  .xc-home-bg {
+    background-color: #F9F6F1;
+    background-image:
+      radial-gradient(ellipse at 10% 20%, rgba(139, 69, 69, 0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(166, 93, 93, 0.05) 0%, transparent 45%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  }
+
+  .xc-home-tab {
+    @apply relative px-4 sm:px-5 py-2 text-sm font-serif tracking-wide
+           text-literary-muted rounded-full border border-transparent
+           transition-all duration-300 hover:text-literary-wine;
+  }
+
+  .xc-home-tab-active {
+    @apply text-white font-medium bg-literary-wine border-literary-wine shadow-sm;
+  }
+
+  .xc-cover-card {
+    @apply relative cursor-pointer;
+    width: 240px;
+    perspective: 1200px;
+  }
+
+  .xc-cover-card-active {
+    width: 296px;
+    filter: drop-shadow(0 20px 40px rgba(107, 51, 51, 0.22));
+  }
+
+  .xc-cover-card-inactive {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+
+  .xc-cover-card-inactive:hover {
+    opacity: 0.72;
+  }
+
+  .xc-cover-inner-active {
+    transform: rotateY(-4deg) translateZ(8px);
+  }
+
+  .xc-cover-arrow {
+    @apply flex h-14 w-14 sm:h-[4.5rem] sm:w-[4.5rem] items-center justify-center rounded-full
+           text-literary-wine text-3xl sm:text-4xl font-light
+           border border-literary-sand bg-white/90 shadow-sm
+           transition-all duration-200
+           hover:bg-literary-paper hover:border-literary-wine/30 hover:shadow-md;
+  }
+
+  .xc-explore-btn {
+    @apply inline-flex items-center gap-2 px-10 sm:px-12 py-3.5 sm:py-4
+           text-sm sm:text-base font-serif tracking-wide text-white
+           bg-literary-wine rounded-full shadow-md
+           transition-all duration-300
+           hover:bg-literary-wine-dark hover:shadow-lg
+           hover:-translate-y-0.5 no-underline;
+  }
+
+  .xc-explore-btn-outline {
+    @apply inline-flex items-center gap-2 px-8 py-3
+           text-sm font-serif text-literary-ink
+           border border-literary-sand rounded-full bg-white/80
+           transition-all duration-300 hover:border-literary-wine/40 no-underline;
+  }
+
+  .xc-home-stat {
+    @apply flex flex-col items-center px-4 sm:px-6 py-2;
+  }
+
+  .xc-home-stat-value {
+    @apply text-2xl sm:text-3xl font-serif font-bold text-literary-wine;
+  }
+
+  .xc-home-stat-label {
+    @apply text-[10px] sm:text-xs text-literary-muted mt-1 tracking-wide text-center;
+  }
+
+  /* 《人间滋味》烟火气背景 */
+  .xc-food-bg {
+    background-color: #F8F3E8;
+    background-image:
+      radial-gradient(ellipse at 15% 80%, rgba(166, 93, 93, 0.06) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 15%, rgba(122, 140, 90, 0.08) 0%, transparent 40%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  }
+
+  .xc-home-logo {
+    @apply flex items-center justify-center gap-3;
+  }
+
+  .xc-home-logo-mark {
+    @apply w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-literary-wine
+           flex items-center justify-center shadow-sm;
+  }
+
+  .xc-home-stats-bar {
+    @apply mx-auto max-w-3xl rounded-2xl bg-white/80 border border-literary-sand
+           shadow-sm px-2 sm:px-6 py-4 sm:py-5 flex justify-around flex-wrap gap-y-3;
+  }
+
+  .xc-home-quote-banner {
+    @apply mx-auto max-w-4xl rounded-2xl bg-literary-sand/60 border border-literary-sand
+           px-6 sm:px-10 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-6;
+  }
+
+  /* ── 文学风详情页 ── */
+  .xc-detail-bg {
+    @apply min-h-screen flex flex-col;
+    background-color: #FDFBF7;
+    background-image:
+      radial-gradient(ellipse at 8% 12%, rgba(139, 69, 69, 0.04) 0%, transparent 45%),
+      radial-gradient(ellipse at 92% 88%, rgba(166, 93, 93, 0.04) 0%, transparent 40%);
+  }
+
+  .xc-detail-eyebrow {
+    @apply text-[11px] text-literary-wine tracking-[0.2em] font-serif uppercase;
+  }
+
+  .xc-detail-title {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-literary-ink leading-tight;
+  }
+
+  .xc-detail-pill {
+    @apply px-3.5 py-1.5 rounded-full text-xs font-serif border transition-all duration-200;
+  }
+
+  .xc-detail-pill-active {
+    @apply bg-literary-wine text-white border-literary-wine shadow-sm;
+  }
+
+  .xc-detail-pill-inactive {
+    @apply bg-white/80 border-literary-sand text-literary-muted hover:border-literary-wine/30 hover:text-literary-ink;
+  }
+
+  .xc-detail-card {
+    @apply rounded-2xl bg-white border border-literary-sand/80 shadow-sm;
+  }
+
+  .xc-detail-section-title {
+    @apply text-xl sm:text-2xl font-serif font-semibold text-literary-ink;
+  }
+
+  .xc-poi-card {
+    @apply rounded-2xl bg-white border border-literary-sand/70 p-4 sm:p-5
+           text-left transition-all duration-200 hover:shadow-md hover:border-literary-wine/25;
+  }
+
+  .xc-chapter-card {
+    @apply relative rounded-2xl bg-literary-sand/50 border border-literary-sand p-5 sm:p-6 overflow-hidden;
+  }
+
+  .xc-timeline-node {
+    @apply w-8 h-8 rounded-full bg-literary-wine text-white text-sm font-medium
+           flex items-center justify-center flex-shrink-0 shadow-sm;
+  }
+
+  /* ── 古籍纸首页（旧版保留） ── */
+  .xc-parchment-bg {
+    background-color: #F5F0E6;
+    background-image: url('/images/home-parchment.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .xc-nav-tab {
+    @apply px-5 py-2 text-sm font-serif font-medium text-charcoal border border-charcoal/80 rounded-md
+           bg-white/40 backdrop-blur-sm transition-all duration-200
+           hover:bg-white/70 hover:shadow-sm;
+  }
+
+  .xc-nav-tab-active {
+    @apply bg-white/80 shadow-md;
+  }
+
+  .xc-book {
+    @apply w-[140px] sm:w-[168px];
+    perspective: 800px;
+  }
+
+  .xc-book-active {
+    @apply w-[168px] sm:w-[200px];
+  }
+
+  .xc-book-face {
+    @apply ml-3 rounded-r-md border-2 shadow-lg;
+    aspect-ratio: 2 / 3;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .xc-book-side .xc-book-face {
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .xc-carousel-arrow {
+    @apply flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full
+           border border-charcoal/60 bg-white/60 backdrop-blur-sm
+           text-2xl text-charcoal/70 font-light
+           transition-all duration-200 hover:bg-white/90 hover:shadow-md;
   }
 }
 

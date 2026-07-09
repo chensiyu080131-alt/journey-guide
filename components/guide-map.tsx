@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Guide } from '@/types'
 import { hasAmapKey, loadAmapScript } from '@/lib/amap-loader'
+import { planNavigationRoute } from '@/lib/amap-routing'
 
 interface GuideMapProps {
   guide: Guide
@@ -27,7 +28,7 @@ export function GuideMap({ guide }: GuideMapProps) {
     let cancelled = false
 
     loadAmapScript()
-      .then(() => {
+      .then(async () => {
         if (cancelled || !containerRef.current || !window.AMap) return
 
         const center = spots[0].location!
@@ -37,11 +38,8 @@ export function GuideMap({ guide }: GuideMapProps) {
           viewMode: '2D',
         })
 
-        const path: AMap.LngLatLike[] = []
-
         spots.forEach((spot, index) => {
           const position: AMap.LngLatLike = [spot.location!.lng, spot.location!.lat]
-          path.push(position)
 
           const marker = new window.AMap!.Marker({
             position,
@@ -54,15 +52,20 @@ export function GuideMap({ guide }: GuideMapProps) {
           map!.add(marker)
         })
 
-        if (path.length > 1) {
-          const polyline = new window.AMap!.Polyline({
-            path,
-            strokeColor: '#f97316',
-            strokeWeight: 4,
-            strokeOpacity: 0.8,
-            showDir: true,
-          })
-          map.add(polyline)
+        if (spots.length > 1) {
+          const points = spots.map(s => ({ lng: s.location!.lng, lat: s.location!.lat }))
+          const { path } = await planNavigationRoute(points, 'auto')
+          if (path.length > 1) {
+            const polyline = new window.AMap!.Polyline({
+              path,
+              strokeColor: '#f97316',
+              strokeWeight: 4,
+              strokeOpacity: 0.85,
+              showDir: true,
+              lineJoin: 'round',
+            })
+            map.add(polyline)
+          }
           map.setFitView(undefined, false, [40, 40, 40, 40])
         }
 

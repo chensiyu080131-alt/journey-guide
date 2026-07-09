@@ -1,9 +1,10 @@
 import { Guide, Spot, EntryCard } from '@/types'
+import { cityGuides } from './city-guides'
+import { renjianziweiGuide } from './renjianziwei-guide'
 
 // ============================================================
-//  寻城 v2 Mock 数据 — 常熟："跟着书本去旅行"
-//  三条主线：沙家浜 / 孽海花 / 翁同龢
-//  数据面向黑客松路演，常熟文旅局可直接落地
+//  寻城 v2 Mock 数据 — 跟着书本去旅行
+//  常熟主线 + 江苏省展示路线（扬州）
 // ============================================================
 
 // ──────────────────────────────────────
@@ -324,6 +325,84 @@ const qianliuSpots: Spot[] = [
 ]
 
 
+// ──────────────────────────────────────
+//  展示路线：扬州「烟花三月」— 江苏省文旅打卡标杆
+//  文学线索：李白《黄鹤楼送孟浩然之广陵》+ 姜夔《扬州慢》
+// ──────────────────────────────────────
+const yangzhouSpots: Spot[] = [
+  {
+    id: 'yz-1', name: '瘦西湖', desc: '五亭桥、二十四桥，诗里的扬州就在这里',
+    duration: '3小时', tags: ['文化', '自然'], timeSlot: '上午',
+    location: { lat: 32.4080, lng: 119.4210 }, address: '扬州市邗江区大虹桥路28号',
+    story: '瘦西湖原名保障湖，清代乾隆年间形成今日格局。园内五亭莲桥、白塔、二十四桥，是扬州园林的巅峰。李白送孟浩然「烟花三月下扬州」，姜夔写「二十四桥仍在」——两座文学丰碑，都指向这片湖水。',
+    type: '景点', budgetHint: '门票95元', goodNow: true, goodNowReason: '三月至五月烟花季最美', photoSpot: true, emoji: '🏯',
+    originalText: '故人西辞黄鹤楼，烟花三月下扬州。孤帆远影碧空尽，唯见长江天际流。',
+    originalSource: '李白《黄鹤楼送孟浩然之广陵》',
+    realityNote: '瘦西湖南门入园，建议先走五亭桥再到二十四桥。春季桃红柳绿，与李白诗中「烟花」意境最合。游船可穿行桥下，体验「画舫听箫声一夜，看红灯千盏」的意境。',
+  },
+  {
+    id: 'yz-2', name: '个园', desc: '四季假山，一步一景，竹西佳处的私家园林',
+    duration: '1.5小时', tags: ['文化', '体验'], timeSlot: '上午',
+    location: { lat: 32.4010, lng: 119.4490 }, address: '扬州市广陵区盐阜东路10号',
+    story: '个园为清代盐商黄至筠所建，以竹石见长，园中四季假山用不同石材营造春夏秋冬四景，是中国园林艺术的孤例。姜夔《扬州慢》起句「淮左名都，竹西佳处」，竹西即扬州城北一带，个园正在此域。',
+    type: '景点', budgetHint: '门票45元', photoSpot: true, emoji: '🎋',
+    originalText: '淮左名都，竹西佳处，解鞍少驻初程。',
+    originalSource: '姜夔《扬州慢·淮左名都》',
+    realityNote: '个园与东关街相邻，可从北门出直接步入古街。园中宜园小筑的月亮门是拍照经典机位，建议沿春→夏→秋→冬顺序穿假山。',
+  },
+  {
+    id: 'yz-3', name: '大明寺', desc: '栖灵塔下，鉴真东渡前的最后一站',
+    duration: '1.5小时', tags: ['文化', '历史'], timeSlot: '下午',
+    location: { lat: 32.4220, lng: 119.4150 }, address: '扬州市邗江区平山堂东路8号',
+    story: '大明寺始建于南朝，栖灵塔为隋文帝杨坚为纪念阵亡将士而建。唐代高僧鉴真曾在此讲经，后六次东渡日本。寺旁平山堂为欧阳修所建，苏轼、秦观皆曾登临赋诗，是扬州文人传统的地标。',
+    type: '景点', budgetHint: '门票免费，栖灵塔另收', emoji: '🛕',
+    originalText: '山横翠霭千层合，水抱芳洲两岸分。',
+    originalSource: '欧阳修《题平山堂》',
+    realityNote: '大明寺在蜀冈之巅，与瘦西湖仅一墙之隔。登栖灵塔可俯瞰瘦西湖全景，是理解「淮左名都」地理格局的最佳视角。',
+  },
+  {
+    id: 'yz-4', name: '东关街', desc: '千年古街，淮扬味道与市井烟火',
+    duration: '2小时', tags: ['文化', '美食'], timeSlot: '下午',
+    location: { lat: 32.3960, lng: 119.4550 }, address: '扬州市广陵区东关街',
+    story: '东关街形成于唐代，是扬州城东门外的商业主轴。街上有盐商宅邸、手工作坊、茶馆酒楼，至今仍是本地人买酱菜、吃早茶的地方。扬州评话、清曲在此传唱，是感受「慢活扬州」的最佳街区。',
+    type: '体验', budgetHint: '自由消费', goodNow: true, goodNowReason: '傍晚华灯初上最有烟火气', photoSpot: true, emoji: '🏮',
+    originalText: '腰缠十万贯，骑鹤上扬州。',
+    originalSource: '宋·俚谚',
+    realityNote: '东关街从个园北门到古运河码头，约1.2公里。建议傍晚前往，赵氏叠汤圆、四美红庙豆腐脑等老店仍在，非景区预制小吃。',
+  },
+  {
+    id: 'yz-5', name: '富春茶社', desc: '蟹黄汤包、三丁包，淮扬早茶的百年老店',
+    duration: '1小时', tags: ['美食'], timeSlot: '中午',
+    location: { lat: 32.3970, lng: 119.4540 }, address: '扬州市广陵区国庆路218号',
+    story: '富春茶社创于1885年，与冶春、共和春并称扬州「三春」。蟹黄汤包以「轻轻提，慢慢移，先开窗、后喝汤」的吃法闻名，三丁包用鸡丁、肉丁、笋丁为馅，是淮扬点心的代表作。',
+    type: '美食', budgetHint: '人均50-80元', goodNow: true, goodNowReason: '早茶7:00起，宜做午餐', emoji: '🥟',
+    originalText: '天下三分明月夜，二分无赖是扬州。',
+    originalSource: '徐凝《忆扬州》',
+    realityNote: '国庆路总店最正宗，周末需排队。建议点蟹黄汤包、三丁包、魁龙珠茶，避开景区旁的高价仿店。',
+  },
+  {
+    id: 'yz-6', name: '何园', desc: '晚清第一园，复道回廊串联六进院落',
+    duration: '1.5小时', tags: ['文化'], timeSlot: '下午',
+    location: { lat: 32.3890, lng: 119.4580 }, address: '扬州市广陵区徐凝门大街66号',
+    story: '何园又名寄啸山庄，清光绪年间何芷舠所建。园中1500米复道回廊为中国园林孤例，串联起六进院落与山水层台。朱自清曾在扬州任教，多次来访何园，其散文中的扬州意象与这座园林的精致相通。',
+    type: '景点', budgetHint: '门票45元', photoSpot: true, emoji: '🏡',
+    originalText: '天下三分明月夜，二分无赖是扬州。',
+    originalSource: '徐凝《忆扬州》',
+    realityNote: '何园复道回廊是摄影经典，建议从东门入、沿回廊上至二楼俯瞰水心亭。与个园风格不同，更见晚清中西交融的痕迹。',
+  },
+  {
+    id: 'yz-7', name: '史可法纪念馆', desc: '梅花岭上，忠义气节与扬州城防记忆',
+    duration: '1小时', tags: ['文化', '历史'], timeSlot: '晚上',
+    location: { lat: 32.4010, lng: 119.4420 }, address: '扬州市邗江区史可法路1号',
+    story: '明末清初，史可法守扬州，城破后殉难于梅花岭。姜夔作《扬州慢》时，扬州历经兵火，「尽荠麦，弥望无际」——与今日繁华形成对照。纪念馆内古银杏、铁骨梅花，是理解扬州历史纵深的一站。',
+    type: '景点', budgetHint: '免费', emoji: '🌸',
+    originalText: '自胡马窥江去后，废池乔木，犹厌言兵。',
+    originalSource: '姜夔《扬州慢·淮左名都》',
+    realityNote: '纪念馆在城北，与瘦西湖、个园构成三角。园内梅花冬末春初盛开，与姜夔词中「念桥边红药，年年知为谁生」意境呼应。',
+  },
+]
+
+
 // ============================================================
 //  组装完整攻略
 // ============================================================
@@ -484,6 +563,42 @@ export const mockGuides: Record<string, Guide> = {
     relatedAuthor: '陈寅恪',
     routeIntro: '钱谦益（1582-1664），明末文坛领袖，"江左三大家"之一；柳如是（1618-1664），明末"秦淮八艳"之首，才情绝世。两人的爱情跨越了乱世，从南京秦淮到常熟虞山，从半野堂到红豆山庄，留下无数诗篇与传奇。陈寅恪以双目失明之躯，穷十年之力撰写《柳如是别传》，为这对乱世情人立传。这条路线带你走进他们的世界——红豆树下的定情、尚湖上的唱和、虞山南麓的合葬——每一个地点都有诗词为证。',
   },
+  'yangzhou': {
+    id: 'yangzhou',
+    title: '烟花三月下扬州',
+    subtitle: '跟着李白与姜夔，走进千年淮左名都',
+    city: '扬州',
+    province: '江苏',
+    days: 2,
+    interests: ['文化', '美食', '自然'],
+    budget: '舒适',
+    dayPlans: buildDayPlans(yangzhouSpots, 2),
+    dialect: [
+      { dialect: '乖乖隆地冬', meaning: '天哪/好厉害', scenario: '表示惊讶' },
+      { dialect: '阿要', meaning: '要不要', scenario: '阿要吃早茶 = 要不要吃早茶' },
+      { dialect: '蛮好', meaning: '很好', scenario: '瘦西湖蛮好 = 瘦西湖不错' },
+      { dialect: '慢活', meaning: '悠闲自在', scenario: '扬州人生活节奏慢' },
+      { dialect: '三把刀', meaning: '菜刀、剪刀、剃刀', scenario: '扬州三把刀指厨艺、理发、修脚' },
+    ],
+    localExperiences: [
+      { name: '瘦西湖夜游', desc: '灯光映照五亭桥，与白日景致截然不同', type: '民俗', schedule: '周末晚间' },
+      { name: '三月烟花季', desc: '桃红柳绿，对应李白「烟花三月下扬州」', type: '时令', schedule: '3-5月' },
+      { name: '淮扬早茶体验', desc: '富春、冶春、共和春，三丁包与蟹黄汤包', type: '手艺', schedule: '每日上午' },
+    ],
+    createdAt: new Date().toISOString(),
+    tips: [
+      '瘦西湖与大明寺相邻，可安排同一天游览',
+      '个园、东关街、富春茶社步行可达，建议连在一起',
+      '春季3-5月是最佳时节，对应「烟花三月」',
+      '淮扬菜偏甜鲜，推荐大煮干丝、狮子头、文思豆腐',
+    ],
+    entryType: '目的地',
+    relatedBook: '《扬州慢》',
+    relatedAuthor: '姜夔 / 李白',
+    routeIntro: '「烟花三月下扬州」——李白这句诗让扬州成为中国最诗意的城市名。千年后，姜夔再访扬州，写下「二十四桥仍在，波心荡，冷月无声」。这条展示路线带你走进江苏省最具知名度的文旅目的地：瘦西湖的五亭桥、个园的四季假山、大明寺的栖灵塔、东关街的烟火气——诗词里写的，脚下都能走到。',
+  },
+  'renjianziwei': renjianziweiGuide,
+  ...cityGuides,
 }
 
 // ============================================================
@@ -491,6 +606,99 @@ export const mockGuides: Record<string, Guide> = {
 // ============================================================
 
 export const entryCards: EntryCard[] = [
+  // ── 城市路线（江苏省）──
+  {
+    id: 'yangzhou',
+    type: '目的地',
+    title: '烟花三月下扬州',
+    subtitle: '淮左名都 · 瘦西湖',
+    emoji: '🌸',
+    target: 'yangzhou',
+    desc: '李白千古名句，瘦西湖、个园、大明寺——江苏文旅打卡标杆',
+    tags: ['展示推荐', '瘦西湖', '淮扬美食'],
+    route: '/guide/yangzhou',
+    gradient: 'from-celadon-100/30 via-camel/20 to-celadon-200/20',
+    coverImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Five_Pavilion_Bridge_in_Yangzhou%27s_Slender_West_Lake.jpg/800px-Five_Pavilion_Bridge_in_Yangzhou%27s_Slender_West_Lake.jpg',
+    days: 2,
+    priceHint: '约200元/天',
+  },
+  {
+    id: 'nanjing',
+    type: '目的地',
+    title: '桨声灯影南京',
+    subtitle: '秦淮河 · 六朝金陵',
+    emoji: '🏮',
+    target: 'nanjing',
+    desc: '朱自清名篇，夫子庙夜游、鸡鸣寺樱花、玄武湖',
+    tags: ['秦淮河', '鸭血粉丝', '樱花'],
+    route: '/guide/nanjing',
+    gradient: 'from-celadon-100/30 via-ink-100/20 to-camel/20',
+    coverImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Qinhuai_River_Night_View.jpg/800px-Qinhuai_River_Night_View.jpg',
+    days: 2,
+    priceHint: '约180元/天',
+  },
+  {
+    id: 'suzhou',
+    type: '目的地',
+    title: '姑苏浮生',
+    subtitle: '拙政园 · 平江路',
+    emoji: '🏯',
+    target: 'suzhou',
+    desc: '沈复与张继，园林、水巷、寒山寺钟声',
+    tags: ['园林', '平江路', '苏帮菜'],
+    route: '/guide/suzhou',
+    gradient: 'from-celadon-200/20 via-camel/30 to-celadon-100/20',
+    coverImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Humble_Administrator%27s_Garden.jpg/800px-Humble_Administrator%27s_Garden.jpg',
+    days: 2,
+    priceHint: '约200元/天',
+  },
+  {
+    id: 'wuxi',
+    type: '目的地',
+    title: '太湖鼋头渚',
+    subtitle: '樱花 · 小笼 · 泥人',
+    emoji: '🌊',
+    target: 'wuxi',
+    desc: '太湖佳绝处，鼋头渚樱花、惠山古镇、无锡小笼',
+    tags: ['太湖', '樱花', '小笼包'],
+    route: '/guide/wuxi',
+    gradient: 'from-celadon-100/30 via-camel/20 to-celadon-300/10',
+    coverImage: 'https://images.unsplash.com/photo-1585435557343-aa53f57c7d00?w=800&q=80',
+    days: 1,
+    priceHint: '约150元/天',
+  },
+  {
+    id: 'zhenjiang',
+    type: '目的地',
+    title: '三山镇江',
+    subtitle: '金山寺 · 锅盖面',
+    emoji: '⛩️',
+    target: 'zhenjiang',
+    desc: '白蛇传金山寺、焦山碑林、西津渡古街',
+    tags: ['金山寺', '锅盖面', '长江'],
+    route: '/guide/zhenjiang',
+    gradient: 'from-camel/30 via-celadon-100/20 to-ink-100/10',
+    coverImage: 'https://images.unsplash.com/photo-1516414447565-b14be0adf13e?w=800&q=80',
+    days: 1,
+    priceHint: '约120元/天',
+  },
+  // ── 书籍路线 ──
+  {
+    id: 'renjianziwei',
+    type: '书籍',
+    title: '《人间滋味》',
+    subtitle: '汪曾祺 · 四方食事',
+    emoji: '🥢',
+    target: 'renjianziwei',
+    desc: '一本书+一个人+一座城。高邮咸鸭蛋、全国美食地图、人生四阶段',
+    tags: ['展示推荐', '美食散文', '高邮', '汪曾祺'],
+    route: '/guide/renjianziwei',
+    gradient: 'from-food-paper/50 via-food-sauce/10 to-food-veg/10',
+    coverImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Salted_duck_egg.jpg/640px-Salted_duck_egg.jpg',
+    days: 1,
+    priceHint: '约150元/天',
+  },
+  // ── 常熟文学路线 ──
   {
     id: 'shajiabang',
     type: '书籍',
