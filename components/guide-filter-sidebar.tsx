@@ -114,3 +114,67 @@ export function GuideFilterSidebar({
     </aside>
   )
 }
+
+/** 人间滋味 · 视图模式侧栏（与地图探索侧栏同款样式） */
+export type RenjianViewMode = 'gaoyou' | 'map' | 'life'
+
+const renjianViews: { id: RenjianViewMode; icon: string; label: string; desc: string }[] = [
+  { id: 'gaoyou', icon: '🗺️', desc: '高邮深度 · 9点位', label: '高邮深度' },
+  { id: 'map', icon: '🌏', desc: '全国美食地图', label: '全国地图' },
+  { id: 'life', icon: '📖', desc: '人生轨迹', label: '人生轨迹' },
+]
+
+interface RenjianViewSidebarProps {
+  guideId: string
+  category: CoverCategory
+  viewMode: RenjianViewMode
+  onViewModeChange: (mode: RenjianViewMode) => void
+}
+
+export function RenjianViewSidebar({
+  guideId,
+  category,
+  viewMode,
+  onViewModeChange,
+}: RenjianViewSidebarProps) {
+  const planFilters = filters.filter(f => f.aspect !== 'map')
+
+  return (
+    <aside className="w-full lg:w-[168px] flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible scrollbar-hide pb-1 lg:pb-0 flex-shrink-0">
+      {renjianViews.map(v => (
+        <button
+          key={v.id}
+          type="button"
+          onClick={() => onViewModeChange(v.id)}
+          className={cn(
+            'xc-explorer-sidebar-item min-w-[140px] lg:min-w-0 lg:w-full text-left',
+            viewMode === v.id ? 'xc-explorer-sidebar-active' : 'xc-explorer-sidebar-inactive'
+          )}
+        >
+          <span className="text-xl flex-shrink-0">{v.icon}</span>
+          <div className="min-w-0">
+            <p className="text-sm font-serif font-medium text-warm-gray">{v.label}</p>
+            <p className="text-[10px] text-warm-gray-muted mt-0.5 leading-snug">{v.desc}</p>
+          </div>
+        </button>
+      ))}
+      <div className="hidden lg:block w-full h-px bg-celadon-200/50 my-1" />
+      {planFilters.map(f => (
+        <Link
+          key={f.aspect}
+          href={`/guide/${guideId}/plan/${f.aspect}?cat=${category}`}
+          className={cn(
+            'xc-explorer-sidebar-item min-w-[140px] lg:min-w-0 lg:w-full',
+            'xc-explorer-sidebar-inactive'
+          )}
+        >
+          <span className="text-xl flex-shrink-0">{f.icon}</span>
+          <div className="min-w-0">
+            <p className="text-sm font-serif font-medium text-warm-gray">{f.label}</p>
+            <p className="text-[10px] text-warm-gray-muted mt-0.5 leading-snug">{f.desc}</p>
+          </div>
+        </Link>
+      ))}
+    </aside>
+  )
+}

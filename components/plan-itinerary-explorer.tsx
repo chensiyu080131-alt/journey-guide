@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import { Guide, ItineraryDayDetail, OptionalRecommendSpot, ScheduleBlock, Spot } from '@/types'
+import { Guide, OptionalRecommendSpot, ScheduleBlock, Spot } from '@/types'
 import { PlanAspect } from '@/lib/guide-category'
 import {
   buildItinerary,
@@ -17,6 +17,8 @@ import { SpotDetailDrawer } from './spot-detail-drawer'
 interface PlanItineraryExplorerProps {
   guide: Guide
   aspect: PlanAspect
+  /** 地图优先：首屏展示地图，行程详情折叠在下 */
+  mapFirst?: boolean
 }
 
 const blockIcons: Record<string, string> = {
@@ -28,7 +30,7 @@ const blockIcons: Record<string, string> = {
   晚间: '🌙',
 }
 
-export function PlanItineraryExplorer({ guide, aspect }: PlanItineraryExplorerProps) {
+export function PlanItineraryExplorer({ guide, aspect, mapFirst = false }: PlanItineraryExplorerProps) {
   const variants = useMemo(() => getRouteVariants(guide, aspect), [guide, aspect])
   const [variantId, setVariantId] = useState(variants[0]?.id ?? '1d')
   const [selectedDay, setSelectedDay] = useState(1)
@@ -38,6 +40,7 @@ export function PlanItineraryExplorer({ guide, aspect }: PlanItineraryExplorerPr
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null)
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [checkedIn, setCheckedIn] = useState<Set<string>>(new Set())
+  const [detailsOpen, setDetailsOpen] = useState(!mapFirst)
 
   const optionalSpots = useMemo(() => getOptionalSpotsForGuide(guide.id, guide), [guide])
 
@@ -87,9 +90,149 @@ export function PlanItineraryExplorer({ guide, aspect }: PlanItineraryExplorerPr
     setCheckedIn(prev => new Set([...Array.from(prev), spotId]))
   }
 
+  const variantToolbar = (
+    <div className="flex flex-wrap items-center gap-1.5 mb-2">
+      {variants.map(v => (
+        <button
+          key={v.id}
+          type="button"
+          onClick={() => handleVariantChange(v.id)}
+          className={cn(
+            'px-3 py-1.5 rounded-full text-[11px] border transition-all',
+            variantId === v.id
+              ? 'bg-celadon-500 text-white border-celadon-500'
+              : 'bg-white/70 border-celadon-200/50 text-warm-gray-muted hover:border-celadon-300'
+          )}
+        >
+          {v.title}
+        </button>
+      ))}
+      {itineraryDays.length > 1 &&
+        itineraryDays.map(d => (
+          <button
+            key={d.day}
+            type="button"
+            onClick={() => setSelectedDay(d.day)}
+            className={cn(
+              'px-3 py-1.5 rounded-full text-[11px] border transition-all',
+              selectedDay === d.day
+                ? 'bg-celadon-500 text-white border-celadon-500'
+                : 'bg-white/70 border-celadon-200/50 text-warm-gray-muted hover:border-celadon-300'
+            )}
+          >
+            Day {d.day}
+          </button>
+        ))}
+    </div>
+  )
+
+  const mapSection = (
+    <GuideMapExplorer
+      guide={guide}
+      spots={mapSpots}
+      showChips={mapFirst}
+      layout="explorer"
+      mapTitle={mapFirst ? 'AI 识别原文景点 · 点击展开详情' : '行程点位'}
+      mapClassName={
+        mapFirst
+          ? 'h-[min(calc(100vh-280px),520px)] sm:h-[min(calc(100vh-260px),540px)]'
+          : 'h-[min(44vh,440px)] sm:h-[min(48vh,480px)]'
+      }
+      onSpotSelect={(spot, idx) => {
+        setSelectedSpot(spot)
+        setSelectedIndex(idx)
+      }}
+    />
+  )
+
+  const scheduleSection = activeDay && (
+    <Card className="p-5 border-celadon-200/40 bg-white/50 space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="font-serif font-bold text-warm-gray">
+          Day {activeDay.day} · {activeDay.title}
+        </h3>
+        {activeDay.budgetEstimate && (
+          <span className="text-xs text-warm-gray-muted">预算 {activeDay.budgetEstimate}</span>
+        )}
+      </div>
+      <ScheduleBlockView block={activeDay.meetingPoint} onSpotClick={openSpot} checkedIn={checkedIn} />
+      {activeDay.blocks.map(block => (
+        <ScheduleBlockView
+          key={block.type + block.label}
+          block={block}
+          onSpotClick={openSpot}
+          checkedIn={checkedIn}
+        />
+      ))}
+    </Card>
+  )
+
+  const optionalSection = optionalSpots.length > 0 && (
+    <section>
+      <p className="text-[10px] text-celadon-600 tracking-widest uppercase mb-2">
+        沿途推荐 · 非遗文化 / 历史文化（可选项）
+      </p>
+      <div className="space-y-2">
+        {optionalSpots.map(opt => (
+          <OptionalSpotCard
+            key={opt.id}
+            opt={opt}
+            selected={pendingOptionals.has(opt.id) || confirmedOptionals.has(opt.id)}
+            confirmed={confirmedOptionals.has(opt.id)}
+            onToggle={() => !confirmedOptionals.has(opt.id) && togglePending(opt.id)}
+          />
+        ))}
+      </div>
+      {pendingOptionals.size > 0 && (
+        <div className="mt-3 flex items-center gap-3 flex-wrap">
+          <button
+            type="button"
+            onClick={confirmOptionals}
+            className="px-5 py-2.5 rounded-full bg-celadon-500 text-white text-sm font-medium hover:bg-celadon-600 transition-colors"
+          >
+            确认选择（{pendingOptionals.size} 项）并优化路线
+          </button>
+        </div>
+      )}
+      {routeOptimized && (
+        <p className="mt-2 text-xs text-celadon-600 bg-celadon-50 px-3 py-2 rounded-lg border border-celadon-200/40">
+          ✓ 路线已优化，地图与行程表已更新
+        </p>
+      )}
+    </section>
+  )
+
+  if (mapFirst) {
+    return (
+      <div className="flex flex-col min-h-0">
+        {variantToolbar}
+        {mapSection}
+        <button
+          type="button"
+          onClick={() => setDetailsOpen(v => !v)}
+          className="mt-3 text-xs text-celadon-600 hover:text-celadon-700 font-serif text-left"
+        >
+          {detailsOpen ? '收起行程详情 ▲' : '展开行程详情 · 方案与时间表 ▼'}
+        </button>
+        {detailsOpen && (
+          <div className="mt-4 space-y-6">
+            {scheduleSection}
+            {optionalSection}
+          </div>
+        )}
+        <SpotDetailDrawer
+          spot={selectedSpot}
+          index={selectedIndex}
+          onClose={() => setSelectedSpot(null)}
+          checkedIn={selectedSpot ? checkedIn.has(selectedSpot.id) : false}
+          onCheckIn={selectedSpot ? () => handleCheckIn(selectedSpot.id) : undefined}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
-      {/* 路线方案选择 */}
       <section>
         <p className="text-[10px] text-celadon-600 tracking-widest uppercase mb-3">
           AI 路线规划 · 选择方案
@@ -115,7 +258,6 @@ export function PlanItineraryExplorer({ guide, aspect }: PlanItineraryExplorerPr
         </div>
       </section>
 
-      {/* 天数 Tab */}
       {itineraryDays.length > 1 && (
         <div className="flex gap-2 flex-wrap">
           {itineraryDays.map(d => (
@@ -136,85 +278,14 @@ export function PlanItineraryExplorer({ guide, aspect }: PlanItineraryExplorerPr
         </div>
       )}
 
-      {/* 当日行程详情 */}
-      {activeDay && (
-        <Card className="p-5 border-celadon-200/40 bg-white/50 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-serif font-bold text-warm-gray">
-              Day {activeDay.day} · {activeDay.title}
-            </h3>
-            {activeDay.budgetEstimate && (
-              <span className="text-xs text-warm-gray-muted">预算 {activeDay.budgetEstimate}</span>
-            )}
-          </div>
+      {scheduleSection}
+      {optionalSection}
 
-          <ScheduleBlockView block={activeDay.meetingPoint} onSpotClick={openSpot} checkedIn={checkedIn} />
-
-          {activeDay.blocks.map(block => (
-            <ScheduleBlockView
-              key={block.type + block.label}
-              block={block}
-              onSpotClick={openSpot}
-              checkedIn={checkedIn}
-            />
-          ))}
-        </Card>
-      )}
-
-      {/* 沿途可选推荐 */}
-      {optionalSpots.length > 0 && (
-        <section>
-          <p className="text-[10px] text-celadon-600 tracking-widest uppercase mb-2">
-            沿途推荐 · 非遗文化 / 历史文化（可选项）
-          </p>
-          <div className="space-y-2">
-            {optionalSpots.map(opt => (
-              <OptionalSpotCard
-                key={opt.id}
-                opt={opt}
-                selected={pendingOptionals.has(opt.id) || confirmedOptionals.has(opt.id)}
-                confirmed={confirmedOptionals.has(opt.id)}
-                onToggle={() => !confirmedOptionals.has(opt.id) && togglePending(opt.id)}
-              />
-            ))}
-          </div>
-          {pendingOptionals.size > 0 && (
-            <div className="mt-3 flex items-center gap-3">
-              <button
-                type="button"
-                onClick={confirmOptionals}
-                className="px-5 py-2.5 rounded-full bg-celadon-500 text-white text-sm font-medium hover:bg-celadon-600 transition-colors"
-              >
-                确认选择（{pendingOptionals.size} 项）并优化路线
-              </button>
-              <p className="text-xs text-warm-gray-muted">AI 将把所选点位插入行程并重新规划顺序</p>
-            </div>
-          )}
-          {routeOptimized && (
-            <p className="mt-2 text-xs text-celadon-600 bg-celadon-50 px-3 py-2 rounded-lg border border-celadon-200/40">
-              ✓ 路线已优化，地图与行程表已更新
-            </p>
-          )}
-        </section>
-      )}
-
-      {/* 地图 */}
       <section>
         <p className="text-[10px] text-celadon-600 tracking-widest uppercase mb-2">
           Day {activeDay?.day} 行程地图 · 点击标记打卡
         </p>
-        <GuideMapExplorer
-          guide={guide}
-          spots={mapSpots}
-          showChips={false}
-          layout="explorer"
-          mapTitle="行程点位"
-          mapClassName="h-[min(44vh,440px)] sm:h-[min(48vh,480px)]"
-          onSpotSelect={(spot, idx) => {
-            setSelectedSpot(spot)
-            setSelectedIndex(idx)
-          }}
-        />
+        {mapSection}
       </section>
 
       <SpotDetailDrawer
