@@ -127,6 +127,14 @@ export function SpotCard({ spot, index }: SpotCardProps) {
           📍 {spot.address}
         </div>
       )}
+
+      {/* ★ 光影记忆彩蛋 */}
+      {spot.culturalTagDetail && (
+        <div className="mt-2 flex items-center gap-1.5 text-xs text-ink-400/80 font-serif italic">
+          <span className="opacity-60">✦</span>
+          <span>{spot.culturalTagDetail}</span>
+        </div>
+      )}
     </div>
   )
 }

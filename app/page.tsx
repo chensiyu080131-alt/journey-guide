@@ -4,52 +4,53 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { HomeNav } from '@/components/home-nav'
 import { HomeCoverCarousel } from '@/components/home-cover-carousel'
-import { HomeComingSoon } from '@/components/home-coming-soon'
-import { HomeTab, getCoversForTab, isComingSoonTab } from '@/lib/home-covers'
+import { HomeTab, getCoversForTab } from '@/lib/home-covers'
 
 const tabHints: Record<HomeTab, string> = {
-  '首页': '江苏省城市 · 精选推荐',
-  '城市': '搜一座城，寻迹而至',
-  '书籍': '跟着书走，寻迹而至',
-  '音乐': '听一曲江南，走进故事里',
-  '游戏': '互动体验，读懂一座城',
-}
-
-const comingSoonHints: Record<'音乐' | '游戏', string> = {
-  '音乐': '江南曲调与戏曲唱段，功能筹备中',
-  '游戏': '诗词挑战与互动体验，功能筹备中',
+  '首页': '文化地理 · 精选推荐',
+  '📖 书籍': '跟着书走，寻迹而至',
+  '🎬 影视': '跟着光影，走进故事里',
+  '🎮 游戏': '互动体验，读懂一座城',
+  '🎵 音乐': '听一曲江南，走进故事里',
+  '🏃 运动': '脚步丈量，山水之间',
 }
 
 const tabStats: Record<HomeTab, { value: string; label: string }[]> = {
   '首页': [
-    { value: '5', label: '江苏城市' },
-    { value: '5', label: '文学路线' },
-    { value: '30+', label: '可打卡点' },
-    { value: '9', label: '精选攻略' },
+    { value: '6', label: '城' },
+    { value: '10', label: '路线' },
+    { value: '50+', label: '点位' },
+    { value: '5', label: '文化载体' },
   ],
-  '城市': [
-    { value: '5', label: '江苏名城' },
-    { value: '20+', label: '地标景点' },
-    { value: '12', label: '美食打卡' },
-    { value: '5', label: '深度路线' },
+  '📖 书籍': [
+    { value: '6', label: '文学原著' },
+    { value: '30+', label: '原文引用' },
+    { value: '10', label: '深度路线' },
+    { value: '50+', label: '打卡点' },
   ],
-  '书籍': [
-    { value: '5', label: '文学原著' },
-    { value: '30+', label: '美食散文' },
-    { value: '9', label: '高邮点位' },
-    { value: '19', label: '城市标注' },
+  '🎬 影视': [
+    { value: '4', label: '影视关联' },
+    { value: '3', label: '传说故事' },
+    { value: '5+', label: '取景地' },
+    { value: '3', label: '城市标注' },
   ],
-  '音乐': [
+  '🎮 游戏': [
+    { value: '2', label: '游戏取景' },
+    { value: '2', label: '互动挑战' },
+    { value: '5', label: '关联路线' },
+    { value: '3+', label: '城市入口' },
+  ],
+  '🎵 音乐': [
     { value: '4', label: '江南曲调' },
     { value: '3', label: '古琴雅韵' },
     { value: '2', label: '戏曲唱段' },
     { value: '5', label: '关联城市' },
   ],
-  '游戏': [
-    { value: '4', label: '互动体验' },
-    { value: '3', label: '诗词挑战' },
-    { value: '2', label: '书法临摹' },
-    { value: '5', label: '关联路线' },
+  '🏃 运动': [
+    { value: '2', label: '运动路线' },
+    { value: '1', label: '森林氧吧' },
+    { value: '1', label: '半马赛道' },
+    { value: '1', label: '城市标注' },
   ],
 }
 
@@ -57,7 +58,6 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<HomeTab>('首页')
   const covers = getCoversForTab(activeTab)
   const stats = tabStats[activeTab]
-  const isComingSoon = isComingSoonTab(activeTab)
 
   return (
     <main className="xc-home-bg min-h-screen flex flex-col">
@@ -76,44 +76,32 @@ export default function HomePage() {
 
       <div className="text-center px-6 flex-shrink-0">
         <p className="text-[11px] sm:text-xs text-literary-wine tracking-[0.25em] font-serif uppercase">
-          {activeTab === '首页' ? 'Featured Routes' : activeTab}
+          {activeTab === '首页' ? 'Cultural Geography Engine' : activeTab}
         </p>
         <h1 className="mt-2 text-xl sm:text-2xl font-serif font-semibold text-literary-ink tracking-wide">
-          {activeTab === '首页'
-            ? '有迹可循，寻迹而至'
-            : isComingSoon
-              ? comingSoonHints[activeTab as '音乐' | '游戏']
-              : tabHints[activeTab]}
+          {activeTab === '首页' ? '有迹可循，寻迹而至' : tabHints[activeTab]}
         </h1>
         <p className="mt-2 text-xs text-literary-muted tracking-wide font-serif max-w-md mx-auto leading-relaxed">
           {activeTab === '首页'
-            ? '跟着书本去旅行 · 从一座城、一本书、一曲江南开始'
-            : isComingSoon
-              ? '该模块正在开发中，暂不提供浏览与跳转'
-              : '左右滑动选择封面，点击封面进入详情'}
+            ? '书籍·影视·游戏·音乐——跟着文化载体去旅行'
+            : '左右滑动选择封面，点击封面进入详情'}
         </p>
       </div>
 
       <section className="flex-1 flex items-center justify-center py-4 sm:py-6 min-h-[50vh]">
-        {isComingSoon ? (
-          <HomeComingSoon tab={activeTab as '音乐' | '游戏'} />
-        ) : (
-          <HomeCoverCarousel key={activeTab} covers={covers} />
-        )}
+        <HomeCoverCarousel key={activeTab} covers={covers} />
       </section>
 
-      {!isComingSoon && (
-        <div className="px-4 sm:px-6 pb-4 flex-shrink-0">
-          <div className="xc-home-stats-bar">
-            {stats.map(stat => (
-              <div key={stat.label} className="xc-home-stat">
-                <span className="xc-home-stat-value">{stat.value}</span>
-                <span className="xc-home-stat-label">{stat.label}</span>
-              </div>
-            ))}
-          </div>
+      <div className="px-4 sm:px-6 pb-4 flex-shrink-0">
+        <div className="xc-home-stats-bar">
+          {stats.map(stat => (
+            <div key={stat.label} className="xc-home-stat">
+              <span className="xc-home-stat-value">{stat.value}</span>
+              <span className="xc-home-stat-label">{stat.label}</span>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
 
       <div className="px-4 sm:px-6 pb-6 flex-shrink-0">
         <div className="max-w-xl mx-auto flex flex-wrap justify-center gap-2">
@@ -160,16 +148,16 @@ export default function HomePage() {
 
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left max-w-4xl mx-auto">
           <div>
-            <p className="text-sm font-serif font-medium text-literary-ink">寻城 · 文旅 demo</p>
+            <p className="text-sm font-serif font-medium text-literary-ink">寻城 · 文化地理引擎</p>
             <p className="mt-1 text-xs text-literary-muted leading-relaxed">
-              一本书 · 一个人 · 一座城
+              书籍·影视·游戏·音乐
               <br />
-              跟着书本去旅行
+              把文字变成脚印
             </p>
           </div>
           <div>
             <p className="text-sm font-serif font-medium text-literary-ink">数据</p>
-            <p className="mt-1 text-xs text-literary-muted">5 城 · 5 书 · 30+ 篇 · 9 高邮点位</p>
+            <p className="mt-1 text-xs text-literary-muted">6 城 · 10 路线 · 50+ 点位 · 5 文化载体</p>
           </div>
           <div>
             <p className="text-sm font-serif font-medium text-literary-ink">说明</p>

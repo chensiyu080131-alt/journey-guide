@@ -12,6 +12,12 @@ export function generateStaticParams() {
     { city: 'wuxi' },
     { city: 'zhenjiang' },
     { city: 'renjianziwei' },
+    { city: 'fenghuang' },
+    { city: 'shanghai' },
+    { city: 'hangzhou' },
+    { city: 'beijing' },
+    { city: 'chengdu' },
+    { city: 'xian' },
   ]
 }
 

@@ -1,12 +1,12 @@
-export type HomeTab = '首页' | '城市' | '书籍' | '音乐' | '游戏'
-export type CoverCategory = '城市' | '书籍' | '音乐' | '游戏'
+export type HomeTab = '首页' | '📖 书籍' | '🎬 影视' | '🎮 游戏' | '🎵 音乐' | '🏃 运动'
+export type CoverCategory = '书籍' | '🎬 影视' | '🎮 游戏' | '🎵 音乐' | '🏃 运动'
 
 export interface CoverStyle {
   bg: string
   border: string
   title: string
   subtitle: string
-  motif: 'book' | 'note' | 'game' | 'landscape' | 'city'
+  motif: 'book' | 'note' | 'game' | 'landscape' | 'city' | 'film' | 'sport'
 }
 
 export interface HomeCover {
@@ -18,79 +18,9 @@ export interface HomeCover {
   style: CoverStyle
 }
 
-const cityCovers: HomeCover[] = [
-  {
-    id: 'yangzhou',
-    category: '城市',
-    title: '扬州',
-    subtitle: '烟花三月 · 淮左名都',
-    route: '/guide/yangzhou/books',
-    style: {
-      bg: 'linear-gradient(165deg, #D4E8E0 0%, #9BBFB2 100%)',
-      border: '#4A7A6E',
-      title: '#2E4A42',
-      subtitle: '#5A7A70',
-      motif: 'city',
-    },
-  },
-  {
-    id: 'nanjing',
-    category: '城市',
-    title: '南京',
-    subtitle: '桨声灯影 · 六朝金陵',
-    route: '/guide/nanjing/books',
-    style: {
-      bg: 'linear-gradient(165deg, #E0DDD6 0%, #B8B0A4 100%)',
-      border: '#6B6560',
-      title: '#3D3832',
-      subtitle: '#8A8278',
-      motif: 'city',
-    },
-  },
-  {
-    id: 'suzhou',
-    category: '城市',
-    title: '苏州',
-    subtitle: '姑苏浮生 · 园林水巷',
-    route: '/guide/suzhou/books',
-    style: {
-      bg: 'linear-gradient(165deg, #D8E4E2 0%, #A8BFB8 100%)',
-      border: '#5A7D78',
-      title: '#3D5550',
-      subtitle: '#6B8480',
-      motif: 'landscape',
-    },
-  },
-  {
-    id: 'wuxi',
-    category: '城市',
-    title: '无锡',
-    subtitle: '太湖鼋头 · 樱花小笼',
-    route: '/guide/wuxi/books',
-    style: {
-      bg: 'linear-gradient(165deg, #DDE8F0 0%, #A8C4D8 100%)',
-      border: '#5A7A8A',
-      title: '#2E4A58',
-      subtitle: '#5A7A88',
-      motif: 'landscape',
-    },
-  },
-  {
-    id: 'zhenjiang',
-    category: '城市',
-    title: '镇江',
-    subtitle: '三山镇江 · 锅盖面',
-    route: '/guide/zhenjiang/books',
-    style: {
-      bg: 'linear-gradient(165deg, #EDE4D8 0%, #C9BAA8 100%)',
-      border: '#8A7B6A',
-      title: '#4A4238',
-      subtitle: '#7A7064',
-      motif: 'city',
-    },
-  },
-]
-
+// ──────────────────────────────────────
+//  📖 书籍 Tab
+// ──────────────────────────────────────
 const bookCovers: HomeCover[] = [
   {
     id: 'renjianziwei',
@@ -103,6 +33,20 @@ const bookCovers: HomeCover[] = [
       border: '#8B4545',
       title: '#6B3333',
       subtitle: '#8A6A5A',
+      motif: 'book',
+    },
+  },
+  {
+    id: 'biancheng-book',
+    category: '书籍',
+    title: '边城',
+    subtitle: '沈从文 · 湘西凤凰',
+    route: '/guide/fenghuang',
+    style: {
+      bg: 'linear-gradient(165deg, #D4D8E0 0%, #A8B4C0 100%)',
+      border: '#5A6878',
+      title: '#2E3E4E',
+      subtitle: '#5A6A7A',
       motif: 'book',
     },
   },
@@ -159,88 +103,262 @@ const bookCovers: HomeCover[] = [
       border: '#5C7260',
       title: '#3A4A3C',
       subtitle: '#6A7A6C',
-      motif: 'landscape',
+      motif: 'book',
+    },
+  },
+  {
+    id: 'fanhua-book',
+    category: '书籍',
+    title: '繁花',
+    subtitle: '金宇澄 · 上海不响',
+    route: '/guide/shanghai',
+    style: {
+      bg: 'linear-gradient(165deg, #E8D4CC 0%, #C4A898 100%)',
+      border: '#8A5A4A',
+      title: '#4A2E24',
+      subtitle: '#7A5A4A',
+      motif: 'book',
+    },
+  },
+  {
+    id: 'qiantanghu-book',
+    category: '书籍',
+    title: '钱塘湖春行',
+    subtitle: '白居易 · 苏轼 · 杭州',
+    route: '/guide/hangzhou',
+    style: {
+      bg: 'linear-gradient(165deg, #C8E0D4 0%, #90C4A8 100%)',
+      border: '#4A7A5A',
+      title: '#2E4A38',
+      subtitle: '#5A7A5A',
+      motif: 'book',
+    },
+  },
+  {
+    id: 'sishitongtang-book',
+    category: '书籍',
+    title: '四世同堂',
+    subtitle: '老舍 · 北平之秋',
+    route: '/guide/beijing',
+    style: {
+      bg: 'linear-gradient(165deg, #E0C8C0 0%, #C09888 100%)',
+      border: '#8A4A3A',
+      title: '#4A2E24',
+      subtitle: '#7A4A3A',
+      motif: 'book',
+    },
+  },
+  {
+    id: 'maowu-book',
+    category: '书籍',
+    title: '茅屋为秋风所破歌',
+    subtitle: '杜甫 · 成都草堂',
+    route: '/guide/chengdu',
+    style: {
+      bg: 'linear-gradient(165deg, #C8E0C8 0%, #90C490 100%)',
+      border: '#4A7A4A',
+      title: '#2E4A2E',
+      subtitle: '#5A7A5A',
+      motif: 'book',
+    },
+  },
+  {
+    id: 'tangshi-book',
+    category: '书籍',
+    title: '唐诗三百首',
+    subtitle: '李白 · 杜甫 · 长安',
+    route: '/guide/xian',
+    style: {
+      bg: 'linear-gradient(165deg, #E0D0B8 0%, #C8A878 100%)',
+      border: '#8A6A3A',
+      title: '#4A3A1E',
+      subtitle: '#7A5A2A',
+      motif: 'book',
+    },
+  },
+  {
+    id: 'woyuditan-book',
+    category: '书籍',
+    title: '我与地坛',
+    subtitle: '史铁生 · 银杏大道',
+    route: '/guide/beijing',
+    style: {
+      bg: 'linear-gradient(165deg, #D8D4C0 0%, #B8B498 100%)',
+      border: '#7A7658',
+      title: '#4A4638',
+      subtitle: '#7A7658',
+      motif: 'book',
+    },
+  },
+  {
+    id: 'jia-book',
+    category: '书籍',
+    title: '家',
+    subtitle: '巴金 · 成都高家大院',
+    route: '/guide/chengdu',
+    style: {
+      bg: 'linear-gradient(165deg, #D8E8D4 0%, #A8C8A0 100%)',
+      border: '#5A7A5A',
+      title: '#3A4A38',
+      subtitle: '#6A8A68',
+      motif: 'book',
+    },
+  },
+  {
+    id: 'feidu-book',
+    category: '书籍',
+    title: '废都',
+    subtitle: '贾平凹 · 古都西安',
+    route: '/guide/xian',
+    style: {
+      bg: 'linear-gradient(165deg, #D8CCC0 0%, #B8A898 100%)',
+      border: '#7A6A5A',
+      title: '#4A3A28',
+      subtitle: '#7A6A58',
+      motif: 'book',
+    },
+  },
+  {
+    id: 'qingchengzhilian-book',
+    category: '书籍',
+    title: '倾城之恋',
+    subtitle: '张爱玲 · 上海弄堂',
+    route: '/guide/shanghai',
+    style: {
+      bg: 'linear-gradient(165deg, #E8D8E0 0%, #C8B0C0 100%)',
+      border: '#7A5A6A',
+      title: '#4A2E3A',
+      subtitle: '#7A5A6A',
+      motif: 'book',
     },
   },
 ]
 
-const musicCovers: HomeCover[] = [
+// ──────────────────────────────────────
+//  🎬 影视 Tab
+// ──────────────────────────────────────
+const filmCovers: HomeCover[] = [
   {
-    id: 'yangzhou-song',
-    category: '音乐',
-    title: '扬州慢',
-    subtitle: '姜夔 · 淮左名都',
-    route: '/guide/yangzhou',
+    id: 'fanhua',
+    category: '🎬 影视',
+    title: '繁花',
+    subtitle: '王家卫 · 上海弄堂',
+    route: '/guide/shanghai',
     style: {
-      bg: 'linear-gradient(165deg, #D4E8E0 0%, #B8D4C8 100%)',
-      border: '#5A7D78',
-      title: '#3D5550',
-      subtitle: '#6B8480',
-      motif: 'note',
+      bg: 'linear-gradient(165deg, #E8D4CC 0%, #C4A898 100%)',
+      border: '#8A5A4A',
+      title: '#4A2E24',
+      subtitle: '#7A5A4A',
+      motif: 'film',
     },
   },
   {
-    id: 'sjb-opera',
-    category: '音乐',
+    id: 'biancheng-film',
+    category: '🎬 影视',
+    title: '边城',
+    subtitle: '沈从文 · 湘西凤凰',
+    route: '/guide/fenghuang',
+    style: {
+      bg: 'linear-gradient(165deg, #D4D8E0 0%, #A8B4C0 100%)',
+      border: '#5A6878',
+      title: '#2E3E4E',
+      subtitle: '#5A6A7A',
+      motif: 'film',
+    },
+  },
+  {
+    id: 'shajiabang-film',
+    category: '🎬 影视',
     title: '沙家浜',
-    subtitle: '京剧经典唱段',
+    subtitle: '京剧经典 · 芦苇荡传奇',
     route: '/guide/shajiabang',
     style: {
       bg: 'linear-gradient(165deg, #EDE8DF 0%, #D9D0C2 100%)',
       border: '#8A8278',
       title: '#4A4540',
       subtitle: '#8A8278',
-      motif: 'note',
+      motif: 'film',
     },
   },
   {
-    id: 'yushan-qin',
-    category: '音乐',
-    title: '虞山古琴',
-    subtitle: '琴韵虞山 · 翁同龢',
-    route: '/guide/wengtonghe',
+    id: 'baishechuan',
+    category: '🎬 影视',
+    title: '白蛇传',
+    subtitle: '千年传说 · 金山水漫',
+    route: '/guide/zhenjiang',
     style: {
-      bg: 'linear-gradient(165deg, #DDE8E4 0%, #B8CCC4 100%)',
-      border: '#5A7D78',
-      title: '#3D5550',
-      subtitle: '#6B8480',
-      motif: 'note',
+      bg: 'linear-gradient(165deg, #D8E0E8 0%, #B0C0D0 100%)',
+      border: '#5A7088',
+      title: '#2E4458',
+      subtitle: '#5A7088',
+      motif: 'film',
     },
   },
   {
-    id: 'jiangnan-tune',
-    category: '音乐',
-    title: '江南小调',
-    subtitle: '吴侬软语 · 水乡',
-    route: '/guide/niehaifeng',
+    id: 'changan-film',
+    category: '🎬 影视',
+    title: '长安三万里',
+    subtitle: '大唐诗仙 · 长安梦回',
+    route: '/guide/xian',
     style: {
-      bg: 'linear-gradient(165deg, #E8E0D4 0%, #CEC4B4 100%)',
-      border: '#9A8E7E',
-      title: '#4A4238',
-      subtitle: '#8A8278',
-      motif: 'note',
+      bg: 'linear-gradient(165deg, #E0D0B8 0%, #C8A878 100%)',
+      border: '#8A6A3A',
+      title: '#4A3A1E',
+      subtitle: '#7A5A2A',
+      motif: 'film',
+    },
+  },
+  {
+    id: 'chaguan-film',
+    category: '🎬 影视',
+    title: '茶馆',
+    subtitle: '老舍 · 北京人艺经典',
+    route: '/guide/beijing',
+    style: {
+      bg: 'linear-gradient(165deg, #E0C8C0 0%, #C09888 100%)',
+      border: '#8A4A3A',
+      title: '#4A2E24',
+      subtitle: '#7A4A3A',
+      motif: 'film',
     },
   },
 ]
 
+// ──────────────────────────────────────
+//  🎮 游戏 Tab
+// ──────────────────────────────────────
 const gameCovers: HomeCover[] = [
   {
-    id: 'yangzhou-poem',
-    category: '游戏',
-    title: '诗词诵读',
-    subtitle: '烟花三月 · 朗读挑战',
-    route: '/guide/yangzhou',
+    id: 'yuanshen',
+    category: '🎮 游戏',
+    title: '原神',
+    subtitle: '璃月取景 · 张家界巡礼',
+    route: '/guide/zhangjiajie',
     style: {
-      bg: 'linear-gradient(165deg, #D4E8E0 0%, #9BBFB2 100%)',
-      border: '#4A7A6E',
-      title: '#2E4A42',
-      subtitle: '#5A7A70',
+      bg: 'linear-gradient(165deg, #E0D8F0 0%, #B8A8D8 100%)',
+      border: '#6A5A8A',
+      title: '#3A2E5A',
+      subtitle: '#6A5A8A',
+      motif: 'game',
+    },
+  },
+  {
+    id: 'black-myth',
+    category: '🎮 游戏',
+    title: '黑神话·悟空',
+    subtitle: '取景地 · 山西古建巡礼',
+    route: '/guide/shanxi',
+    style: {
+      bg: 'linear-gradient(165deg, #E0D8D0 0%, #B8A898 100%)',
+      border: '#7A6A58',
+      title: '#4A3A28',
+      subtitle: '#7A6A58',
       motif: 'game',
     },
   },
   {
     id: 'poem-challenge',
-    category: '游戏',
+    category: '🎮 游戏',
     title: '诗词诵读',
     subtitle: '跟着原文 · 朗读挑战',
     route: '/guide/niehaifeng',
@@ -254,7 +372,7 @@ const gameCovers: HomeCover[] = [
   },
   {
     id: 'treasure-hunt',
-    category: '游戏',
+    category: '🎮 游戏',
     title: '古籍寻宝',
     subtitle: '找错字 · 读原文',
     route: '/guide/wengtonghe',
@@ -266,44 +384,275 @@ const gameCovers: HomeCover[] = [
       motif: 'game',
     },
   },
+]
+
+// ──────────────────────────────────────
+//  🎵 音乐 Tab
+// ──────────────────────────────────────
+const musicCovers: HomeCover[] = [
   {
-    id: 'calligraphy',
-    category: '游戏',
-    title: '书法临摹',
-    subtitle: '帝师笔意 · 虞山风骨',
-    route: '/guide/wengtonghe',
+    id: 'yangzhou-song',
+    category: '🎵 音乐',
+    title: '扬州慢',
+    subtitle: '姜夔 · 淮左名都',
+    route: '/guide/yangzhou',
     style: {
-      bg: 'linear-gradient(165deg, #E8E4DC 0%, #C9C2B4 100%)',
-      border: '#7A7368',
-      title: '#454038',
-      subtitle: '#7A7368',
-      motif: 'game',
+      bg: 'linear-gradient(165deg, #D4E8E0 0%, #B8D4C8 100%)',
+      border: '#5A7D78',
+      title: '#3D5550',
+      subtitle: '#6B8480',
+      motif: 'note',
+    },
+  },
+  {
+    id: 'sjb-opera',
+    category: '🎵 音乐',
+    title: '沙家浜',
+    subtitle: '京剧经典唱段',
+    route: '/guide/shajiabang',
+    style: {
+      bg: 'linear-gradient(165deg, #EDE8DF 0%, #D9D0C2 100%)',
+      border: '#8A8278',
+      title: '#4A4540',
+      subtitle: '#8A8278',
+      motif: 'note',
+    },
+  },
+  {
+    id: 'yushan-qin',
+    category: '🎵 音乐',
+    title: '虞山古琴',
+    subtitle: '虞山琴派 · UNESCO非遗',
+    route: '/guide/niehaifeng',
+    style: {
+      bg: 'linear-gradient(165deg, #DDE8E4 0%, #B8CCC4 100%)',
+      border: '#5A7D78',
+      title: '#3D5550',
+      subtitle: '#6B8480',
+      motif: 'note',
+    },
+  },
+  {
+    id: 'jiangnan-tune',
+    category: '🎵 音乐',
+    title: '江南小调',
+    subtitle: '吴侬软语 · 水乡',
+    route: '/guide/niehaifeng',
+    style: {
+      bg: 'linear-gradient(165deg, #E8E0D4 0%, #CEC4B4 100%)',
+      border: '#9A8E7E',
+      title: '#4A4238',
+      subtitle: '#8A8278',
+      motif: 'note',
+    },
+  },
+  {
+    id: 'changan-yuefu',
+    category: '🎵 音乐',
+    title: '长安乐府',
+    subtitle: '唐诗吟唱 · 盛唐遗音',
+    route: '/guide/xian',
+    style: {
+      bg: 'linear-gradient(165deg, #E0D0B8 0%, #C8A878 100%)',
+      border: '#8A6A3A',
+      title: '#4A3A1E',
+      subtitle: '#7A5A2A',
+      motif: 'note',
+    },
+  },
+  {
+    id: 'chuanju-music',
+    category: '🎵 音乐',
+    title: '川剧变脸',
+    subtitle: '蜀韵川腔 · 成都',
+    route: '/guide/chengdu',
+    style: {
+      bg: 'linear-gradient(165deg, #C8E0C8 0%, #90C490 100%)',
+      border: '#4A7A4A',
+      title: '#2E4A2E',
+      subtitle: '#5A7A5A',
+      motif: 'note',
+    },
+  },
+  {
+    id: 'jingyun-dagu',
+    category: '🎵 音乐',
+    title: '京韵大鼓',
+    subtitle: '胡同曲艺 · 北京',
+    route: '/guide/beijing',
+    style: {
+      bg: 'linear-gradient(165deg, #E0C8C0 0%, #C09888 100%)',
+      border: '#8A4A3A',
+      title: '#4A2E24',
+      subtitle: '#7A4A3A',
+      motif: 'note',
+    },
+  },
+  {
+    id: 'miaoge-music',
+    category: '🎵 音乐',
+    title: '苗族飞歌',
+    subtitle: '湘西苗寨 · 凤凰',
+    route: '/guide/fenghuang',
+    style: {
+      bg: 'linear-gradient(165deg, #C8D0D8 0%, #98A8B8 100%)',
+      border: '#5A6878',
+      title: '#2E3E4E',
+      subtitle: '#5A6A7A',
+      motif: 'note',
+    },
+  },
+  {
+    id: 'shanghai-shidaiqu',
+    category: '🎵 音乐',
+    title: '上海时代曲',
+    subtitle: '夜上海 · 繁花金曲',
+    route: '/guide/shanghai',
+    style: {
+      bg: 'linear-gradient(165deg, #E8D4CC 0%, #C4A898 100%)',
+      border: '#8A5A4A',
+      title: '#4A2E24',
+      subtitle: '#7A5A4A',
+      motif: 'note',
     },
   },
 ]
 
-/** 首页推荐：城市展示优先 */
+// ──────────────────────────────────────
+//  🏃 运动 Tab
+// ──────────────────────────────────────
+const sportCovers: HomeCover[] = [
+  {
+    id: 'yushan-trail',
+    category: '🏃 运动',
+    title: '虞山森林氧吧',
+    subtitle: '中国森林氧吧 · 常熟',
+    route: '/guide/niehaifeng',
+    style: {
+      bg: 'linear-gradient(165deg, #D4E8D4 0%, #A8C8A8 100%)',
+      border: '#5A7A5A',
+      title: '#3A4A3A',
+      subtitle: '#6A8A6A',
+      motif: 'sport',
+    },
+  },
+  {
+    id: 'shanghu-marathon',
+    category: '🏃 运动',
+    title: '尚湖半马',
+    subtitle: '最美赛道 · 常熟尚湖',
+    route: '/guide/qianliu',
+    style: {
+      bg: 'linear-gradient(165deg, #D8E8F0 0%, #A8C8D8 100%)',
+      border: '#5A7A8A',
+      title: '#2E4A58',
+      subtitle: '#5A7A88',
+      motif: 'sport',
+    },
+  },
+  {
+    id: 'xian-cycling',
+    category: '🏃 运动',
+    title: '城墙骑行',
+    subtitle: '13.7公里 · 夕阳长安',
+    route: '/guide/xian',
+    style: {
+      bg: 'linear-gradient(165deg, #E0D0B8 0%, #C8A878 100%)',
+      border: '#8A6A3A',
+      title: '#4A3A1E',
+      subtitle: '#7A5A2A',
+      motif: 'sport',
+    },
+  },
+  {
+    id: 'hangzhou-hiking',
+    category: '🏃 运动',
+    title: '九溪烟树徒步',
+    subtitle: '天然氧吧 · 杭州秘境',
+    route: '/guide/hangzhou',
+    style: {
+      bg: 'linear-gradient(165deg, #C8E0D4 0%, #90C4A8 100%)',
+      border: '#4A7A5A',
+      title: '#2E4A38',
+      subtitle: '#5A7A5A',
+      motif: 'sport',
+    },
+  },
+  {
+    id: 'beijing-hutong-walk',
+    category: '🏃 运动',
+    title: '胡同漫步',
+    subtitle: '文学散步 · 北平秋意',
+    route: '/guide/beijing',
+    style: {
+      bg: 'linear-gradient(165deg, #E0C8C0 0%, #C09888 100%)',
+      border: '#8A4A3A',
+      title: '#4A2E24',
+      subtitle: '#7A4A3A',
+      motif: 'sport',
+    },
+  },
+  {
+    id: 'chengdu-tea-walk',
+    category: '🏃 运动',
+    title: '锦里夜行',
+    subtitle: '灯火古街 · 成都漫步',
+    route: '/guide/chengdu',
+    style: {
+      bg: 'linear-gradient(165deg, #C8E0C8 0%, #90C490 100%)',
+      border: '#4A7A4A',
+      title: '#2E4A2E',
+      subtitle: '#5A7A5A',
+      motif: 'sport',
+    },
+  },
+  {
+    id: 'fenghuang-river-walk',
+    category: '🏃 运动',
+    title: '沱江步道',
+    subtitle: '吊脚楼畔 · 凤凰晨雾',
+    route: '/guide/fenghuang',
+    style: {
+      bg: 'linear-gradient(165deg, #C8D0D8 0%, #98A8B8 100%)',
+      border: '#5A6878',
+      title: '#2E3E4E',
+      subtitle: '#5A6A7A',
+      motif: 'sport',
+    },
+  },
+  {
+    id: 'shanghai-citywalk',
+    category: '🏃 运动',
+    title: '繁花Citywalk',
+    subtitle: '黄河路 · 外滩漫步',
+    route: '/guide/shanghai',
+    style: {
+      bg: 'linear-gradient(165deg, #E8D4CC 0%, #C4A898 100%)',
+      border: '#8A5A4A',
+      title: '#4A2E24',
+      subtitle: '#7A5A4A',
+      motif: 'sport',
+    },
+  },
+]
+
+/** 首页推荐：文化载体精选 */
 export const featuredCovers: HomeCover[] = [
-  cityCovers[0],
   bookCovers[0],
-  cityCovers[1],
+  filmCovers[0],
+  gameCovers[0],
   musicCovers[0],
 ]
 
 export function getCoversForTab(tab: HomeTab): HomeCover[] {
   switch (tab) {
-    case '城市': return cityCovers
-    case '书籍': return bookCovers
-    case '音乐': return musicCovers
-    case '游戏': return gameCovers
+    case '📖 书籍': return bookCovers
+    case '🎬 影视': return filmCovers
+    case '🎮 游戏': return gameCovers
+    case '🎵 音乐': return musicCovers
+    case '🏃 运动': return sportCovers
     default: return featuredCovers
   }
 }
 
-export const homeTabs: HomeTab[] = ['首页', '城市', '书籍', '音乐', '游戏']
-
-const comingSoonTabs = new Set<HomeTab>(['音乐', '游戏'])
-
-export function isComingSoonTab(tab: HomeTab): boolean {
-  return comingSoonTabs.has(tab)
-}
+export const homeTabs: HomeTab[] = ['首页', '📖 书籍', '🎬 影视', '🎮 游戏', '🎵 音乐', '🏃 运动']

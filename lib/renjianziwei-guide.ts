@@ -57,6 +57,7 @@ const gaoyouSpots: Spot[] = [
     originalText: '我的家乡是水乡。高邮在运河之旁，地多水，故有水乡之称。',
     originalSource: '汪曾祺《故乡的食物》',
     realityNote: '建议作为"跟着汪曾祺吃高邮"路线的起点，了解人物与书籍背景后再出发。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《故乡的食物》——高邮记忆',
     essay: '《故乡的食物》', region: '高邮', flavor: '咸',
   },
   {
@@ -68,6 +69,7 @@ const gaoyouSpots: Spot[] = [
     originalText: '高邮咸蛋的特点是质细而油多。蛋白柔嫩，不似别处的发干、发粉，入口如嚼石灰。',
     originalSource: '汪曾祺《故乡的食物》',
     realityNote: '秋季可赏芦苇，冬季可品湖鲜。咸鸭蛋可在东大街或镇上特产店购买。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺"筷子头一扎，吱——红油冒出来"',
     essay: '《故乡的食物》', region: '高邮', flavor: '咸',
   },
   {
@@ -79,6 +81,7 @@ const gaoyouSpots: Spot[] = [
     originalText: '运河的水，高邮的水，是活水。',
     originalSource: '汪曾祺散文',
     realityNote: '与运河码头相邻，可一并游览，感受"河鲜上岸"的市井气。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺笔下水乡——运河古驿',
     region: '高邮',
   },
   {
@@ -90,6 +93,7 @@ const gaoyouSpots: Spot[] = [
     originalText: '茶干是豆腐干的一种，比豆腐干要紧实，比香干要嫩。',
     originalSource: '汪曾祺《家常酒菜》',
     realityNote: '界首镇老街可买现制茶干，建议搭配黄酒或清茶。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《家常酒菜》——界首茶干',
     essay: '《家常酒菜》', region: '高邮', flavor: '咸',
   },
   {
@@ -101,6 +105,7 @@ const gaoyouSpots: Spot[] = [
     originalText: '炒米是铁锅炒熟的糯米，焦屑是炒米磨成的粉。冬天晚上，泡一碗焦屑，加红糖，暖和。',
     originalSource: '汪曾祺《故乡的食物》',
     realityNote: '推荐路线：东大街品小吃 → 寻蒲包肉 → 买咸鸭蛋伴手礼。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《故乡的食物》——炒米与焦屑',
     essay: '《故乡的食物》', region: '高邮', flavor: '甜',
   },
   {
@@ -112,6 +117,7 @@ const gaoyouSpots: Spot[] = [
     originalText: '螺蛳壳是孩子们的游戏。把空壳放在屋脊上，用弹弓射，看谁射得高。',
     originalSource: '汪曾祺《故乡的食物》',
     realityNote: '春夏时节河鲜最肥，可搭配盂城驿一同游览。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《故乡的食物》——螺蛳与蚬子',
     essay: '《故乡的食物》', region: '高邮', flavor: '咸',
   },
   {
@@ -123,6 +129,7 @@ const gaoyouSpots: Spot[] = [
     originalText: '高邮的小菜，咸鸭蛋、茶干、蒲包肉，都是下酒的。',
     originalSource: '汪曾祺散文',
     realityNote: '东大街及老城巷弄内多家老店，建议中午趁热食用。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺散文——高邮蒲包肉',
     essay: '《肉食者不鄙》', region: '高邮', flavor: '咸',
   },
   {
@@ -134,6 +141,7 @@ const gaoyouSpots: Spot[] = [
     originalText: '豆腐最妙处，在于淡。淡中有味，淡中有情。',
     originalSource: '汪曾祺《豆腐》',
     realityNote: '可预约老城餐馆，搭配界首茶干、咸鸭蛋拼盘。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《豆腐》——淡中有味',
     essay: '《豆腐》', region: '高邮', flavor: '咸',
   },
 ]
@@ -148,6 +156,7 @@ const kunmingSpots: Spot[] = [
     originalText: '昆明是个好地方。四季如春，水果极多。',
     originalSource: '汪曾祺《四方食事》',
     realityNote: '校园内可寻联大纪念碑，随后步行至翠湖。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《四方食事》——西南联大岁月',
     essay: '《四方食事》', region: '昆明',
   },
   {
@@ -159,6 +168,7 @@ const kunmingSpots: Spot[] = [
     originalText: '联大学生在茶馆里往往一泡就是半天，看书，聊天，写东西。',
     originalSource: '汪曾祺散文',
     realityNote: '翠湖晨练、海鸥季（冬季）尤佳，茶馆多集中在周边巷弄。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺笔下的昆明茶馆文化',
     region: '昆明',
   },
   {
@@ -170,6 +180,7 @@ const kunmingSpots: Spot[] = [
     originalText: '每到一个新地方，我宁可去逛菜市场，也不爱逛名胜。',
     originalSource: '汪曾祺《四方食事》',
     realityNote: '菌子季（6-9月）必逛，见手青、牛肝菌等，注意需彻底煮熟。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺"宁可逛菜市场，也不爱逛名胜"',
     essay: '《四方食事》', region: '昆明',
   },
   {
@@ -181,6 +192,7 @@ const kunmingSpots: Spot[] = [
     originalText: '过桥米线，汤烫，料生，吃法讲究。',
     originalSource: '汪曾祺《四方食事》',
     realityNote: '老街片区可一并品尝破酥包子、火腿月饼。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《四方食事》——昆明过桥米线',
     essay: '《四方食事》', region: '昆明', flavor: '咸',
   },
   {
@@ -192,6 +204,7 @@ const kunmingSpots: Spot[] = [
     originalText: '汽锅鸡，汤清如水，鸡香扑鼻。是昆明一绝。',
     originalSource: '汪曾祺散文',
     realityNote: '建议提前预约，可与昆明老街行程排在同一天。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺"汤清如水，鸡香扑鼻"——汽锅鸡',
     essay: '《四方食事》', region: '昆明', flavor: '咸',
   },
 ]
@@ -206,6 +219,7 @@ const beijingSpots: Spot[] = [
     originalText: '豆汁儿，味儿真怪。喝惯了，离不开。',
     originalSource: '汪曾祺《四方食事》',
     realityNote: '护国寺小吃总店，清晨排队最地道。可先小份试饮豆汁。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《四方食事》——北京豆汁儿',
     essay: '《四方食事》', region: '北京', flavor: '酸',
   },
   {
@@ -217,6 +231,7 @@ const beijingSpots: Spot[] = [
     originalText: '北京的吃，讲究的是个"全"。',
     originalSource: '汪曾祺散文',
     realityNote: '与护国寺可分两日，或择一深度品尝。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺散文——北京清真风味',
     region: '北京', flavor: '咸',
   },
   {
@@ -228,6 +243,7 @@ const beijingSpots: Spot[] = [
     originalText: '玉渊潭的槐花盛开时，香飘十里。',
     originalSource: '汪曾祺《人间草木》',
     realityNote: '四月槐花季最佳，与《人间滋味》草木篇可对照阅读。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《人间草木》——玉渊潭槐花',
     region: '北京',
   },
   {
@@ -239,6 +255,7 @@ const beijingSpots: Spot[] = [
     originalText: '秋天了，该贴秋膘了。涮羊肉，最好。',
     originalSource: '汪曾祺《肉食者不鄙》',
     realityNote: '秋季体验最合时宜，可与韭菜花、芝麻酱小料搭配。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《肉食者不鄙》——贴秋膘涮羊肉',
     essay: '《肉食者不鄙》', region: '北京', flavor: '咸',
   },
 ]
@@ -253,6 +270,7 @@ const zhangjiakouSpots: Spot[] = [
     originalText: '马铃薯，学名土豆，俗名洋芋。',
     originalSource: '汪曾祺《马铃薯》',
     realityNote: '可结合张家口博物馆了解下放历史，感受"荒凉中的诗意"。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《马铃薯》——张家口下放岁月',
     essay: '《马铃薯》', region: '张家口',
   },
   {
@@ -264,6 +282,7 @@ const zhangjiakouSpots: Spot[] = [
     originalText: '沽源，在张家口以北，是坝上。',
     originalSource: '汪曾祺散文',
     realityNote: '夏季草原最美，可品尝莜面、手把肉。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺散文——坝上沽源',
     essay: '《手把肉》', region: '张家口', flavor: '咸',
   },
   {
@@ -275,6 +294,7 @@ const zhangjiakouSpots: Spot[] = [
     originalText: '莜麦，性耐寒，坝上种得多。',
     originalSource: '汪曾祺散文',
     realityNote: '推荐莜面窝窝、莜面鱼鱼，搭配羊肉汤。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺散文——坝上莜面',
     region: '张家口',
   },
 ]
@@ -289,6 +309,7 @@ const roamSpots: Spot[] = [
     originalText: '长沙臭豆腐，外焦里嫩，闻着臭，吃着香。',
     originalSource: '汪曾祺《四方食事》',
     realityNote: '坡子街片区可连逛，体验湘味小吃。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《四方食事》——长沙臭豆腐',
     essay: '《四方食事》', region: '漫游', flavor: '辣',
   },
   {
@@ -300,6 +321,7 @@ const roamSpots: Spot[] = [
     originalText: '虎跑泉泡茶，茶香最清。',
     originalSource: '汪曾祺散文',
     realityNote: '可携龙井至虎跑试茶，西湖周边餐馆品杭帮菜。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺散文——虎跑泉泡龙井',
     essay: '《四方食事》', region: '漫游',
   },
   {
@@ -311,6 +333,7 @@ const roamSpots: Spot[] = [
     originalText: '肴肉，水晶似的，蘸镇江香醋，妙。',
     originalSource: '汪曾祺散文',
     realityNote: '可与镇江锅盖面、醋搭配，一日淮扬小食线。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺散文——镇江肴肉',
     region: '漫游', flavor: '咸',
   },
   {
@@ -322,6 +345,7 @@ const roamSpots: Spot[] = [
     originalText: '狮子头，宜大，宜烂，宜入口即化。',
     originalSource: '汪曾祺《肉食者不鄙》',
     realityNote: '淮安为淮扬菜发源地，建议与河下古镇同游。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《肉食者不鄙》——淮安狮子头',
     essay: '《肉食者不鄙》', region: '漫游', flavor: '咸',
   },
   {
@@ -333,6 +357,7 @@ const roamSpots: Spot[] = [
     originalText: '鳜鱼，清蒸最好。臭鳜鱼是另一种境界。',
     originalSource: '汪曾祺《鱼我所欲也》',
     realityNote: '歙县徽州古城内多家老字号，需预订。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 汪曾祺《鱼我所欲也》——徽州臭鳜鱼',
     essay: '《鱼我所欲也》', region: '漫游', flavor: '咸',
   },
 ]
