@@ -2,14 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Guide, Spot } from '@/types'
-import { hasAmapKey, loadAmapScript, getAmapConfigStatus, ensureAmapSecurityConfig, waitForMapComplete, scheduleMapResize } from '@/lib/amap-loader'
+import { hasAmapKey, loadAmapScript, getAmapConfigStatus } from '@/lib/amap-loader'
 import { planNavigationRoute, routeModeLabels, formatRouteSummary, RouteSummary } from '@/lib/amap-routing'
 import { enrichSpotMedia } from '@/lib/spot-media'
-import {
-  addStyledRoutePolylines,
-  buildSpotMarkerHtml,
-  getSpotBullets,
-} from '@/lib/map-route-visual'
 import { cn } from '@/lib/utils'
 import { SpotDetailDrawer } from './spot-detail-drawer'
 import { OsmMapFallback } from './osm-map-fallback'
@@ -63,11 +58,6 @@ export function GuideMapExplorer({
 
   const center = spots[0]?.location
 
-  const spotKey = useMemo(
-    () => spots.map(s => `${s.id}:${s.location!.lng},${s.location!.lat}`).join('|'),
-    [spots]
-  )
-
   const selectSpot = (spot: Spot, index: number) => {
     if (onSpotSelect) {
       onSpotSelect(spot, index)
@@ -87,101 +77,99 @@ export function GuideMapExplorer({
     }
 
     let cancelled = false
-    let map: AMap.Map | null = null
-    let resizeObserver: ResizeObserver | null = null
 
-    async function initMap() {
-      setStatus('loading')
-      setMapError(null)
-      setRouteMode(null)
-      setRouteSummary(null)
-      setRouteWarning(null)
-
-      await loadAmapScript()
-      ensureAmapSecurityConfig()
-
-      if (cancelled || !containerRef.current || !window.AMap) {
-        throw new Error('地图容器未就绪')
-      }
-
-      // React Strict Mode 下重复挂载时，需清空容器再初始化
-      containerRef.current.innerHTML = ''
-
-      const first = spots[0].location!
-      map = new window.AMap.Map(containerRef.current, {
-        zoom: 13,
-        center: [first.lng, first.lat],
-        viewMode: '2D',
-      })
-      mapRef.current = map
-
-      scheduleMapResize(map)
-
-      resizeObserver = new ResizeObserver(() => {
-        if (!cancelled && map) scheduleMapResize(map)
-      })
-      resizeObserver.observe(containerRef.current)
-
-      spots.forEach((spot, index) => {
-        const position: AMap.LngLatLike = [spot.location!.lng, spot.location!.lat]
-
-        const markerContent = document.createElement('div')
-        markerContent.innerHTML = buildSpotMarkerHtml(spot, index)
-        markerContent.onclick = (e) => {
-          e.stopPropagation()
-          selectSpot(spot, index)
+    loadAmapScript()
+      .then(async () => {
+        if (cancelled || !containerRef.current || !window.AMap) {
+          throw new Error('地图容器未就绪')
         }
 
-        map!.add(new window.AMap!.Marker({
-          position,
-          content: markerContent,
-          title: spot.name,
-          anchor: 'bottom-center',
-          zIndex: 120 + index,
-        }))
-      })
+        const first = spots[0].location!
+        const map = new window.AMap.Map(containerRef.current, {
+          zoom: 13,
+          center: [first.lng, first.lat],
+          viewMode: '2D',
+        })
+        mapRef.current = map
 
-      await waitForMapComplete(map)
+        spots.forEach((spot, index) => {
+          const position: AMap.LngLatLike = [spot.location!.lng, spot.location!.lat]
 
-      if (cancelled) return
+          const excerpt = spot.originalText
+            ? spot.originalText.slice(0, 16) + (spot.originalText.length > 16 ? '…' : '')
+            : spot.desc.slice(0, 10)
 
-      setStatus('ready')
-      scheduleMapResize(map)
+          const markerContent = document.createElement('div')
+          markerContent.innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;max-width:130px;">
+              <div style="background:#F7F3EB;border:1px solid #5A7D78;border-radius:6px;padding:3px 6px;margin-bottom:3px;box-shadow:0 1px 6px rgba(90,125,120,0.2);">
+                <p style="font-size:9px;color:#3D3832;margin:0;font-family:serif;line-height:1.3;text-align:center;">「${excerpt}」</p>
+              </div>
+              <div style="width:26px;height:26px;border-radius:50%;background:#5A7D78;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:2px solid #F7F3EB;">${index + 1}</div>
+            </div>
+          `
+          markerContent.onclick = (e) => {
+            e.stopPropagation()
+            selectSpot(spot, index)
+          }
 
-      if (spots.length > 1) {
-        const points = spots.map(s => ({ lng: s.location!.lng, lat: s.location!.lat }))
-        const { path, mode, summary, warning } = await planNavigationRoute(points, 'auto')
-        if (cancelled || !map) return
+          const marker = new window.AMap!.Marker({ position, content: markerContent, title: spot.name })
+          map.add(marker)
+        })
 
-        setRouteMode(mode)
-        setRouteSummary(summary ?? null)
-        setRouteWarning(warning ?? null)
+        if (spots.length > 1) {
+          const points = spots.map(s => ({ lng: s.location!.lng, lat: s.location!.lat }))
+          const { path, mode, summary, warning } = await planNavigationRoute(points, 'auto')
+          if (!cancelled) {
+            setRouteMode(mode)
+            setRouteSummary(summary ?? null)
+            setRouteWarning(warning ?? null)
+          }
 
-        if (path.length > 1) {
-          addStyledRoutePolylines(map, path)
-          map.setFitView(undefined, false, [50, 50, 50, 50])
-          scheduleMapResize(map)
+          if (path.length > 1) {
+            const polyline = new window.AMap!.Polyline({
+              path,
+              strokeColor: '#5A7D78',
+              strokeWeight: 5,
+              strokeOpacity: 0.85,
+              showDir: true,
+              lineJoin: 'round',
+              lineCap: 'round',
+            })
+            map.add(polyline)
+          }
         }
-      }
-    }
 
-    initMap().catch((err: Error) => {
-      if (!cancelled) {
-        setMapError(err.message || '高德地图加载失败')
-        setStatus('osm')
-      }
-    })
+        map.setFitView(undefined, false, [50, 50, 50, 50])
+
+        // 容器尺寸稳定后再 resize，避免地图空白
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            if (!cancelled) map.resize()
+          }, 200)
+        })
+
+        if (!cancelled) {
+          setStatus('ready')
+          setMapError(null)
+        }
+      })
+      .catch((err: Error) => {
+        if (!cancelled) {
+          setMapError(err.message || '高德地图加载失败')
+          setStatus('osm')
+        }
+      })
 
     return () => {
       cancelled = true
-      resizeObserver?.disconnect()
-      map?.destroy()
+      setRouteMode(null)
+      setRouteSummary(null)
+      setRouteWarning(null)
+      mapRef.current?.destroy()
       mapRef.current = null
-      if (containerRef.current) {
-        containerRef.current.innerHTML = ''
-      }
     }
-  }, [guide.id, spotKey])
+  }, [guide.id, spots])
 
   if (spots.length === 0) {
     return (
@@ -234,32 +222,17 @@ export function GuideMapExplorer({
                         ? 'border-literary-wine/50 bg-literary-sand/70 shadow-sm'
                         : 'border-literary-sand bg-white/80 hover:border-literary-wine/30'
                       : selectedSpot?.id === spot.id
-                        ? 'border-[#FACC15] bg-amber-50/80 shadow-sm ring-1 ring-[#FACC15]/40'
-                        : 'border-celadon-200/50 bg-camel-light/40 hover:border-[#FACC15]/50'
+                        ? 'border-celadon-400 bg-celadon-50/80 shadow-sm'
+                        : 'border-celadon-200/50 bg-camel-light/40 hover:border-celadon-300'
                   )
             )}
           >
-            {isExplorer ? (
-              <>
-                <div className="xc-explorer-spot-pill">
-                  <span className="xc-explorer-spot-pill-title">{spot.name}</span>
-                </div>
-                <div className="xc-explorer-spot-detail">
-                  <ul className="list-disc pl-3.5 space-y-0.5">
-                    {getSpotBullets(spot).map(b => (
-                      <li key={b} className="line-clamp-2">{b}</li>
-                    ))}
-                  </ul>
-                </div>
-              </>
-            ) : (
-              <>
             <div className="flex items-center gap-2 mb-1.5">
               <span className={cn(
                 'text-[10px] font-medium w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0',
                 isLiterary
                   ? 'text-literary-wine bg-literary-wine/10'
-                  : 'text-amber-700 bg-[#FACC15]/30'
+                  : 'text-celadon-600 bg-celadon-100'
               )}>
                 {i + 1}
               </span>
@@ -278,8 +251,6 @@ export function GuideMapExplorer({
                 「{spot.originalText}」
               </p>
             )}
-              </>
-            )}
           </button>
         ))}
       </div>
@@ -291,7 +262,7 @@ export function GuideMapExplorer({
       'relative rounded-2xl border overflow-hidden shadow-sm',
       isLiterary
         ? 'border-literary-sand bg-literary-sand/20'
-        : 'border-celadon-200/50 bg-white',
+        : 'border-celadon-200/50 bg-camel-light/20',
       mapHeightClass
     )}>
       {status === 'loading' && (
@@ -369,7 +340,7 @@ export function GuideMapExplorer({
       )}
 
       {status !== 'osm' && (
-        <div ref={containerRef} className="absolute inset-0 w-full h-full" />
+        <div ref={containerRef} className="w-full h-full" />
       )}
     </div>
   )

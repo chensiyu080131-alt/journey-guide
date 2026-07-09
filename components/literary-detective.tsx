@@ -1,15 +1,20 @@
 'use client'
 
-import { useChat } from '@ai-sdk/react'
+import { useState, useCallback } from 'react'
 import { Guide } from '@/types'
+import { streamLLM, isMockMode, type LLMMessage } from '@/lib/llm-client'
 import { cn } from '@/lib/utils'
 
 interface LiteraryDetectiveProps {
   guide: Guide
 }
 
-/** P2 · AI文学侦探 —— 跨文本关联 + 隐藏线索挖掘 */
+/** P2 · AI文学侦探 —— 跨文本关联 + 隐藏线索挖掘（客户端直连版） */
 export function LiteraryDetective({ guide }: LiteraryDetectiveProps) {
+  const [busy, setBusy] = useState(false)
+  const [report, setReport] = useState('')
+  const [started, setStarted] = useState(false)
+
   const context = {
     title: guide.title,
     city: guide.city,
@@ -20,24 +25,58 @@ export function LiteraryDetective({ guide }: LiteraryDetectiveProps) {
       .map(s => ({ name: s.name, originalText: s.originalText, originalSource: s.originalSource })),
   }
 
-  const { messages, append, status, setMessages } = useChat({
-    api: '/api/chat',
-    id: `detective-${guide.id}`,
-  })
+  const cards = parseCards(report)
 
-  const busy = status === 'submitted' || status === 'streaming'
-  const lastAssistant = [...messages].reverse().find(m => m.role === 'assistant')
-  const cards = lastAssistant ? parseCards(lastAssistant.content) : []
-  const started = messages.length > 0
-
-  const run = () => {
+  const run = useCallback(async () => {
     if (busy) return
-    setMessages([])
-    append(
-      { role: 'user', content: '🕵️ 启动文学侦探：扫描本路线所有景点原文，找出跨文本关联与隐藏线索。' },
-      { body: { mode: 'detective', context } }
-    )
-  }
+    setBusy(true)
+    setStarted(true)
+    setReport('')
+
+    const messages: LLMMessage[] = [
+      {
+        role: 'system',
+        content: `你是"寻迹"的AI文学侦探。用户会给你一条旅行路线的景点原文，你需要：
+1. 找出不同景点原文之间的跨文本关联（如同一作者、同一时代、互文）
+2. 挖掘隐藏的文学线索（你可能不知道的事实）
+3. 每个发现用 --- 分隔，首行为标题
+用专业但不枯燥的语言，像侦探一样有趣。`,
+      },
+      {
+        role: 'user',
+        content: `🕵️ 启动文学侦探：扫描本路线所有景点原文，找出跨文本关联与隐藏线索。\n\n路线：${context.title}\n城市：${context.city}\n景点原文：${context.spots.map(s => `【${s.name}】${s.originalText}（${s.originalSource}）`).join('\n')}`,
+      },
+    ]
+
+    let fullText = ''
+
+    try {
+      await streamLLM(
+        messages,
+        {
+          onToken: (token) => {
+            fullText += token
+            setReport(fullText)
+          },
+          onDone: () => {
+            setBusy(false)
+          },
+          onError: () => {
+            if (isMockMode()) {
+              setReport(getMockDetectiveReport(guide.title))
+            }
+            setBusy(false)
+          },
+        },
+        { max_tokens: 2000, temperature: 0.8 }
+      )
+    } catch {
+      if (isMockMode()) {
+        setReport(getMockDetectiveReport(guide.title))
+      }
+      setBusy(false)
+    }
+  }, [busy, context, guide.title])
 
   return (
     <div className="space-y-3">
@@ -106,4 +145,14 @@ function parseCards(text: string): { title: string; body: string }[] {
       const body = lines.slice(1).join('\n').trim()
       return { title: title || '线索', body: body || block }
     })
+}
+
+function getMockDetectiveReport(title: string): string {
+  return `🔗 跨文本关联：「${title}」中的多个景点原文出自同一时期文人之手，形成了独特的文学互文网络
+---
+💡 你可能不知道：这些看似散落的历史遗址，实际上构成了一个完整的文人社交圈——他们的书信往来记录在同一本笔记中
+---
+🔗 隐藏线索：书中的某处描写，与另一部经典小说的开篇惊人相似，作者之间可能有过直接交流
+
+_（演示数据，配置API Key后可获取AI分析的详细侦探报告）_`
 }

@@ -1,13 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { HomeNav } from '@/components/home-nav'
 import { HomeCoverCarousel } from '@/components/home-cover-carousel'
 import { HomeTab, getCoversForTab, underDevelopmentTabs } from '@/lib/home-covers'
 
-const tabHints: Record<HomeTab, string> = {
-  '首页': '文化地理 · 精选推荐',
+const taglineImages: Record<HomeTab, string> = {
+  '首页': '/images/tagline-home.png',
+  '📖 书籍': '/images/tagline-book.png',
+  '🏙️ 城市': '/images/tagline-city.png',
+  '🎮 游戏': '/images/tagline-game.png',
+  '🎵 音乐': '/images/tagline-music.png',
+}
+
+const taglineAlts: Record<HomeTab, string> = {
+  '首页': '有迹可循，寻迹而至',
   '📖 书籍': '字里行间，可抵山河',
   '🏙️ 城市': '一城一页，藏尽风华',
   '🎮 游戏': '屏幕之外，次元之间',
@@ -39,8 +46,13 @@ export default function HomePage() {
             Tracking
           </p>
         )}
-        <h1 className="mt-1 text-base sm:text-lg font-serif font-semibold text-literary-ink tracking-wide">
-          {activeTab === '首页' ? '有迹可循，寻迹而至' : tabHints[activeTab]}
+        <h1 className="mt-1">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={taglineImages[activeTab]}
+            alt={taglineAlts[activeTab]}
+            className="h-12 sm:h-16 w-auto mx-auto object-contain"
+          />
         </h1>
         <p className="mt-1 text-[11px] text-literary-muted tracking-wide font-serif max-w-md mx-auto leading-relaxed">
           {activeTab === '首页'
@@ -52,10 +64,12 @@ export default function HomePage() {
       <section className="flex-1 flex items-center justify-center py-4 sm:py-6 min-h-[50vh]">
         {isUnderDevelopment ? (
           <div className="text-center px-6">
-            <div className="text-4xl sm:text-5xl mb-4 opacity-40">🚧</div>
-            <p className="text-2xl sm:text-3xl font-serif font-semibold text-literary-ink tracking-[0.35em]">
-              待开发
-            </p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/under-development.png"
+              alt="待开发"
+              className="h-28 sm:h-36 w-auto mx-auto object-contain"
+            />
             <p className="mt-3 text-xs sm:text-sm text-literary-muted tracking-wide font-serif">
               该功能正在建设中，敬请期待
             </p>
@@ -64,30 +78,6 @@ export default function HomePage() {
           <HomeCoverCarousel key={activeTab} covers={covers} />
         )}
       </section>
-
-      <div className="px-4 sm:px-6 pb-6 flex-shrink-0">
-        <div className="max-w-xl mx-auto flex flex-wrap justify-center gap-2">
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new CustomEvent('xuncheng:open-book-guide'))}
-            className="px-4 py-2 rounded-full bg-literary-wine text-white text-xs sm:text-sm font-medium hover:bg-literary-wine/90 transition-colors shadow-sm ring-2 ring-literary-wine/20"
-          >
-            📖 跟书旅行
-          </button>
-          <Link
-            href="/guide/destination"
-            className="px-4 py-2 rounded-full border border-literary-wine/30 bg-literary-wine/10 text-literary-wine text-xs sm:text-sm font-medium hover:bg-literary-wine/15 transition-colors"
-          >
-            搜一座城
-          </Link>
-          <Link
-            href="/dashboard"
-            className="px-4 py-2 rounded-full border border-literary-sand bg-white/70 text-literary-ink text-xs sm:text-sm font-medium hover:border-literary-wine/40 transition-colors"
-          >
-            文旅局工作台
-          </Link>
-        </div>
-      </div>
 
       <footer className="px-4 sm:px-6 pb-8 sm:pb-10 flex-shrink-0">
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left max-w-4xl mx-auto">
@@ -105,7 +95,7 @@ export default function HomePage() {
           </div>
           <div>
             <p className="text-sm font-serif font-medium text-literary-ink">说明</p>
-            <p className="mt-1 text-xs text-literary-muted">AI 文学旅行原型，预设路线含原文对照</p>
+            <p className="mt-1 text-xs text-literary-muted">图片来源均为网络图片，仅供原型演示</p>
           </div>
         </div>
       </footer>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { InteractiveTask as InteractiveTaskType } from '@/types'
 import { cn } from '@/lib/utils'
 
@@ -261,11 +261,6 @@ function CalligraphyTask({ text }: { text: string }) {
     ctx.scale(2, 2)
     handleClear()
   }, [handleClear])
-
-  // 挂载时初始化画布（田字格 + 淡色范字），否则展开后是一片空白
-  useEffect(() => {
-    initCanvas()
-  }, [initCanvas])
 
   const getPos = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current

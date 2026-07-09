@@ -84,144 +84,177 @@ function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color:
 function CoverCard({
   cover,
   isActive,
-  onActivate,
+  showExplore,
+  href,
+  onClick,
 }: {
   cover: HomeCover
   isActive: boolean
-  onActivate: () => void
+  showExplore: boolean
+  href: string
+  onClick: () => void
 }) {
   const { style } = cover
   const isLiteraryBook = cover.id === 'renjianziwei'
-  const href = `${cover.route}?cat=${cover.category}`
 
-  const cardClass = cn(
-    'xc-cover-card snap-center flex-shrink-0 transition-all duration-500 ease-out',
-    'focus:outline-none focus-visible:ring-2 focus-visible:ring-literary-wine/40',
-    isActive ? 'xc-cover-card-active cursor-pointer' : 'xc-cover-card-inactive'
-  )
-
-  const cardInner = (
+  return (
     <div
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick()
+        }
+      }}
       className={cn(
-        'relative transition-transform duration-500',
-        isActive && 'xc-cover-inner-active'
+        'xc-cover-card snap-center flex-shrink-0 transition-all duration-500 ease-out cursor-pointer',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-literary-wine/40',
+        isActive ? 'xc-cover-card-active' : 'xc-cover-card-inactive'
       )}
+      aria-label={`选择${cover.title}`}
+      aria-pressed={isActive}
     >
       <div
-        className="absolute left-0 top-2 bottom-2 w-4 sm:w-5 rounded-l-md"
-        style={{
-          background: isActive && isLiteraryBook ? '#6B3333' : style.border,
-          boxShadow: isActive ? 'inset -2px 0 6px rgba(0,0,0,0.15)' : undefined,
-        }}
-      />
-      <div
         className={cn(
-          'relative ml-3 sm:ml-4 rounded-r-md border overflow-hidden',
-          isActive && 'shadow-xl'
+          'relative transition-transform duration-500',
+          isActive && 'xc-cover-inner-active'
         )}
-        style={{
-          background: isActive && isLiteraryBook
-            ? 'linear-gradient(155deg, #A65D5D 0%, #8B4545 55%, #6B3333 100%)'
-            : style.bg,
-          borderColor: isActive && isLiteraryBook ? '#6B333340' : `${style.border}40`,
-          aspectRatio: '3 / 4.2',
-          boxShadow: isActive
-            ? '8px 12px 32px rgba(107, 51, 51, 0.2), inset 0 1px 0 rgba(255,255,255,0.15)'
-            : '4px 6px 16px rgba(61, 46, 46, 0.08)',
-        }}
       >
         <div
-          className="absolute top-4 left-4 w-5 h-5 border-t border-l opacity-25"
-          style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
+          className="absolute left-0 top-2 bottom-2 w-4 sm:w-5 rounded-l-md"
+          style={{
+            background: isActive && isLiteraryBook ? '#6B3333' : style.border,
+            boxShadow: isActive ? 'inset -2px 0 6px rgba(0,0,0,0.15)' : undefined,
+          }}
         />
         <div
-          className="absolute top-4 right-4 w-5 h-5 border-t border-r opacity-25"
-          style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
-        />
-        <div
-          className="absolute bottom-4 left-4 w-5 h-5 border-b border-l opacity-25"
-          style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
-        />
-        <div
-          className="absolute bottom-4 right-4 w-5 h-5 border-b border-r opacity-25"
-          style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
-        />
-
-        <div className="flex flex-col items-center justify-between h-full py-8 sm:py-10 px-5 sm:px-6">
-          <div className="text-center">
-            <p
-              className="text-[10px] tracking-[0.2em] uppercase mb-2"
-              style={{
-                color: isActive && isLiteraryBook ? 'rgba(255,255,255,0.65)' : style.subtitle,
-              }}
-            >
-              {cover.category}
-            </p>
-            <h3
-              className="font-serif font-semibold tracking-widest leading-snug"
-              style={{
-                color: isActive && isLiteraryBook ? '#FFFFFF' : style.title,
-                fontSize: isActive ? '1.5rem' : '1.2rem',
-              }}
-            >
-              {cover.title}
-            </h3>
-            <p
-              className="mt-3 text-xs sm:text-sm tracking-wide"
-              style={{
-                color: isActive && isLiteraryBook ? 'rgba(255,255,255,0.78)' : style.subtitle,
-              }}
-            >
-              {cover.subtitle}
-            </p>
-          </div>
-
-          <CoverMotif
-            type={style.motif}
-            color={isActive && isLiteraryBook ? 'rgba(255,255,255,0.45)' : style.border}
+          className={cn(
+            'relative ml-3 sm:ml-4 rounded-r-md border overflow-hidden',
+            isActive && 'shadow-xl'
+          )}
+          style={{
+            background: isActive && isLiteraryBook
+              ? 'linear-gradient(155deg, #A65D5D 0%, #8B4545 55%, #6B3333 100%)'
+              : style.bg,
+            borderColor: isActive && isLiteraryBook ? '#6B333340' : `${style.border}40`,
+            aspectRatio: '3 / 4.2',
+            boxShadow: isActive
+              ? '8px 12px 32px rgba(107, 51, 51, 0.2), inset 0 1px 0 rgba(255,255,255,0.15)'
+              : '4px 6px 16px rgba(61, 46, 46, 0.08)',
+          }}
+        >
+          {cover.image && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={cover.image}
+              alt={cover.title}
+              className="absolute inset-0 w-full h-full object-cover z-10"
+            />
+          )}
+          <div
+            className="absolute top-4 left-4 w-5 h-5 border-t border-l opacity-25"
+            style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
+          />
+          <div
+            className="absolute top-4 right-4 w-5 h-5 border-t border-r opacity-25"
+            style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
+          />
+          <div
+            className="absolute bottom-4 left-4 w-5 h-5 border-b border-l opacity-25"
+            style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
+          />
+          <div
+            className="absolute bottom-4 right-4 w-5 h-5 border-b border-r opacity-25"
+            style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
           />
 
-          {isActive && (
-            <div
-              className={cn(
-                'w-10 h-10 rounded-md flex items-center justify-center',
-                isLiteraryBook
-                  ? 'bg-white/15 border border-white/25'
-                  : 'border border-literary-wine/30 bg-literary-paper/50'
-              )}
-            >
-              <span
+          <div className="flex flex-col items-center justify-between h-full py-8 sm:py-10 px-5 sm:px-6">
+            <div className="text-center">
+              <p
+                className="text-[10px] tracking-[0.2em] uppercase mb-2"
+                style={{
+                  color: isActive && isLiteraryBook ? 'rgba(255,255,255,0.65)' : style.subtitle,
+                }}
+              >
+                {cover.category}
+              </p>
+              <h3
+                className="font-serif font-semibold tracking-widest leading-snug"
+                style={{
+                  color: isActive && isLiteraryBook ? '#FFFFFF' : style.title,
+                  fontSize: isActive ? '1.5rem' : '1.2rem',
+                }}
+              >
+                {cover.title}
+              </h3>
+              <p
+                className="mt-3 text-xs sm:text-sm tracking-wide"
+                style={{
+                  color: isActive && isLiteraryBook ? 'rgba(255,255,255,0.78)' : style.subtitle,
+                }}
+              >
+                {cover.subtitle}
+              </p>
+            </div>
+
+            <CoverMotif
+              type={style.motif}
+              color={isActive && isLiteraryBook ? 'rgba(255,255,255,0.45)' : style.border}
+            />
+
+            {isActive && (
+              <div
                 className={cn(
-                  'text-sm font-serif leading-none',
-                  isLiteraryBook ? 'text-white' : 'text-literary-wine'
+                  'w-10 h-10 rounded-md flex items-center justify-center',
+                  isLiteraryBook
+                    ? 'bg-white/15 border border-white/25'
+                    : 'border border-literary-wine/30 bg-literary-paper/50'
                 )}
               >
-                {isLiteraryBook ? '味' : '寻'}
-              </span>
-            </div>
+                <span
+                  className={cn(
+                    'text-sm font-serif leading-none',
+                    isLiteraryBook ? 'text-white' : 'text-literary-wine'
+                  )}
+                >
+                  {isLiteraryBook ? '味' : '寻'}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {showExplore && (
+            cover.category === '书籍' ? (
+              <Link
+                href={href}
+                onClick={(e) => e.stopPropagation()}
+                className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 animate-fade-in"
+                aria-label={`开始探索${cover.title}`}
+              >
+                <span className="xc-explore-btn">
+                  开始探索
+                  <span className="opacity-80">→</span>
+                </span>
+              </Link>
+            ) : (
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 animate-fade-in px-4 text-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/under-development.png"
+                  alt="待开发"
+                  className="h-16 sm:h-20 w-auto object-contain brightness-0 invert"
+                />
+                <p className="mt-2 text-[11px] sm:text-xs text-white/85 font-serif tracking-wide">
+                  该功能正在建设中，敬请期待
+                </p>
+              </div>
+            )
           )}
         </div>
       </div>
     </div>
-  )
-
-  if (isActive) {
-    return (
-      <Link href={href} className={cardClass} aria-label={`进入${cover.title}`}>
-        {cardInner}
-      </Link>
-    )
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={onActivate}
-      className={cardClass}
-      aria-label={`选择${cover.title}`}
-    >
-      {cardInner}
-    </button>
   )
 }
 
@@ -232,9 +265,11 @@ interface HomeCoverCarouselProps {
 export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [exploreIndex, setExploreIndex] = useState<number | null>(null)
 
   useEffect(() => {
     setActiveIndex(0)
+    setExploreIndex(null)
   }, [covers])
 
   const scrollTo = (index: number) => {
@@ -245,6 +280,7 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
       card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
     }
     setActiveIndex(index)
+    setExploreIndex(null)
   }
 
   const handleScroll = () => {
@@ -291,7 +327,12 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
               key={cover.id}
               cover={cover}
               isActive={i === activeIndex}
-              onActivate={() => scrollTo(i)}
+              showExplore={i === activeIndex && exploreIndex === i}
+              href={`${cover.route}?cat=${cover.category}`}
+              onClick={() => {
+                scrollTo(i)
+                setExploreIndex(i)
+              }}
             />
           ))}
         </div>

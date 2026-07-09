@@ -1,19 +1,19 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { AmapSecurityBootstrap } from '@/components/amap-security-bootstrap'
-import { BookGuideFloat } from '@/components/book-guide-float'
+import { JiluFloat } from '@/components/jilu-float'
 
 export const metadata: Metadata = {
-  title: '寻迹 - 跟着书本去旅行',
-  description: 'AI驱动的文学旅行攻略。选一本书，跟着故事走到现场，让文字照进现实。',
-  keywords: ['跟着书本去旅行', '文学旅行', 'AI攻略', '寻迹'],
+  title: '寻迹 - 有迹可循，寻迹而至',
+  description: 'AI驱动的文化旅行攻略。书籍·游戏·音乐——跟着文化载体去旅行，让文字照进现实。',
+  keywords: ['跟着书本去旅行', '文学旅行', '文化旅行', '寻迹', 'AI攻略'],
 }
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#1A1A1A',
+  themeColor: '#8B4545',
 }
 
 export default function RootLayout({
@@ -28,7 +28,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-paper-warm">
         {children}
-        <BookGuideFloat />
+        <JiluFloat />
       </body>
     </html>
   )

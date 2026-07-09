@@ -16,6 +16,8 @@ export interface HomeCover {
   subtitle: string
   route: string
   style: CoverStyle
+  /** 若提供，则封面直接渲染该图片（覆盖默认的排版封面） */
+  image?: string
 }
 
 // ──────────────────────────────────────
@@ -28,6 +30,7 @@ const bookCovers: HomeCover[] = [
     title: '人间滋味',
     subtitle: '汪曾祺 · 高邮烟火',
     route: '/guide/renjianziwei',
+    image: '/images/cover-renjianziwei.png',
     style: {
       bg: 'linear-gradient(165deg, #FDF8F2 0%, #E8D8CC 100%)',
       border: '#8B4545',
@@ -42,6 +45,7 @@ const bookCovers: HomeCover[] = [
     title: '边城',
     subtitle: '沈从文 · 湘西凤凰',
     route: '/guide/fenghuang',
+    image: '/images/cover-biancheng.jpg',
     style: {
       bg: 'linear-gradient(165deg, #D4D8E0 0%, #A8B4C0 100%)',
       border: '#5A6878',
@@ -56,6 +60,7 @@ const bookCovers: HomeCover[] = [
     title: '孽海花',
     subtitle: '晚清文人 · 曾朴',
     route: '/guide/niehaifeng',
+    image: '/images/cover-niehaifeng.jpg',
     style: {
       bg: 'linear-gradient(165deg, #D8E4E2 0%, #A8BFB8 100%)',
       border: '#5A7D78',
@@ -70,6 +75,7 @@ const bookCovers: HomeCover[] = [
     title: '柳如是别传',
     subtitle: '钱柳情缘 · 陈寅恪',
     route: '/guide/qianliu',
+    image: '/images/cover-qianliu.jpg',
     style: {
       bg: 'linear-gradient(165deg, #EDE4D8 0%, #D4C8B8 100%)',
       border: '#8A7B6A',
@@ -84,6 +90,7 @@ const bookCovers: HomeCover[] = [
     title: '翁同龢传',
     subtitle: '两代帝师 · 常熟风骨',
     route: '/guide/wengtonghe',
+    image: '/images/cover-wengtonghe.jpg',
     style: {
       bg: 'linear-gradient(165deg, #E8E4DC 0%, #C9C2B4 100%)',
       border: '#7A7368',
@@ -98,137 +105,12 @@ const bookCovers: HomeCover[] = [
     title: '沙家浜',
     subtitle: '红色经典 · 芦苇荡',
     route: '/guide/shajiabang',
+    image: '/images/cover-shajiabang.jpg',
     style: {
       bg: 'linear-gradient(165deg, #DDE5DC 0%, #B5C4B0 100%)',
       border: '#5C7260',
       title: '#3A4A3C',
       subtitle: '#6A7A6C',
-      motif: 'book',
-    },
-  },
-  {
-    id: 'fanhua-book',
-    category: '书籍',
-    title: '繁花',
-    subtitle: '金宇澄 · 上海不响',
-    route: '/guide/shanghai',
-    style: {
-      bg: 'linear-gradient(165deg, #E8D4CC 0%, #C4A898 100%)',
-      border: '#8A5A4A',
-      title: '#4A2E24',
-      subtitle: '#7A5A4A',
-      motif: 'book',
-    },
-  },
-  {
-    id: 'qiantanghu-book',
-    category: '书籍',
-    title: '钱塘湖春行',
-    subtitle: '白居易 · 苏轼 · 杭州',
-    route: '/guide/hangzhou',
-    style: {
-      bg: 'linear-gradient(165deg, #C8E0D4 0%, #90C4A8 100%)',
-      border: '#4A7A5A',
-      title: '#2E4A38',
-      subtitle: '#5A7A5A',
-      motif: 'book',
-    },
-  },
-  {
-    id: 'sishitongtang-book',
-    category: '书籍',
-    title: '四世同堂',
-    subtitle: '老舍 · 北平之秋',
-    route: '/guide/beijing',
-    style: {
-      bg: 'linear-gradient(165deg, #E0C8C0 0%, #C09888 100%)',
-      border: '#8A4A3A',
-      title: '#4A2E24',
-      subtitle: '#7A4A3A',
-      motif: 'book',
-    },
-  },
-  {
-    id: 'maowu-book',
-    category: '书籍',
-    title: '茅屋为秋风所破歌',
-    subtitle: '杜甫 · 成都草堂',
-    route: '/guide/chengdu',
-    style: {
-      bg: 'linear-gradient(165deg, #C8E0C8 0%, #90C490 100%)',
-      border: '#4A7A4A',
-      title: '#2E4A2E',
-      subtitle: '#5A7A5A',
-      motif: 'book',
-    },
-  },
-  {
-    id: 'tangshi-book',
-    category: '书籍',
-    title: '唐诗三百首',
-    subtitle: '李白 · 杜甫 · 长安',
-    route: '/guide/xian',
-    style: {
-      bg: 'linear-gradient(165deg, #E0D0B8 0%, #C8A878 100%)',
-      border: '#8A6A3A',
-      title: '#4A3A1E',
-      subtitle: '#7A5A2A',
-      motif: 'book',
-    },
-  },
-  {
-    id: 'woyuditan-book',
-    category: '书籍',
-    title: '我与地坛',
-    subtitle: '史铁生 · 银杏大道',
-    route: '/guide/beijing',
-    style: {
-      bg: 'linear-gradient(165deg, #D8D4C0 0%, #B8B498 100%)',
-      border: '#7A7658',
-      title: '#4A4638',
-      subtitle: '#7A7658',
-      motif: 'book',
-    },
-  },
-  {
-    id: 'jia-book',
-    category: '书籍',
-    title: '家',
-    subtitle: '巴金 · 成都高家大院',
-    route: '/guide/chengdu',
-    style: {
-      bg: 'linear-gradient(165deg, #D8E8D4 0%, #A8C8A0 100%)',
-      border: '#5A7A5A',
-      title: '#3A4A38',
-      subtitle: '#6A8A68',
-      motif: 'book',
-    },
-  },
-  {
-    id: 'feidu-book',
-    category: '书籍',
-    title: '废都',
-    subtitle: '贾平凹 · 古都西安',
-    route: '/guide/xian',
-    style: {
-      bg: 'linear-gradient(165deg, #D8CCC0 0%, #B8A898 100%)',
-      border: '#7A6A5A',
-      title: '#4A3A28',
-      subtitle: '#7A6A58',
-      motif: 'book',
-    },
-  },
-  {
-    id: 'qingchengzhilian-book',
-    category: '书籍',
-    title: '倾城之恋',
-    subtitle: '张爱玲 · 上海弄堂',
-    route: '/guide/shanghai',
-    style: {
-      bg: 'linear-gradient(165deg, #E8D8E0 0%, #C8B0C0 100%)',
-      border: '#7A5A6A',
-      title: '#4A2E3A',
-      subtitle: '#7A5A6A',
       motif: 'book',
     },
   },
@@ -244,6 +126,7 @@ const filmCovers: HomeCover[] = [
     title: '繁花',
     subtitle: '王家卫 · 上海弄堂',
     route: '/guide/shanghai',
+    image: '/images/cover-fanhua.jpg',
     style: {
       bg: 'linear-gradient(165deg, #E8D4CC 0%, #C4A898 100%)',
       border: '#8A5A4A',
@@ -334,6 +217,7 @@ const gameCovers: HomeCover[] = [
     title: '原神',
     subtitle: '璃月取景 · 张家界巡礼',
     route: '/guide/zhangjiajie',
+    image: '/images/cover-yuanshen.jpg',
     style: {
       bg: 'linear-gradient(165deg, #E0D8F0 0%, #B8A8D8 100%)',
       border: '#6A5A8A',
@@ -514,124 +398,6 @@ const musicCovers: HomeCover[] = [
       title: '#4A2E24',
       subtitle: '#7A5A4A',
       motif: 'note',
-    },
-  },
-]
-
-// ──────────────────────────────────────
-//  🏃 运动 Tab
-// ──────────────────────────────────────
-const sportCovers: HomeCover[] = [
-  {
-    id: 'yushan-trail',
-    category: '🏃 运动',
-    title: '虞山森林氧吧',
-    subtitle: '中国森林氧吧 · 常熟',
-    route: '/guide/niehaifeng',
-    style: {
-      bg: 'linear-gradient(165deg, #D4E8D4 0%, #A8C8A8 100%)',
-      border: '#5A7A5A',
-      title: '#3A4A3A',
-      subtitle: '#6A8A6A',
-      motif: 'sport',
-    },
-  },
-  {
-    id: 'shanghu-marathon',
-    category: '🏃 运动',
-    title: '尚湖半马',
-    subtitle: '最美赛道 · 常熟尚湖',
-    route: '/guide/qianliu',
-    style: {
-      bg: 'linear-gradient(165deg, #D8E8F0 0%, #A8C8D8 100%)',
-      border: '#5A7A8A',
-      title: '#2E4A58',
-      subtitle: '#5A7A88',
-      motif: 'sport',
-    },
-  },
-  {
-    id: 'xian-cycling',
-    category: '🏃 运动',
-    title: '城墙骑行',
-    subtitle: '13.7公里 · 夕阳长安',
-    route: '/guide/xian',
-    style: {
-      bg: 'linear-gradient(165deg, #E0D0B8 0%, #C8A878 100%)',
-      border: '#8A6A3A',
-      title: '#4A3A1E',
-      subtitle: '#7A5A2A',
-      motif: 'sport',
-    },
-  },
-  {
-    id: 'hangzhou-hiking',
-    category: '🏃 运动',
-    title: '九溪烟树徒步',
-    subtitle: '天然氧吧 · 杭州秘境',
-    route: '/guide/hangzhou',
-    style: {
-      bg: 'linear-gradient(165deg, #C8E0D4 0%, #90C4A8 100%)',
-      border: '#4A7A5A',
-      title: '#2E4A38',
-      subtitle: '#5A7A5A',
-      motif: 'sport',
-    },
-  },
-  {
-    id: 'beijing-hutong-walk',
-    category: '🏃 运动',
-    title: '胡同漫步',
-    subtitle: '文学散步 · 北平秋意',
-    route: '/guide/beijing',
-    style: {
-      bg: 'linear-gradient(165deg, #E0C8C0 0%, #C09888 100%)',
-      border: '#8A4A3A',
-      title: '#4A2E24',
-      subtitle: '#7A4A3A',
-      motif: 'sport',
-    },
-  },
-  {
-    id: 'chengdu-tea-walk',
-    category: '🏃 运动',
-    title: '锦里夜行',
-    subtitle: '灯火古街 · 成都漫步',
-    route: '/guide/chengdu',
-    style: {
-      bg: 'linear-gradient(165deg, #C8E0C8 0%, #90C490 100%)',
-      border: '#4A7A4A',
-      title: '#2E4A2E',
-      subtitle: '#5A7A5A',
-      motif: 'sport',
-    },
-  },
-  {
-    id: 'fenghuang-river-walk',
-    category: '🏃 运动',
-    title: '沱江步道',
-    subtitle: '吊脚楼畔 · 凤凰晨雾',
-    route: '/guide/fenghuang',
-    style: {
-      bg: 'linear-gradient(165deg, #C8D0D8 0%, #98A8B8 100%)',
-      border: '#5A6878',
-      title: '#2E3E4E',
-      subtitle: '#5A6A7A',
-      motif: 'sport',
-    },
-  },
-  {
-    id: 'shanghai-citywalk',
-    category: '🏃 运动',
-    title: '繁花Citywalk',
-    subtitle: '黄河路 · 外滩漫步',
-    route: '/guide/shanghai',
-    style: {
-      bg: 'linear-gradient(165deg, #E8D4CC 0%, #C4A898 100%)',
-      border: '#8A5A4A',
-      title: '#4A2E24',
-      subtitle: '#7A5A4A',
-      motif: 'sport',
     },
   },
 ]
