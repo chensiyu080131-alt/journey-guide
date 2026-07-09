@@ -51,6 +51,23 @@ export async function recognizeAndGenerateGuide(bookText: string): Promise<Guide
   }
 }
 
+/** 从书籍信息生成文学旅行攻略 —— 走 /api/book-guide */
+export async function generateBookGuide(
+  request: import('@/types/book-guide').BookGuideRequest
+): Promise<import('@/types/book-guide').BookGuideResponse> {
+  const res = await fetch('/api/book-guide', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request),
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error || `API ${res.status}`)
+  }
+  return res.json()
+}
+
 function simulateDelay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
+

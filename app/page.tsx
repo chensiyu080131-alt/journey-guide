@@ -117,9 +117,16 @@ export default function HomePage() {
 
       <div className="px-4 sm:px-6 pb-6 flex-shrink-0">
         <div className="max-w-xl mx-auto flex flex-wrap justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent('xuncheng:open-book-guide'))}
+            className="px-4 py-2 rounded-full bg-literary-wine text-white text-xs sm:text-sm font-medium hover:bg-literary-wine/90 transition-colors shadow-sm ring-2 ring-literary-wine/20"
+          >
+            📖 跟书旅行
+          </button>
           <Link
             href="/guide/destination"
-            className="px-4 py-2 rounded-full bg-literary-wine text-white text-xs sm:text-sm font-medium hover:bg-literary-wine/90 transition-colors"
+            className="px-4 py-2 rounded-full border border-literary-wine/30 bg-literary-wine/10 text-literary-wine text-xs sm:text-sm font-medium hover:bg-literary-wine/15 transition-colors"
           >
             搜一座城
           </Link>
