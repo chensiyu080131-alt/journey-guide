@@ -109,20 +109,13 @@ export function shouldUseMock(): boolean {
   return process.env.USE_MOCK === 'true' || !process.env.LLM_API_KEY
 }
 
-export async function generateGuideServer(
-  city: string,
-  days: number,
-  interests: InterestTag[],
-  budget: BudgetLevel
-): Promise<Guide> {
-  if (shouldUseMock()) {
-    return getMockGuide(city, days, interests, budget)
-  }
-
+/** 服务端统一发起 LLM 请求，密钥仅存在于服务端环境变量 */
+async function callLLM(
+  messages: { role: 'system' | 'user'; content: string }[]
+): Promise<string> {
   const apiKey = process.env.LLM_API_KEY!
   const baseUrl = process.env.LLM_BASE_URL || 'https://api.openai-next.com/v1'
   const model = process.env.LLM_MODEL || 'gpt-4o-mini'
-  const prompt = buildPrompt(city, days, interests, budget)
 
   const response = await fetch(`${baseUrl}/chat/completions`, {
     method: 'POST',
@@ -132,10 +125,7 @@ export async function generateGuideServer(
     },
     body: JSON.stringify({
       model,
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: prompt },
-      ],
+      messages,
       temperature: 0.7,
       max_tokens: 4000,
     }),
@@ -147,13 +137,58 @@ export async function generateGuideServer(
   }
 
   const data = await response.json()
-  const content = data.choices[0]?.message?.content
+  const content = data.choices?.[0]?.message?.content
   if (!content) throw new Error('API返回内容为空')
+  return content
+}
+
+export async function generateGuideServer(
+  city: string,
+  days: number,
+  interests: InterestTag[],
+  budget: BudgetLevel
+): Promise<Guide> {
+  if (shouldUseMock()) {
+    return getMockGuide(city, days, interests, budget)
+  }
+
+  const prompt = buildPrompt(city, days, interests, budget)
 
   try {
+    const content = await callLLM([
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user', content: prompt },
+    ])
     return parseLLMResponse(content, city, days, interests, budget)
   } catch (error) {
-    console.error('解析LLM响应失败:', error)
+    console.error('生成攻略失败，回退 Mock:', error)
     return getMockGuide(city, days, interests, budget)
+  }
+}
+
+/** 从一段书籍文字识别地点并生成攻略 */
+export async function recognizeGuideServer(bookText: string): Promise<Guide> {
+  const fallbackCity = '常熟'
+  if (shouldUseMock()) {
+    return getMockGuide(fallbackCity, 2, ['文化', '美食'], '舒适')
+  }
+
+  const userPrompt = `请分析以下书籍片段，识别其中的地点（城市/景点/人物）并生成"跟着书本去旅行"的攻略：
+
+"""
+${bookText}
+"""
+
+${buildPrompt('（从上文识别出的城市）', 2, ['文化', '美食'], '舒适')}`
+
+  try {
+    const content = await callLLM([
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user', content: userPrompt },
+    ])
+    return parseLLMResponse(content, fallbackCity, 2, ['文化', '美食'], '舒适')
+  } catch (error) {
+    console.error('识别书籍生成攻略失败，回退 Mock:', error)
+    return getMockGuide(fallbackCity, 2, ['文化', '美食'], '舒适')
   }
 }

@@ -58,27 +58,23 @@ function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color:
 function CoverCard({
   cover,
   isActive,
-  onClick,
+  onActivate,
 }: {
   cover: HomeCover
   isActive: boolean
-  onClick: () => void
+  onActivate: () => void
 }) {
   const { style } = cover
   const isLiteraryBook = cover.id === 'renjianziwei'
+  const href = `${cover.route}?cat=${cover.category}`
 
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        'xc-cover-card snap-center flex-shrink-0 transition-all duration-500 ease-out',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-literary-wine/40',
-        isActive ? 'xc-cover-card-active' : 'xc-cover-card-inactive'
-      )}
-      aria-label={`选择${cover.title}`}
-      aria-pressed={isActive}
-    >
+  const cardClass = cn(
+    'xc-cover-card snap-center flex-shrink-0 transition-all duration-500 ease-out',
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-literary-wine/40',
+    isActive ? 'xc-cover-card-active' : 'xc-cover-card-inactive'
+  )
+
+  const cardInner = (
       <div
         className={cn(
           'relative transition-transform duration-500',
@@ -181,6 +177,24 @@ function CoverCard({
           </div>
         </div>
       </div>
+  )
+
+  if (isActive) {
+    return (
+      <Link href={href} className={cardClass} aria-label={`进入${cover.title}`}>
+        {cardInner}
+      </Link>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onActivate}
+      className={cardClass}
+      aria-label={`选择${cover.title}`}
+    >
+      {cardInner}
     </button>
   )
 }
@@ -251,7 +265,7 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
               key={cover.id}
               cover={cover}
               isActive={i === activeIndex}
-              onClick={() => scrollTo(i)}
+              onActivate={() => scrollTo(i)}
             />
           ))}
         </div>
@@ -291,16 +305,6 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
             aria-label={cover.title}
           />
         ))}
-      </div>
-
-      <div className="mt-8 h-14 flex items-center justify-center gap-3">
-        <Link
-          href={`${activeCover.route}?cat=${activeCover.category}`}
-          className="xc-explore-btn animate-fade-in"
-        >
-          开始探索
-          <span className="opacity-80">→</span>
-        </Link>
       </div>
     </div>
   )

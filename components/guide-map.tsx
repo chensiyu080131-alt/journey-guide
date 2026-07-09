@@ -2,8 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Guide } from '@/types'
-import { hasAmapKey, loadAmapScript } from '@/lib/amap-loader'
+import { hasAmapKey, loadAmapScript, ensureAmapSecurityConfig, scheduleMapResize } from '@/lib/amap-loader'
 import { planNavigationRoute } from '@/lib/amap-routing'
+import {
+  addStyledRoutePolylines,
+  buildSpotMarkerHtml,
+} from '@/lib/map-route-visual'
 
 interface GuideMapProps {
   guide: Guide
@@ -31,6 +35,9 @@ export function GuideMap({ guide }: GuideMapProps) {
       .then(async () => {
         if (cancelled || !containerRef.current || !window.AMap) return
 
+        ensureAmapSecurityConfig()
+        containerRef.current.innerHTML = ''
+
         const center = spots[0].location!
         map = new window.AMap.Map(containerRef.current, {
           zoom: 12,
@@ -38,16 +45,20 @@ export function GuideMap({ guide }: GuideMapProps) {
           viewMode: '2D',
         })
 
+        scheduleMapResize(map)
+
         spots.forEach((spot, index) => {
           const position: AMap.LngLatLike = [spot.location!.lng, spot.location!.lat]
 
+          const markerContent = document.createElement('div')
+          markerContent.innerHTML = buildSpotMarkerHtml(spot, index)
+
           const marker = new window.AMap!.Marker({
             position,
+            content: markerContent,
             title: spot.name,
-            label: {
-              content: `<div style="background:#fff;border:1px solid #fed7aa;border-radius:999px;padding:2px 8px;font-size:12px;color:#9a3412;">${index + 1}. ${spot.name}</div>`,
-              direction: 'top',
-            },
+            anchor: 'bottom-center',
+            zIndex: 120 + index,
           })
           map!.add(marker)
         })
@@ -56,15 +67,7 @@ export function GuideMap({ guide }: GuideMapProps) {
           const points = spots.map(s => ({ lng: s.location!.lng, lat: s.location!.lat }))
           const { path } = await planNavigationRoute(points, 'auto')
           if (path.length > 1) {
-            const polyline = new window.AMap!.Polyline({
-              path,
-              strokeColor: '#f97316',
-              strokeWeight: 4,
-              strokeOpacity: 0.85,
-              showDir: true,
-              lineJoin: 'round',
-            })
-            map.add(polyline)
+            addStyledRoutePolylines(map, path)
           }
           map.setFitView(undefined, false, [40, 40, 40, 40])
         }

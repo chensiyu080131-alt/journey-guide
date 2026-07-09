@@ -5,6 +5,9 @@ import { Guide, DialectItem, LocalExperience } from '@/types'
 import { DayGroup } from './day-group'
 import { GuideMap } from './guide-map'
 import { Badge, Card } from './ui'
+import { AIBookSpirit } from './ai-book-spirit'
+import { LiteraryDetective } from './literary-detective'
+import { LiteraryHeatmap } from './literary-heatmap'
 
 interface GuideViewProps {
   guide: Guide
@@ -166,12 +169,21 @@ export function GuideView({ guide }: GuideViewProps) {
       {/* 路线地图 */}
       <GuideMap guide={guide} />
 
+      {/* 文学意象热力图（P2） */}
+      <LiteraryHeatmap guide={guide} />
+
+      {/* AI 书灵（P0） */}
+      <AIBookSpirit guide={guide} />
+
       {/* 每日行程 */}
       <div className="space-y-8">
         {guide.dayPlans.map(dayPlan => (
           <DayGroup key={dayPlan.day} dayPlan={dayPlan} />
         ))}
       </div>
+
+      {/* AI 文学侦探（P2） */}
+      <LiteraryDetective guide={guide} />
 
       {/* 在地体验 */}
       {guide.localExperiences && guide.localExperiences.length > 0 && (

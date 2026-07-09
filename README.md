@@ -47,18 +47,22 @@ app/
   page.tsx                 # 首页
   guide/[city]/page.tsx    # 预设路线详情
   guide/destination/       # 自定义目的地搜索
-  api/generate-guide/      # LLM 攻略生成 API
+  api/generate-guide/      # 服务端 LLM 攻略生成 API（密钥仅在服务端）
 components/
   entry-cards.tsx          # 首页入口卡片
   guide-view.tsx           # 攻略展示
   guide-map.tsx            # 高德地图
 lib/
-  mock-data.ts             # 常熟三条路线 Mock 数据
-  llm-server.ts            # 服务端 LLM 逻辑
-  llm-service.ts           # 客户端调用封装
+  mock-data.ts             # 常熟四条路线 Mock 数据
+  llm-server.ts            # 服务端 LLM 逻辑（读取 LLM_API_KEY）
+  llm-service.ts           # 客户端封装，调用 /api/generate-guide
 docs/
   路演PPT大纲.md            # 黑客松路演大纲
 ```
+
+> 说明：AI 调用全部经由服务端 API 路由 `app/api/generate-guide` 完成，
+> `LLM_API_KEY` 只存在于服务端环境变量、不会打包进浏览器。
+> 因此本项目使用 Next.js 服务端运行（Serverless），而非纯静态导出。
 
 ## 部署到 Vercel
 

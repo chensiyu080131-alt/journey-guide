@@ -26,11 +26,31 @@ export function ensureAmapSecurityConfig(): void {
   }
 }
 
+function waitForAmapNamespace(timeoutMs = 5000): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const start = Date.now()
+    const check = () => {
+      if (window.AMap) {
+        resolve()
+        return
+      }
+      if (Date.now() - start > timeoutMs) {
+        reject(new Error('高德地图命名空间未就绪'))
+        return
+      }
+      setTimeout(check, 50)
+    }
+    check()
+  })
+}
+
 export function loadAmapScript(): Promise<void> {
   const key = getAmapKey()
   if (!key) {
     return Promise.reject(new Error('未配置 NEXT_PUBLIC_AMAP_KEY'))
   }
+
+  ensureAmapSecurityConfig()
 
   if (typeof window !== 'undefined' && window.AMap) {
     return Promise.resolve()
@@ -38,12 +58,16 @@ export function loadAmapScript(): Promise<void> {
 
   if (loadPromise) return loadPromise
 
-  ensureAmapSecurityConfig()
-
   loadPromise = new Promise((resolve, reject) => {
-    const existing = document.querySelector('script[data-amap-loader]')
+    const existing = document.querySelector('script[data-amap-loader]') as HTMLScriptElement | null
     if (existing) {
-      existing.addEventListener('load', () => resolve())
+      if (window.AMap) {
+        resolve()
+        return
+      }
+      existing.addEventListener('load', () => {
+        waitForAmapNamespace().then(resolve).catch(reject)
+      })
       existing.addEventListener('error', () => reject(new Error('高德地图脚本加载失败')))
       return
     }
@@ -53,12 +77,7 @@ export function loadAmapScript(): Promise<void> {
     script.src = `https://webapi.amap.com/maps?v=2.0&key=${key}`
     script.async = true
     script.onload = () => {
-      // 等待 AMap 命名空间就绪
-      const check = () => {
-        if (window.AMap) resolve()
-        else setTimeout(check, 50)
-      }
-      check()
+      waitForAmapNamespace().then(resolve).catch(reject)
     }
     script.onerror = () => {
       loadPromise = null
@@ -95,8 +114,39 @@ export function getAmapConfigStatus(): {
       hasKey,
       hasSecurity,
       ready: false,
-      hint: '请配置 NEXT_PUBLIC_AMAP_SECURITY（安全密钥），否则路径规划可能失败',
+      hint: '请配置 NEXT_PUBLIC_AMAP_SECURITY（安全密钥），否则地图瓦片与路径规划可能失败',
     }
   }
   return { hasKey, hasSecurity, ready: true }
+}
+
+/** 等待地图底图瓦片加载完成 */
+export function waitForMapComplete(map: AMap.Map, timeoutMs = 8000): Promise<void> {
+  return new Promise(resolve => {
+    let settled = false
+    const finish = () => {
+      if (settled) return
+      settled = true
+      resolve()
+    }
+
+    map.on('complete', finish)
+    setTimeout(finish, timeoutMs)
+  })
+}
+
+/** 多次触发 resize，解决 flex 布局下容器尺寸延迟就绪的问题 */
+export function scheduleMapResize(map: AMap.Map): void {
+  const resize = () => {
+    try {
+      map.resize()
+    } catch {
+      /* ignore */
+    }
+  }
+  resize()
+  requestAnimationFrame(resize)
+  setTimeout(resize, 100)
+  setTimeout(resize, 400)
+  setTimeout(resize, 1000)
 }
