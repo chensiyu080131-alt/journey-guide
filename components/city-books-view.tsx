@@ -71,7 +71,7 @@ function BookCoverCard({
 export function CityBooksView({ meta, category }: CityBooksViewProps) {
   return (
     <main className="xc-explorer-bg min-h-screen">
-      <div className="xc-container max-w-3xl py-6 sm:py-8 pb-12">
+      <div className="xc-container max-w-4xl py-6 sm:py-8 pb-12">
         <Link
           href={`/?cat=${category}`}
           className="text-xs text-warm-gray-muted hover:text-celadon-600 no-underline"

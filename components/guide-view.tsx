@@ -103,7 +103,7 @@ export function GuideView({ guide }: GuideViewProps) {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8 animate-fade-in max-w-4xl">
       {/* 攻略头部 */}
       <div className="text-center space-y-3 py-2">
         {/* 入口类型标签 */}

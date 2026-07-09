@@ -42,7 +42,7 @@ export function HomeComingSoon({ tab }: HomeComingSoonProps) {
   const meta = tabMeta[tab]
 
   return (
-    <div className="flex flex-col items-center w-full max-w-md mx-auto px-6 py-12 sm:py-16 animate-fade-in">
+    <div className="flex flex-col items-center w-full max-w-lg mx-auto px-6 py-12 sm:py-16 animate-fade-in">
       <div
         className="relative w-full rounded-2xl border border-literary-sand bg-white/80 shadow-sm overflow-hidden"
         style={{ aspectRatio: '4 / 3' }}

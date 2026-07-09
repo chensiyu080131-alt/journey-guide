@@ -114,7 +114,7 @@ function DestinationGuideContent() {
   return (
     <main className="min-h-screen pb-8">
       <div className="sticky top-1 z-40 bg-paper/80 backdrop-blur-md border-b border-ink-100">
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
+        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <Link href="/" className="text-ink-400 hover:text-ink-600 transition-colors">
             ← 返回
           </Link>
@@ -124,7 +124,7 @@ function DestinationGuideContent() {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 pt-6 space-y-6">
+      <div className="max-w-2xl mx-auto px-4 pt-6 space-y-6">
         <section className="rounded-2xl border border-ink-100 bg-white p-5 shadow-sm space-y-4">
           <div>
             <h1 className="text-xl font-serif font-bold text-ink-900">搜一座城，生成文学旅行攻略</h1>

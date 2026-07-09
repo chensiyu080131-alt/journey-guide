@@ -306,7 +306,7 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
   const activeCover = covers[activeIndex] ?? covers[0]
 
   return (
-    <div className="flex flex-col items-center w-full max-w-5xl mx-auto px-4">
+    <div className="flex flex-col items-center w-full max-w-6xl mx-auto px-4">
       <div className="relative w-full">
         <button
           type="button"

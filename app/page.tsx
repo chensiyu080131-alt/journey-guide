@@ -28,7 +28,7 @@ export default function HomePage() {
 
   return (
     <main className="xc-home-bg min-h-screen flex flex-col">
-      <header className="pt-6 sm:pt-8 pb-3 flex-shrink-0">
+      <header className="pt-6 sm:pt-8 lg:pt-12 pb-3 flex-shrink-0">
         <div className="xc-home-logo mb-2 sm:mb-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -54,14 +54,14 @@ export default function HomePage() {
             className="h-12 sm:h-16 w-auto mx-auto object-contain"
           />
         </h1>
-        <p className="mt-1 text-[11px] text-literary-muted tracking-wide font-serif max-w-md mx-auto leading-relaxed">
+        <p className="mt-1 text-[11px] sm:text-xs text-literary-muted tracking-wide font-serif max-w-lg mx-auto leading-relaxed">
           {activeTab === '首页'
             ? '书籍·游戏·音乐——跟着文化载体去旅行'
             : '左右滑动选择封面，点击进入探索'}
         </p>
       </div>
 
-      <section className="flex-1 flex items-center justify-center py-4 sm:py-6 min-h-[50vh]">
+      <section className="flex-1 flex items-center justify-center py-4 sm:py-6 lg:py-10 min-h-[50vh]">
         {isUnderDevelopment ? (
           <div className="text-center px-6">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -79,7 +79,7 @@ export default function HomePage() {
         )}
       </section>
 
-      <footer className="px-4 sm:px-6 pb-8 sm:pb-10 flex-shrink-0">
+      <footer className="px-4 sm:px-6 lg:px-8 pb-8 sm:pb-10 flex-shrink-0">
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left max-w-4xl mx-auto">
           <div>
             <p className="text-sm font-serif font-medium text-literary-ink">寻迹 · 有迹可循</p>
