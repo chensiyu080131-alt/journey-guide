@@ -97,112 +97,112 @@ function CoverCard({
   const cardClass = cn(
     'xc-cover-card snap-center flex-shrink-0 transition-all duration-500 ease-out',
     'focus:outline-none focus-visible:ring-2 focus-visible:ring-literary-wine/40',
-    isActive ? 'xc-cover-card-active' : 'xc-cover-card-inactive'
+    isActive ? 'xc-cover-card-active cursor-pointer' : 'xc-cover-card-inactive'
   )
 
   const cardInner = (
+    <div
+      className={cn(
+        'relative transition-transform duration-500',
+        isActive && 'xc-cover-inner-active'
+      )}
+    >
+      <div
+        className="absolute left-0 top-2 bottom-2 w-4 sm:w-5 rounded-l-md"
+        style={{
+          background: isActive && isLiteraryBook ? '#6B3333' : style.border,
+          boxShadow: isActive ? 'inset -2px 0 6px rgba(0,0,0,0.15)' : undefined,
+        }}
+      />
       <div
         className={cn(
-          'relative transition-transform duration-500',
-          isActive && 'xc-cover-inner-active'
+          'relative ml-3 sm:ml-4 rounded-r-md border overflow-hidden',
+          isActive && 'shadow-xl'
         )}
+        style={{
+          background: isActive && isLiteraryBook
+            ? 'linear-gradient(155deg, #A65D5D 0%, #8B4545 55%, #6B3333 100%)'
+            : style.bg,
+          borderColor: isActive && isLiteraryBook ? '#6B333340' : `${style.border}40`,
+          aspectRatio: '3 / 4.2',
+          boxShadow: isActive
+            ? '8px 12px 32px rgba(107, 51, 51, 0.2), inset 0 1px 0 rgba(255,255,255,0.15)'
+            : '4px 6px 16px rgba(61, 46, 46, 0.08)',
+        }}
       >
         <div
-          className="absolute left-0 top-2 bottom-2 w-4 sm:w-5 rounded-l-md"
-          style={{
-            background: isActive && isLiteraryBook ? '#6B3333' : style.border,
-            boxShadow: isActive ? 'inset -2px 0 6px rgba(0,0,0,0.15)' : undefined,
-          }}
+          className="absolute top-4 left-4 w-5 h-5 border-t border-l opacity-25"
+          style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
         />
         <div
-          className={cn(
-            'relative ml-3 sm:ml-4 rounded-r-md border overflow-hidden',
-            isActive && 'shadow-xl'
-          )}
-          style={{
-            background: isActive && isLiteraryBook
-              ? 'linear-gradient(155deg, #A65D5D 0%, #8B4545 55%, #6B3333 100%)'
-              : style.bg,
-            borderColor: isActive && isLiteraryBook ? '#6B333340' : `${style.border}40`,
-            aspectRatio: '3 / 4.2',
-            boxShadow: isActive
-              ? '8px 12px 32px rgba(107, 51, 51, 0.2), inset 0 1px 0 rgba(255,255,255,0.15)'
-              : '4px 6px 16px rgba(61, 46, 46, 0.08)',
-          }}
-        >
-          <div
-            className="absolute top-4 left-4 w-5 h-5 border-t border-l opacity-25"
-            style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
-          />
-          <div
-            className="absolute top-4 right-4 w-5 h-5 border-t border-r opacity-25"
-            style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
-          />
-          <div
-            className="absolute bottom-4 left-4 w-5 h-5 border-b border-l opacity-25"
-            style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
-          />
-          <div
-            className="absolute bottom-4 right-4 w-5 h-5 border-b border-r opacity-25"
-            style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
+          className="absolute top-4 right-4 w-5 h-5 border-t border-r opacity-25"
+          style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
+        />
+        <div
+          className="absolute bottom-4 left-4 w-5 h-5 border-b border-l opacity-25"
+          style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
+        />
+        <div
+          className="absolute bottom-4 right-4 w-5 h-5 border-b border-r opacity-25"
+          style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
+        />
+
+        <div className="flex flex-col items-center justify-between h-full py-8 sm:py-10 px-5 sm:px-6">
+          <div className="text-center">
+            <p
+              className="text-[10px] tracking-[0.2em] uppercase mb-2"
+              style={{
+                color: isActive && isLiteraryBook ? 'rgba(255,255,255,0.65)' : style.subtitle,
+              }}
+            >
+              {cover.category}
+            </p>
+            <h3
+              className="font-serif font-semibold tracking-widest leading-snug"
+              style={{
+                color: isActive && isLiteraryBook ? '#FFFFFF' : style.title,
+                fontSize: isActive ? '1.5rem' : '1.2rem',
+              }}
+            >
+              {cover.title}
+            </h3>
+            <p
+              className="mt-3 text-xs sm:text-sm tracking-wide"
+              style={{
+                color: isActive && isLiteraryBook ? 'rgba(255,255,255,0.78)' : style.subtitle,
+              }}
+            >
+              {cover.subtitle}
+            </p>
+          </div>
+
+          <CoverMotif
+            type={style.motif}
+            color={isActive && isLiteraryBook ? 'rgba(255,255,255,0.45)' : style.border}
           />
 
-          <div className="flex flex-col items-center justify-between h-full py-8 sm:py-10 px-5 sm:px-6">
-            <div className="text-center">
-              <p
-                className="text-[10px] tracking-[0.2em] uppercase mb-2"
-                style={{
-                  color: isActive && isLiteraryBook ? 'rgba(255,255,255,0.65)' : style.subtitle,
-                }}
-              >
-                {cover.category}
-              </p>
-              <h3
-                className="font-serif font-semibold tracking-widest leading-snug"
-                style={{
-                  color: isActive && isLiteraryBook ? '#FFFFFF' : style.title,
-                  fontSize: isActive ? '1.5rem' : '1.2rem',
-                }}
-              >
-                {cover.title}
-              </h3>
-              <p
-                className="mt-3 text-xs sm:text-sm tracking-wide"
-                style={{
-                  color: isActive && isLiteraryBook ? 'rgba(255,255,255,0.78)' : style.subtitle,
-                }}
-              >
-                {cover.subtitle}
-              </p>
-            </div>
-
-            <CoverMotif
-              type={style.motif}
-              color={isActive && isLiteraryBook ? 'rgba(255,255,255,0.45)' : style.border}
-            />
-
-            {isActive && (
-              <div
+          {isActive && (
+            <div
+              className={cn(
+                'w-10 h-10 rounded-md flex items-center justify-center',
+                isLiteraryBook
+                  ? 'bg-white/15 border border-white/25'
+                  : 'border border-literary-wine/30 bg-literary-paper/50'
+              )}
+            >
+              <span
                 className={cn(
-                  'w-10 h-10 rounded-md flex items-center justify-center',
-                  isLiteraryBook
-                    ? 'bg-white/15 border border-white/25'
-                    : 'border border-literary-wine/30 bg-literary-paper/50'
+                  'text-sm font-serif leading-none',
+                  isLiteraryBook ? 'text-white' : 'text-literary-wine'
                 )}
               >
-                <span
-                  className={cn(
-                    'text-sm font-serif leading-none',
-                    isLiteraryBook ? 'text-white' : 'text-literary-wine'
-                  )}
-                >
-                  {isLiteraryBook ? '味' : '寻'}
-                </span>
-              </div>
-            )}
-          </div>
+                {isLiteraryBook ? '味' : '寻'}
+              </span>
+            </div>
+          )}
         </div>
       </div>
+    </div>
   )
 
   if (isActive) {
