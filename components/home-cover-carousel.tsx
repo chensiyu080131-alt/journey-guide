@@ -84,21 +84,32 @@ function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color:
 function CoverCard({
   cover,
   isActive,
+  showExplore,
+  href,
   onClick,
 }: {
   cover: HomeCover
   isActive: boolean
+  showExplore: boolean
+  href: string
   onClick: () => void
 }) {
   const { style } = cover
   const isLiteraryBook = cover.id === 'renjianziwei'
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick()
+        }
+      }}
       className={cn(
-        'xc-cover-card snap-center flex-shrink-0 transition-all duration-500 ease-out',
+        'xc-cover-card snap-center flex-shrink-0 transition-all duration-500 ease-out cursor-pointer',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-literary-wine/40',
         isActive ? 'xc-cover-card-active' : 'xc-cover-card-inactive'
       )}
@@ -205,9 +216,23 @@ function CoverCard({
               </div>
             )}
           </div>
+
+          {showExplore && (
+            <Link
+              href={href}
+              onClick={(e) => e.stopPropagation()}
+              className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 animate-fade-in"
+              aria-label={`开始探索${cover.title}`}
+            >
+              <span className="xc-explore-btn">
+                开始探索
+                <span className="opacity-80">→</span>
+              </span>
+            </Link>
+          )}
         </div>
       </div>
-    </button>
+    </div>
   )
 }
 
@@ -218,9 +243,11 @@ interface HomeCoverCarouselProps {
 export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [exploreIndex, setExploreIndex] = useState<number | null>(null)
 
   useEffect(() => {
     setActiveIndex(0)
+    setExploreIndex(null)
   }, [covers])
 
   const scrollTo = (index: number) => {
@@ -231,6 +258,7 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
       card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
     }
     setActiveIndex(index)
+    setExploreIndex(null)
   }
 
   const handleScroll = () => {
@@ -277,7 +305,12 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
               key={cover.id}
               cover={cover}
               isActive={i === activeIndex}
-              onClick={() => scrollTo(i)}
+              showExplore={i === activeIndex && exploreIndex === i}
+              href={`${cover.route}?cat=${cover.category}`}
+              onClick={() => {
+                scrollTo(i)
+                setExploreIndex(i)
+              }}
             />
           ))}
         </div>
@@ -317,16 +350,6 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
             aria-label={cover.title}
           />
         ))}
-      </div>
-
-      <div className="mt-8 h-14 flex items-center justify-center gap-3">
-        <Link
-          href={`${activeCover.route}?cat=${activeCover.category}`}
-          className="xc-explore-btn animate-fade-in"
-        >
-          开始探索
-          <span className="opacity-80">→</span>
-        </Link>
       </div>
     </div>
   )
