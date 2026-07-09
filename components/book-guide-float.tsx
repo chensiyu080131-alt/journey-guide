@@ -5,6 +5,8 @@ import { BudgetLevel, InterestTag } from '@/types'
 import { BookGuideRequest, BookGuideResponse } from '@/types/book-guide'
 import { BookGuideResultView, saveBookGuideAndNavigate } from './book-guide-result-view'
 import { cn } from '@/lib/utils'
+import { isMockMode, getMockReason } from '@/lib/llm-client'
+import { generateBookGuideClient } from '@/lib/book-guide-client'
 
 type Step = 'book' | 'trip' | 'excerpt' | 'generating' | 'done'
 
@@ -62,10 +64,7 @@ export function BookGuideFloat() {
 
   useEffect(() => {
     if (!open) return
-    fetch('/api/book-guide')
-      .then(res => res.json())
-      .then(data => setDemoMode({ mock: Boolean(data.mock), reason: data.reason ?? null }))
-      .catch(() => setDemoMode(null))
+    setDemoMode({ mock: isMockMode(), reason: getMockReason() })
   }, [open])
 
   const close = () => {
@@ -96,19 +95,10 @@ export function BookGuideFloat() {
     }, 1800)
 
     try {
-      const res = await fetch('/api/book-guide', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          city: form.city?.trim() || undefined,
-        }),
+      const data = await generateBookGuideClient({
+        ...form,
+        city: form.city?.trim() || undefined,
       })
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}))
-        throw new Error(err.error || `请求失败 ${res.status}`)
-      }
-      const data = (await res.json()) as BookGuideResponse
       setResult(data)
       setStep('done')
     } catch (e) {
