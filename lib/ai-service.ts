@@ -1,11 +1,29 @@
 /**
- * 寻城 AI 服务 - 接入 OpenAI Next Credits
- * 黑客松期间使用，API Key有效期至 2026-07-10 23:59
+ * 寻城 AI 服务 - 旅游攻略生成
+ *
+ * 项目为纯静态导出(output: 'export'),无服务端,LLM 由浏览器端直连,
+ * 故 API Key 通过 NEXT_PUBLIC_ 前缀环境变量注入(会进入前端 bundle)。
+ * 切换 provider 只需改环境变量,无需改代码。
+ *
+ * ===== 免费大模型接入(任选其一,注册后在控制台拿 Key 写入 .env.local) =====
+ *   ① 硅基流动 SiliconFlow —— 免费、OpenAI 兼容、国内直连
+ *        NEXT_PUBLIC_LLM_BASE_URL = https://api.siliconflow.cn/v1
+ *        NEXT_PUBLIC_LLM_MODEL    = Qwen/Qwen2.5-7B-Instruct   (免费模型)
+ *   ② 智谱 BigModel —— glm-4-flash 完全免费、质量好
+ *        NEXT_PUBLIC_LLM_BASE_URL = https://open.bigmodel.cn/api/paas/v4
+ *        NEXT_PUBLIC_LLM_MODEL    = glm-4-flash
+ *   ③ 阿里云百炼 DashScope —— qwen-turbo,有免费额度
+ *        NEXT_PUBLIC_LLM_BASE_URL = https://dashscope.aliyuncs.com/compatible-mode/v1
+ *        NEXT_PUBLIC_LLM_MODEL    = qwen-turbo
+ *
+ * 默认回退:常熟黑客松 OpenAI-Next(2026-07-10 23:59 前可用),不配 Key 也能跑。
  */
 
-const API_KEY = 'sk-VcHfkYaxHXAA2VUW75B771D90032430cA9457c74E2BaF88e'
-const BASE_URL = 'https://api.openai-next.com/v1'
-const MODEL = 'gpt-4o-mini'
+// 有 Key → 用环境变量配置的 provider(如智谱 GLM-4-Flash);无 Key → 整体回退黑客松 OpenAI-Next
+const HAS_KEY = !!process.env.NEXT_PUBLIC_LLM_API_KEY
+const API_KEY = process.env.NEXT_PUBLIC_LLM_API_KEY || 'sk-VcHfkYaxHXAA2VUW75B771D90032430cA9457c74E2BaF88e'
+const BASE_URL = (HAS_KEY ? process.env.NEXT_PUBLIC_LLM_BASE_URL : undefined) || 'https://api.openai-next.com/v1'
+const MODEL = (HAS_KEY ? process.env.NEXT_PUBLIC_LLM_MODEL : undefined) || 'gpt-4o-mini'
 
 /** 通用聊天补全 */
 export async function chatCompletion(
