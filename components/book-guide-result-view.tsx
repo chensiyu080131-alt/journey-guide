@@ -31,12 +31,22 @@ export function BookGuideResultView({ result, compact }: BookGuideResultViewProp
           <span className="px-2 py-0.5 rounded-full bg-white border border-literary-sand">
             {meta.verifiedCount} 处 POI 验证
           </span>
+          {meta.linkedSpotCount != null && (
+            <span className="px-2 py-0.5 rounded-full bg-white border border-literary-sand">
+              {meta.linkedSpotCount} 处行程含原文
+            </span>
+          )}
           {meta.mock && (
             <span className="px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700">
               演示模式
             </span>
           )}
         </div>
+        {!meta.hasExcerpt && !meta.mock && (
+          <p className="mt-2 text-[10px] text-amber-700 bg-amber-50/80 rounded-lg px-2 py-1.5 leading-relaxed">
+            未提供书籍摘录，引文由 AI 根据书名推断。粘贴书中段落可提高原文准确度。
+          </p>
+        )}
       </div>
 
       {/* 书中地点对照表 */}
@@ -61,8 +71,13 @@ export function BookGuideResultView({ result, compact }: BookGuideResultViewProp
                 </span>
               </div>
               {row.originalText && (
-                <p className="mt-1.5 text-literary-muted font-serif italic line-clamp-2">
+                <p className="mt-1.5 text-literary-muted font-serif italic leading-relaxed">
                   「{row.originalText}」
+                  {row.originalSource && (
+                    <span className="not-italic text-[10px] text-literary-wine ml-1">
+                      —— {row.originalSource}
+                    </span>
+                  )}
                 </p>
               )}
               <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-literary-muted">
@@ -111,8 +126,18 @@ export function BookGuideResultView({ result, compact }: BookGuideResultViewProp
                           {spot.timeSlot} · {spot.duration}
                         </span>
                         {spot.originalText && (
-                          <p className="mt-0.5 text-literary-muted font-serif italic line-clamp-1">
+                          <p className="mt-0.5 text-literary-muted font-serif italic leading-relaxed">
                             「{spot.originalText}」
+                            {spot.originalSource && (
+                              <span className="not-italic text-[10px] text-literary-wine ml-1">
+                                —— {spot.originalSource}
+                              </span>
+                            )}
+                          </p>
+                        )}
+                        {spot.realityNote && (
+                          <p className="mt-0.5 text-[10px] text-literary-muted leading-relaxed">
+                            📍 {spot.realityNote}
                           </p>
                         )}
                       </div>

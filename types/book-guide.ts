@@ -4,7 +4,8 @@ import { BudgetLevel, Guide, InterestTag } from './index'
 export interface BookGuideRequest {
   bookTitle: string
   author: string
-  city: string
+  /** 可选；未填时 AI 根据书名/摘录推断主要城市 */
+  city?: string
   days: number
   interests: InterestTag[]
   budget: BudgetLevel
@@ -69,6 +70,10 @@ export interface BookGuideResponse {
     verifiedCount: number
     bookTitle: string
     author: string
+    /** 行程中含书中原文的点位数 */
+    linkedSpotCount?: number
+    /** 用户是否提供了摘录 */
+    hasExcerpt?: boolean
   }
 }
 

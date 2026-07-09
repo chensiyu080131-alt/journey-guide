@@ -38,6 +38,9 @@ export function BookGuideFloat() {
   const [stage, setStage] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<BookGuideResponse | null>(null)
+  const [demoMode, setDemoMode] = useState<{ mock: boolean; reason: string | null } | null>(
+    null
+  )
 
   const reset = useCallback(() => {
     setStep('book')
@@ -56,6 +59,14 @@ export function BookGuideFloat() {
     window.addEventListener('xuncheng:open-book-guide', openPanel)
     return () => window.removeEventListener('xuncheng:open-book-guide', openPanel)
   }, [reset])
+
+  useEffect(() => {
+    if (!open) return
+    fetch('/api/book-guide')
+      .then(res => res.json())
+      .then(data => setDemoMode({ mock: Boolean(data.mock), reason: data.reason ?? null }))
+      .catch(() => setDemoMode(null))
+  }, [open])
 
   const close = () => {
     setOpen(false)
@@ -88,7 +99,10 @@ export function BookGuideFloat() {
       const res = await fetch('/api/book-guide', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          city: form.city?.trim() || undefined,
+        }),
       })
       if (!res.ok) {
         const err = await res.json().catch(() => ({}))
@@ -106,7 +120,6 @@ export function BookGuideFloat() {
   }
 
   const canNextBook = form.bookTitle.trim().length > 0
-  const canNextTrip = form.city.trim().length > 0
 
   return (
     <>
@@ -143,6 +156,18 @@ export function BookGuideFloat() {
               ✕
             </button>
           </div>
+
+          {demoMode?.mock && step !== 'done' && (
+            <div className="mx-4 mb-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] text-amber-800 leading-relaxed">
+              当前为<strong>演示模式</strong>
+              {demoMode.reason === '未配置 LLM_API_KEY'
+                ? '（未检测到 LLM_API_KEY，请在项目根目录配置 .env.local 后重启 dev 服务）'
+                : demoMode.reason
+                  ? `（${demoMode.reason}）`
+                  : ''}
+              ，将返回常熟示例路线，不会调用大模型。
+            </div>
+          )}
 
           {/* 步骤指示 */}
           {step !== 'generating' && step !== 'done' && (
@@ -203,14 +228,18 @@ export function BookGuideFloat() {
             {step === 'trip' && (
               <div className="space-y-4 animate-fade-in">
                 <label className="block">
-                  <span className="text-xs text-literary-ink font-medium">目标城市 *</span>
+                  <span className="text-xs text-literary-ink font-medium">目标城市</span>
+                  <span className="ml-1 text-[10px] text-literary-muted font-normal">（可选）</span>
                   <input
                     type="text"
-                    value={form.city}
+                    value={form.city ?? ''}
                     onChange={e => patch({ city: e.target.value })}
-                    placeholder="如：高邮、南京、扬州"
+                    placeholder="不清楚可留空，AI 将根据书名推断"
                     className="xc-book-guide-input mt-1"
                   />
+                  <p className="mt-1 text-[10px] text-literary-muted leading-relaxed">
+                    若不确定书中涉及哪些城市，留空即可；填写摘录后推断会更准。
+                  </p>
                 </label>
 
                 <div>
@@ -291,7 +320,6 @@ export function BookGuideFloat() {
                   </button>
                   <button
                     type="button"
-                    disabled={!canNextTrip}
                     onClick={() => setStep('excerpt')}
                     className="xc-book-guide-btn flex-[2]"
                   >
@@ -304,16 +332,20 @@ export function BookGuideFloat() {
             {/* Step 3: 摘录（可选） */}
             {step === 'excerpt' && (
               <div className="space-y-4 animate-fade-in">
-                <p className="text-xs text-literary-muted">
-                  粘贴书中段落（可选），AI 将从中精准提取地点与原文引用。
-                </p>
-                <textarea
-                  value={form.bookExcerpt}
-                  onChange={e => patch({ bookExcerpt: e.target.value })}
-                  placeholder="粘贴书中描写地点的段落…"
-                  rows={5}
-                  className="xc-book-guide-input resize-none"
-                />
+                <div className="rounded-lg border border-literary-wine/20 bg-literary-wine/5 px-3 py-2 text-[11px] text-literary-ink leading-relaxed">
+                  <strong>强烈建议粘贴书中段落</strong>——AI 将从原文中提取地点并逐字引用，否则只能根据书名推断，可能与书中内容对应不准。
+                </div>
+                <label className="block">
+                  <span className="text-xs text-literary-ink font-medium">书籍摘录</span>
+                  <span className="ml-1 text-[10px] text-literary-wine font-normal">（推荐填写）</span>
+                  <textarea
+                    value={form.bookExcerpt}
+                    onChange={e => patch({ bookExcerpt: e.target.value })}
+                    placeholder="粘贴书中描写地点、人物活动的段落…（可从电子书或实体书拍照识别后粘贴）"
+                    rows={5}
+                    className="xc-book-guide-input mt-1 resize-none"
+                  />
+                </label>
                 {error && (
                   <p className="text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>
                 )}
@@ -341,7 +373,8 @@ export function BookGuideFloat() {
               <div className="py-8 text-center space-y-4 animate-fade-in">
                 <div className="text-3xl animate-pulse">📖</div>
                 <p className="font-serif text-sm text-literary-ink">
-                  正在为《{form.bookTitle}》规划 {form.city} 之旅…
+                  正在为《{form.bookTitle}》规划
+                  {form.city?.trim() ? `${form.city}` : '相关城市'}之旅…
                 </p>
                 <div className="space-y-2 text-left px-4">
                   {STAGES.map((text, i) => (

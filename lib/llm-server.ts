@@ -109,10 +109,21 @@ export function shouldUseMock(): boolean {
   return process.env.USE_MOCK === 'true' || !process.env.LLM_API_KEY
 }
 
+export function getMockReason(): string | null {
+  if (!shouldUseMock()) return null
+  if (process.env.USE_MOCK === 'true') return 'USE_MOCK=true'
+  return '未配置 LLM_API_KEY'
+}
+
 /** 服务端统一发起 LLM 请求，密钥仅存在于服务端环境变量 */
-async function callLLM(
-  messages: { role: 'system' | 'user'; content: string }[]
+export async function callLLMChat(
+  messages: { role: 'system' | 'user'; content: string }[],
+  options?: { max_tokens?: number; temperature?: number }
 ): Promise<string> {
+  if (shouldUseMock()) {
+    throw new Error('mock mode')
+  }
+
   const apiKey = process.env.LLM_API_KEY!
   const baseUrl = process.env.LLM_BASE_URL || 'https://api.openai-next.com/v1'
   const model = process.env.LLM_MODEL || 'gpt-4o-mini'
@@ -126,8 +137,8 @@ async function callLLM(
     body: JSON.stringify({
       model,
       messages,
-      temperature: 0.7,
-      max_tokens: 4000,
+      temperature: options?.temperature ?? 0.7,
+      max_tokens: options?.max_tokens ?? 4000,
     }),
   })
 
@@ -140,6 +151,13 @@ async function callLLM(
   const content = data.choices?.[0]?.message?.content
   if (!content) throw new Error('API返回内容为空')
   return content
+}
+
+/** @deprecated 内部使用 callLLMChat */
+async function callLLM(
+  messages: { role: 'system' | 'user'; content: string }[]
+): Promise<string> {
+  return callLLMChat(messages)
 }
 
 export async function generateGuideServer(
