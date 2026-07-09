@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import { AmapSecurityBootstrap } from '@/components/amap-security-bootstrap'
 import { BookGuideFloat } from '@/components/book-guide-float'
 
 export const metadata: Metadata = {
@@ -21,10 +20,21 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // 运行期从 pm2/.env.production 读取，注入客户端（不依赖 build 时 NEXT_PUBLIC_*）
+  const amapKey = process.env.NEXT_PUBLIC_AMAP_KEY || process.env.AMAP_WEB_KEY || ''
+  const amapSecurity = process.env.NEXT_PUBLIC_AMAP_SECURITY || ''
+
+  const runtimeBootstrap =
+    amapKey || amapSecurity
+      ? `window.__XUNCHENG_AMAP_KEY__=${JSON.stringify(amapKey)};window.__XUNCHENG_AMAP_SECURITY__=${JSON.stringify(amapSecurity)};${amapSecurity ? `window._AMapSecurityConfig={securityJsCode:${JSON.stringify(amapSecurity)}};` : ''}`
+      : ''
+
   return (
     <html lang="zh-CN">
       <head>
-        <AmapSecurityBootstrap />
+        {runtimeBootstrap ? (
+          <script id="xuncheng-amap-runtime" dangerouslySetInnerHTML={{ __html: runtimeBootstrap }} />
+        ) : null}
       </head>
       <body className="min-h-screen bg-paper-warm">
         {children}

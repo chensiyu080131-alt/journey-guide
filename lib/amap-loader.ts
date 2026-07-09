@@ -1,7 +1,11 @@
+import { getRuntimeAmapKey, getRuntimeAmapSecurity } from './amap-runtime'
+
 declare global {
   interface Window {
     AMap?: typeof AMap
     _AMapSecurityConfig?: { securityJsCode?: string }
+    __XUNCHENG_AMAP_KEY__?: string
+    __XUNCHENG_AMAP_SECURITY__?: string
   }
 }
 
@@ -14,13 +18,13 @@ export interface AMapMarker {
 let loadPromise: Promise<void> | null = null
 
 function getAmapKey(): string {
-  return process.env.NEXT_PUBLIC_AMAP_KEY || ''
+  return getRuntimeAmapKey()
 }
 
 /** 注入高德安全密钥（2021年后 Web 端 Key 通常需要配对） */
 export function ensureAmapSecurityConfig(): void {
   if (typeof window === 'undefined') return
-  const code = process.env.NEXT_PUBLIC_AMAP_SECURITY
+  const code = getRuntimeAmapSecurity()
   if (code) {
     window._AMapSecurityConfig = { securityJsCode: code }
   }
@@ -94,7 +98,7 @@ export function hasAmapKey(): boolean {
 }
 
 export function hasAmapSecurity(): boolean {
-  return Boolean(process.env.NEXT_PUBLIC_AMAP_SECURITY)
+  return Boolean(getRuntimeAmapSecurity())
 }
 
 /** 供页面展示的配置摘要（不含密钥内容） */

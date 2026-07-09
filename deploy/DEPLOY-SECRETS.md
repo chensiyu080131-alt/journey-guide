@@ -18,10 +18,32 @@
 ## 部署后自检
 
 ```bash
+# LLM
 curl http://47.109.91.112:8080/api/book-guide
 # 期望：{"mock":false,"reason":null}
-# 若 mock:true → LLM_API_KEY 未注入
+
+# 地图 Key（服务端环境）
+curl http://47.109.91.112:8080/api/config
+# 期望：{"amap":{"hasKey":true,"hasSecurity":true,...}}
 ```
+
+## 高德地图白名单（地图不显示 / 蓝格子时必查）
+
+登录 [高德开放平台](https://console.amap.com/) → 应用 → Web 端 Key：
+
+1. **服务平台**：勾选「Web 端 (JS API)」
+2. **域名白名单** 添加（至少）：
+   - `47.109.91.112`
+   - `47.109.91.112:8080`
+   - `localhost`（本地开发）
+3. **安全密钥** `NEXT_PUBLIC_AMAP_SECURITY` 必须与 Key 配对启用
+
+## 常见原因：线上地图不显示
+
+1. **服务端未配 Key** — `NEXT_PUBLIC_AMAP_KEY` / `NEXT_PUBLIC_AMAP_SECURITY` 未写入服务器 `.env.production`
+2. **高德白名单** — 未添加 `47.109.91.112:8080`，瓦片请求被拒（蓝格或空白）
+3. **安全密钥未配对** — 仅有 Key 没有 Security Code，JS API 2.0 无法加载瓦片
+4. **仍走静态站** — 页面能开但 `/api/config` 返回 HTML → 需 standalone 部署
 
 ## 常见原因：线上没有 LLM
 
