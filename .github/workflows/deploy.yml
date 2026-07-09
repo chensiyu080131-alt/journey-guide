@@ -1,8 +1,14 @@
-name: Deploy to ECS
+name: Deploy to ECS (Node standalone + pm2)
 
 on:
   push:
     branches: [main]
+
+# 目标服务器目录（pm2 运行此处的 server.js）
+env:
+  DEPLOY_DIR: /opt/xuncheng
+  APP_NAME: xuncheng
+  APP_PORT: '3000'
 
 jobs:
   deploy:
@@ -14,20 +20,54 @@ jobs:
         with:
           node-version: '20'
 
-      - run: npm install
-      - name: Build static site
+      - run: npm ci || npm install
+
+      - name: Build (standalone)
         run: npx next build
         env:
-          # NEXT_PUBLIC_* 在 build 时写入前端包，必须在 CI 注入（不能只配服务器 .env）
+          # NEXT_PUBLIC_* 在 build 时写入前端包，必须在 CI 注入
           NEXT_PUBLIC_AMAP_KEY: ${{ secrets.NEXT_PUBLIC_AMAP_KEY }}
           NEXT_PUBLIC_AMAP_SECURITY: ${{ secrets.NEXT_PUBLIC_AMAP_SECURITY }}
 
-      - uses: appleboy/scp-action@v0.1.7
+      - name: Assemble standalone bundle
+        run: |
+          # standalone 需要手动带上 static 与 public
+          mkdir -p .next/standalone/.next
+          cp -r .next/static .next/standalone/.next/static
+          if [ -d public ]; then cp -r public .next/standalone/public; fi
+          ls -la .next/standalone
+
+      - name: Upload bundle to ECS
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.ECS_HOST }}
           username: root
           key: ${{ secrets.ECS_SSH_KEY }}
-          source: "out/*"
-          target: "/usr/share/nginx/html/xuncheng"
-          strip_components: 1
+          source: ".next/standalone/*"
+          target: ${{ env.DEPLOY_DIR }}
+          strip_components: 2   # 去掉 .next/standalone/ 前缀
           overwrite: true
+
+      - name: Restart with pm2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: root
+          key: ${{ secrets.ECS_SSH_KEY }}
+          # 把运行期密钥透传到远端 shell（pm2 start 时捕获进环境）
+          envs: LLM_API_KEY,LLM_BASE_URL,LLM_MODEL,NEXT_PUBLIC_AMAP_KEY,APP_NAME,APP_PORT,DEPLOY_DIR
+          script: |
+            set -e
+            export LLM_API_KEY="${{ secrets.LLM_API_KEY }}"
+            export LLM_BASE_URL="${{ secrets.LLM_BASE_URL }}"
+            export LLM_MODEL="${{ secrets.LLM_MODEL }}"
+            export NEXT_PUBLIC_AMAP_KEY="${{ secrets.NEXT_PUBLIC_AMAP_KEY }}"
+            cd ${{ env.DEPLOY_DIR }}
+            command -v pm2 >/dev/null 2>&1 || npm i -g pm2
+            pm2 delete ${{ env.APP_NAME }} 2>/dev/null || true
+            PORT=${{ env.APP_PORT }} HOSTNAME=127.0.0.1 \
+              LLM_API_KEY="$LLM_API_KEY" LLM_BASE_URL="$LLM_BASE_URL" LLM_MODEL="$LLM_MODEL" \
+              NEXT_PUBLIC_AMAP_KEY="$NEXT_PUBLIC_AMAP_KEY" \
+              pm2 start server.js --name ${{ env.APP_NAME }} --update-env
+            pm2 save
+            pm2 status ${{ env.APP_NAME }}
