@@ -45,6 +45,32 @@ function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color:
       </svg>
     )
   }
+  if (type === 'film') {
+    return (
+      <svg viewBox="0 0 64 64" className={cls} fill="none">
+        <rect x="14" y="14" width="36" height="36" rx="2" stroke={stroke} strokeWidth="1.2" />
+        <rect x="10" y="18" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="10" y="28" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="10" y="38" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="50" y="18" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="50" y="28" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="50" y="38" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <circle cx="32" cy="32" r="8" stroke={stroke} strokeWidth="1.2" />
+        <circle cx="32" cy="32" r="3" fill={stroke} opacity="0.3" />
+      </svg>
+    )
+  }
+  if (type === 'sport') {
+    return (
+      <svg viewBox="0 0 64 64" className={cls} fill="none">
+        <path d="M32 12 L32 52" stroke={stroke} strokeWidth="1.2" />
+        <path d="M20 20 Q32 8 44 20" stroke={stroke} strokeWidth="1.2" fill="none" />
+        <path d="M16 36 L48 36" stroke={stroke} strokeWidth="1" opacity="0.6" />
+        <circle cx="32" cy="28" r="4" stroke={stroke} strokeWidth="1" fill="none" />
+        <path d="M28 44 L32 52 L36 44" stroke={stroke} strokeWidth="1" opacity="0.5" />
+      </svg>
+    )
+  }
   return (
     <svg viewBox="0 0 64 64" className={cls} fill="none">
       <rect x="18" y="14" width="28" height="38" rx="1" stroke={stroke} strokeWidth="1.2" />

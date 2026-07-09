@@ -24,6 +24,7 @@ const nanjingSpots: Spot[] = [
     originalText: '我们默默地坐着，看江里帆影的流动，看河心洲上五色的灯光。',
     originalSource: '朱自清《桨声灯影里的秦淮河》',
     realityNote: '建议傍晚从文德桥步行至白鹭洲，乘画舫夜游。鸭血粉丝汤认准回味、小潘记等老店。',
+    culturalTag: '🎬影视', culturalTagDetail: '🎬 朱自清散文名篇——桨声灯影里的秦淮河',
   },
   {
     id: 'nj-2', name: '鸡鸣寺', desc: '南朝四百八十寺，樱花季满城皆粉',
@@ -34,6 +35,7 @@ const nanjingSpots: Spot[] = [
     originalText: '千里莺啼绿映红，水村山郭酒旗风。南朝四百八十寺，多少楼台烟雨中。',
     originalSource: '杜牧《江南春》',
     realityNote: '从北门出可登明城墙俯瞰玄武湖。樱花季3-4月需提前预约。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 杜牧"南朝四百八十寺，多少楼台烟雨中"',
   },
   {
     id: 'nj-3', name: '玄武湖', desc: '六朝烟水，城中最大湖泊',
@@ -44,6 +46,7 @@ const nanjingSpots: Spot[] = [
     originalText: '春花秋月何时了，往事知多少。',
     originalSource: '李煜《虞美人》',
     realityNote: '建议租自行车环湖，樱洲春季花开，梁洲适合看日落。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 李煜"春花秋月何时了"',
   },
   {
     id: 'nj-4', name: '老门东', desc: '明清老街巷，城南烟火气',
@@ -54,6 +57,7 @@ const nanjingSpots: Spot[] = [
     originalText: '烟水寒，枫林老，草枯霜白，月明风清，正是游赏好时节。',
     originalSource: '《金陵景物志》',
     realityNote: '推荐蓝老大糖芋苗、蒋有记牛肉锅贴，比夫子庙人少价实。',
+    culturalTag: '🎬影视', culturalTagDetail: '🎬 影视剧取景地——明清老街巷老门东',
   },
   {
     id: 'nj-5', name: '鸭血粉丝汤', desc: '金陵第一小吃，鸭血嫩滑粉丝鲜',
@@ -64,6 +68,7 @@ const nanjingSpots: Spot[] = [
     originalText: '金陵自古繁华地，美食甲于东南。',
     originalSource: '《金陵岁时记》',
     realityNote: '回味鸭血粉丝汤、小潘记为连锁老店，加辣油香菜，汤要喝完。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 金陵美食文化——鸭血粉丝汤',
   },
 ]
 
@@ -77,6 +82,7 @@ const suzhouSpots: Spot[] = [
     originalText: '园林之美，在于疏密有致，虚实相生。此间一步一景，正如画理。',
     originalSource: '沈复《浮生六记》',
     realityNote: '建议7:30开园即入。从东花园经中园到西园，西部盆景园人少景幽。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 沈复《浮生六记》中的苏州园林意境',
   },
   {
     id: 'sz-2', name: '平江路', desc: '姑苏水巷，枕河人家',
@@ -87,6 +93,7 @@ const suzhouSpots: Spot[] = [
     originalText: '姑苏城外寒山寺，夜半钟声到客船。',
     originalSource: '张继《枫桥夜泊》',
     realityNote: '从拙政园步行10分钟可达，推荐听一曲评弹，尝松鹤楼枣泥拉糕。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 张继"姑苏城外寒山寺，夜半钟声到客船"',
   },
   {
     id: 'sz-3', name: '虎丘', desc: '吴中第一名胜，斜塔千年不倒',
@@ -97,6 +104,7 @@ const suzhouSpots: Spot[] = [
     originalText: '到苏州而不游虎丘，乃憾事也。',
     originalSource: '苏轼语',
     realityNote: '从山门沿剑池上行至斜塔，春季杜鹃花展值得一看。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 苏轼"到苏州不游虎丘，乃憾事也"',
   },
   {
     id: 'sz-4', name: '寒山寺', desc: '夜半钟声，客船听枫桥',
@@ -107,6 +115,7 @@ const suzhouSpots: Spot[] = [
     originalText: '姑苏城外寒山寺，夜半钟声到客船。',
     originalSource: '张继《枫桥夜泊》',
     realityNote: '可步行过枫桥，碑廊存有历代《枫桥夜泊》石刻。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 张继《枫桥夜泊》——寒山寺夜半钟声',
   },
   {
     id: 'sz-5', name: '苏帮菜', desc: '松鼠桂鱼、响油鳝糊，甜鲜为本',
@@ -117,6 +126,7 @@ const suzhouSpots: Spot[] = [
     originalText: '饮食之道，清鲜和润，乃吴中之正味。',
     originalSource: '《苏州府志·风俗》',
     realityNote: '观前街得月楼、松鹤楼为百年老店，松鼠桂鱼偏甜宜配碧螺虾仁。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 苏州饮食文化——吴中正味',
   },
 ]
 
@@ -130,6 +140,7 @@ const wuxiSpots: Spot[] = [
     originalText: '太湖佳绝处，毕竟在鼋头。',
     originalSource: '郭沫若题鼋头渚',
     realityNote: '樱花季建议工作日早7点入园，非花季可登太湖仙岛。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 郭沫若"太湖佳绝处，毕竟在鼋头"',
   },
   {
     id: 'wx-2', name: '惠山古镇', desc: '寄畅园畔，泥人茶香',
@@ -140,6 +151,7 @@ const wuxiSpots: Spot[] = [
     originalText: '二泉映月，惠山泥人，江南风物尽在眼前。',
     originalSource: '《惠山记》',
     realityNote: '二泉亭品泉茶，惠山泥人博物馆可体验捏塑。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 二泉映月·惠山泥人——江南风物',
   },
   {
     id: 'wx-3', name: '无锡小笼', desc: '皮薄汁多，先开窗后喝汤',
@@ -150,6 +162,7 @@ const wuxiSpots: Spot[] = [
     originalText: '江南点心，以无锡小笼为绝，鲜而不腻。',
     originalSource: '《无锡县志·食货》',
     realityNote: '熙盛源鲜肉小笼配姜丝醋，轻提慢移避免烫口。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 无锡饮食文化——江南点心之绝',
   },
   {
     id: 'wx-4', name: '南长街', desc: '运河古街，灯火映水',
@@ -160,6 +173,7 @@ const wuxiSpots: Spot[] = [
     originalText: '运河千里，无锡最繁华处在此。',
     originalSource: '《运河志》',
     realityNote: '从清明桥步行至南禅寺，晚间可乘运河游船。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 大运河文化——无锡南长街',
   },
 ]
 
@@ -173,6 +187,7 @@ const zhenjiangSpots: Spot[] = [
     originalText: '山不在高，有仙则名。水不在深，有龙则灵。',
     originalSource: '刘禹锡《陋室铭》',
     realityNote: '登慈寿塔俯瞰长江，文创区有白蛇传说展。',
+    culturalTag: '🎬影视', culturalTagDetail: '🎬 《白蛇传》"水漫金山"传说发生地',
   },
   {
     id: 'zj-2', name: '焦山', desc: '书法摩崖，长江第一江防',
@@ -183,6 +198,7 @@ const zhenjiangSpots: Spot[] = [
     originalText: '大江奔流，焦山独立，书法石刻，千古绝唱。',
     originalSource: '《焦山志》',
     realityNote: '需乘渡船登岛，万佛塔可远眺长江大桥。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 焦山《瘗鹤铭》——大字之祖',
   },
   {
     id: 'zj-3', name: '西津渡', desc: '千年古渡，三国遗风',
@@ -193,6 +209,7 @@ const zhenjiangSpots: Spot[] = [
     originalText: '京口瓜洲一水间，钟山只隔数重山。',
     originalSource: '王安石《泊船瓜洲》',
     realityNote: '傍晚前往最佳，附近锅盖面老店集中。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 王安石"京口瓜洲一水间"',
   },
   {
     id: 'zj-4', name: '镇江锅盖面', desc: '面锅煮面，锅盖浮汤',
@@ -203,6 +220,7 @@ const zhenjiangSpots: Spot[] = [
     originalText: '面要锅盖，肴要香醋，镇江一绝。',
     originalSource: '镇江民间食谚',
     realityNote: '大华面馆、邵顺兴为本地名店，点长鱼面或腰花面。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 镇江饮食文化——锅盖面与肴肉',
   },
 ]
 

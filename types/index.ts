@@ -79,6 +79,10 @@ export interface Spot {
   region?: string
   /** 五味标签：酸/甜/苦/辣/咸 */
   flavor?: '酸' | '甜' | '苦' | '辣' | '咸'
+  /** ★ 光影记忆：文化载体类型 */
+  culturalTag?: '📖书籍' | '🎬影视' | '🎮游戏' | '🎵音乐' | '🏃运动'
+  /** ★ 光影记忆：具体描述，如"🎬 京剧《沙家浜》经典场景拍摄地" */
+  culturalTagDetail?: string
 }
 
 /** 一天的行程 */
