@@ -19,13 +19,31 @@ export function SiteFooter() {
           </Link>
         </div>
 
-        <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-8 text-sm">
+        <div className="mt-12 grid grid-cols-2 sm:grid-cols-6 gap-8 text-sm">
           <div>
             <p className="font-semibold mb-3 text-white/90">路线</p>
             <ul className="space-y-2 text-white/50">
               <li><Link href="/guide/shajiabang" className="hover:text-xuncheng-400">《沙家浜》</Link></li>
               <li><Link href="/guide/niehaifeng" className="hover:text-xuncheng-400">《孽海花》</Link></li>
               <li><Link href="/guide/wengtonghe" className="hover:text-xuncheng-400">翁同龢</Link></li>
+            </ul>
+          </div>
+          <div>
+            <p className="font-semibold mb-3 text-white/90">非遗 · 遗承</p>
+            <ul className="space-y-2 text-white/50">
+              <li><Link href="/yicheng" className="hover:text-xuncheng-400">非遗总览</Link></li>
+              <li><Link href="/yicheng/booking" className="hover:text-xuncheng-400">工坊预约</Link></li>
+              <li><Link href="/yicheng/ar" className="hover:text-xuncheng-400">AR 教学</Link></li>
+              <li><Link href="/yicheng/community" className="hover:text-xuncheng-400">传承社区</Link></li>
+            </ul>
+          </div>
+          <div>
+            <p className="font-semibold mb-3 text-white/90">人间滋味</p>
+            <ul className="space-y-2 text-white/50">
+              <li><Link href="/renjian" className="hover:text-xuncheng-400">封面</Link></li>
+              <li><Link href="/renjian/gaoyou" className="hover:text-xuncheng-400">高邮深度</Link></li>
+              <li><Link href="/renjian/map" className="hover:text-xuncheng-400">全国美食地图</Link></li>
+              <li><Link href="/renjian/timeline" className="hover:text-xuncheng-400">人生轨迹</Link></li>
             </ul>
           </div>
           <div>
