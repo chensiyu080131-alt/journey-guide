@@ -77,6 +77,16 @@ function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color:
       </svg>
     )
   }
+  if (type === 'search') {
+    return (
+      <svg viewBox="0 0 64 64" className={cls} fill="none">
+        <circle cx="27" cy="27" r="13" stroke={stroke} strokeWidth="1.6" />
+        <line x1="37" y1="37" x2="50" y2="50" stroke={stroke} strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M21 27 Q27 21 33 27" stroke={stroke} strokeWidth="0.9" opacity="0.6" />
+        <circle cx="27" cy="27" r="3" fill={stroke} opacity="0.3" />
+      </svg>
+    )
+  }
   return (
     <svg viewBox="0 0 64 64" className={cls} fill="none">
       <rect x="18" y="14" width="28" height="38" rx="1" stroke={stroke} strokeWidth="1.2" />

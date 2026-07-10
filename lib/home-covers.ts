@@ -1,12 +1,12 @@
 export type HomeTab = '首页' | '📖 书籍' | '🏙️ 城市' | '🎮 游戏' | '🎵 音乐'
-export type CoverCategory = '书籍' | '🎬 影视' | '🎮 游戏' | '🎵 音乐' | '🏃 运动'
+export type CoverCategory = '书籍' | '🎬 影视' | '🎮 游戏' | '🎵 音乐' | '🏃 运动' | '🏙️ 城市' | '🔍 搜索'
 
 export interface CoverStyle {
   bg: string
   border: string
   title: string
   subtitle: string
-  motif: 'book' | 'note' | 'game' | 'landscape' | 'city' | 'film' | 'sport'
+  motif: 'book' | 'note' | 'game' | 'landscape' | 'city' | 'film' | 'sport' | 'search'
 }
 
 export interface HomeCover {
@@ -455,14 +455,48 @@ export const featuredCovers: HomeCover[] = [
   },
 ]
 
+// ──────────────────────────────────────
+//  🏙️ 城市 Tab
+// ──────────────────────────────────────
+
+/** 「搜一座城」入口封面（AI 生成任意城市攻略）——城市 tab 的首要入口 */
+const searchHeroCover: HomeCover = {
+  id: 'souyizuocheng',
+  category: '🔍 搜索',
+  title: '搜一座城',
+  subtitle: 'AI 生成 · 任意城市攻略',
+  route: '/guide/destination',
+  style: {
+    bg: 'linear-gradient(165deg, #FBE7CF 0%, #E89B5A 100%)',
+    border: '#C2410C',
+    title: '#7C2D12',
+    subtitle: '#9A3412',
+    motif: 'search',
+  },
+}
+
+const cityCovers: HomeCover[] = [
+  searchHeroCover,
+  { id: 'city-changshu', category: '🏙️ 城市', title: '常熟', subtitle: '虞山琴派 · 江南名城', route: '/guide/niehaifeng', style: { bg: 'linear-gradient(165deg, #DDE8E4 0%, #B8CCC4 100%)', border: '#5A7D78', title: '#3D5550', subtitle: '#6B8480', motif: 'city' } },
+  { id: 'city-hangzhou', category: '🏙️ 城市', title: '杭州', subtitle: '钱塘湖 · 西湖烟雨', route: '/guide/hangzhou', style: { bg: 'linear-gradient(165deg, #C8E0D4 0%, #90C4A8 100%)', border: '#4A7A5A', title: '#2E4A38', subtitle: '#5A7A5A', motif: 'city' } },
+  { id: 'city-beijing', category: '🏙️ 城市', title: '北京', subtitle: '帝都 · 胡同秋意', route: '/guide/beijing', style: { bg: 'linear-gradient(165deg, #E0C8C0 0%, #C09888 100%)', border: '#8A4A3A', title: '#4A2E24', subtitle: '#7A4A3A', motif: 'city' } },
+  { id: 'city-shanghai', category: '🏙️ 城市', title: '上海', subtitle: '繁花 · 弄堂外滩', route: '/guide/shanghai', style: { bg: 'linear-gradient(165deg, #E8D4CC 0%, #C4A898 100%)', border: '#8A5A4A', title: '#4A2E24', subtitle: '#7A5A4A', motif: 'city' } },
+  { id: 'city-chengdu', category: '🏙️ 城市', title: '成都', subtitle: '草堂 · 锦里烟火', route: '/guide/chengdu', style: { bg: 'linear-gradient(165deg, #C8E0C8 0%, #90C490 100%)', border: '#4A7A4A', title: '#2E4A2E', subtitle: '#5A7A5A', motif: 'city' } },
+  { id: 'city-xian', category: '🏙️ 城市', title: '西安', subtitle: '长安 · 盛唐遗韵', route: '/guide/xian', style: { bg: 'linear-gradient(165deg, #E0D0B8 0%, #C8A878 100%)', border: '#8A6A3A', title: '#4A3A1E', subtitle: '#7A5A2A', motif: 'city' } },
+  { id: 'city-yangzhou', category: '🏙️ 城市', title: '扬州', subtitle: '淮左名都 · 二分明月', route: '/guide/yangzhou', style: { bg: 'linear-gradient(165deg, #D4E8E0 0%, #B8D4C8 100%)', border: '#5A7D78', title: '#3D5550', subtitle: '#6B8480', motif: 'city' } },
+  { id: 'city-fenghuang', category: '🏙️ 城市', title: '凤凰', subtitle: '边城 · 沱江吊脚楼', route: '/guide/fenghuang', style: { bg: 'linear-gradient(165deg, #C8D0D8 0%, #98A8B8 100%)', border: '#5A6878', title: '#2E3E4E', subtitle: '#5A6A7A', motif: 'city' } },
+  { id: 'city-zhangjiajie', category: '🏙️ 城市', title: '张家界', subtitle: '奇峰 · 原神取景', route: '/guide/zhangjiajie', style: { bg: 'linear-gradient(165deg, #D4E8D4 0%, #A8C8A8 100%)', border: '#5A7A5A', title: '#3A4A3A', subtitle: '#6A8A6A', motif: 'city' } },
+]
+
 export function getCoversForTab(tab: HomeTab): HomeCover[] {
   switch (tab) {
     case '📖 书籍': return bookCovers
+    case '🏙️ 城市': return cityCovers
     default: return featuredCovers
   }
 }
 
 /** 待开发的 Tab：中部显示占位提示，不展示封面 */
-export const underDevelopmentTabs: HomeTab[] = ['🏙️ 城市', '🎮 游戏', '🎵 音乐']
+export const underDevelopmentTabs: HomeTab[] = ['🎮 游戏', '🎵 音乐']
 
 export const homeTabs: HomeTab[] = ['首页', '📖 书籍', '🏙️ 城市', '🎮 游戏', '🎵 音乐']

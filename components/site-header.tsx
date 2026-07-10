@@ -8,6 +8,7 @@ const navLinks = [
   { href: '/', label: '首页' },
   { href: '/#routes', label: '路线' },
   { href: '/yicheng', label: '非遗工坊' },
+  { href: '/renjian', label: '人间滋味' },
   { href: '/xhs', label: '小红书文案' },
   { href: '/guide/destination', label: '搜目的地' },
 ]
