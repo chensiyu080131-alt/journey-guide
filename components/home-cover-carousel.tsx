@@ -15,17 +15,17 @@ function MiniCoverCard({ cover, index, total, isExpanded }: {
   const { style } = cover
   const isLiteraryBook = cover.id === 'renjianziwei'
 
-  // 堆叠偏移：未展开时紧密堆叠，展开时扇形散开
+  // 堆叠偏移：未展开时明显错落堆叠，展开时扇形散开
   const stackOffset = isExpanded
-    ? { rotate: (index - (total - 1) / 2) * 8, y: index * 8 }
-    : { rotate: (index - (total - 1) / 2) * 3, y: index * 3 }
+    ? { rotate: (index - (total - 1) / 2) * 10, y: index * 18, x: (index - (total - 1) / 2) * 20 }
+    : { rotate: (index - (total - 1) / 2) * 5, y: index * 8, x: index * 6 }
   const zIndex = total - index + (isExpanded ? 10 : 0)
 
   return (
     <div
       className="absolute transition-all duration-500 ease-out"
       style={{
-        transform: `rotate(${stackOffset.rotate}deg) translateY(${stackOffset.y}px)`,
+        transform: `rotate(${stackOffset.rotate}deg) translate(${stackOffset.x}px, ${stackOffset.y}px)`,
         zIndex,
         width: isExpanded ? '160px' : '140px',
         left: '50%',
