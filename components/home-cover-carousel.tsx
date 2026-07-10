@@ -1,326 +1,378 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { HomeCover, CoverCategory } from '@/lib/home-covers'
+import { HomeCover } from '@/lib/home-covers'
 
-/* ─── 小型封面卡（堆叠中的单本） ─── */
-function MiniCoverCard({ cover, index, total, isExpanded }: {
+function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color: string }) {
+  const stroke = color
+  const cls = 'w-24 h-24 sm:w-28 sm:h-28 opacity-35'
+  if (type === 'city') {
+    return (
+      <svg viewBox="0 0 64 64" className={cls} fill="none">
+        <path d="M12 48 L32 16 L52 48 Z" stroke={stroke} strokeWidth="1.2" />
+        <rect x="26" y="36" width="12" height="12" stroke={stroke} strokeWidth="1" />
+        <line x1="20" y1="48" x2="44" y2="48" stroke={stroke} strokeWidth="1" />
+      </svg>
+    )
+  }
+  if (type === 'note') {
+    return (
+      <svg viewBox="0 0 64 64" className={cls} fill="none">
+        <ellipse cx="32" cy="44" rx="18" ry="6" stroke={stroke} strokeWidth="1.2" />
+        <path d="M18 44 Q32 18 46 44" stroke={stroke} strokeWidth="1.5" />
+        <circle cx="18" cy="44" r="2.5" fill={stroke} opacity="0.5" />
+        <line x1="46" y1="44" x2="46" y2="28" stroke={stroke} strokeWidth="1.2" />
+      </svg>
+    )
+  }
+  if (type === 'game') {
+    return (
+      <svg viewBox="0 0 64 64" className={cls} fill="none">
+        <rect x="14" y="22" width="36" height="24" rx="4" stroke={stroke} strokeWidth="1.2" />
+        <circle cx="24" cy="34" r="4" stroke={stroke} strokeWidth="1" />
+        <circle cx="40" cy="30" r="2" fill={stroke} opacity="0.5" />
+        <circle cx="44" cy="36" r="2" fill={stroke} opacity="0.5" />
+      </svg>
+    )
+  }
+  if (type === 'landscape') {
+    return (
+      <svg viewBox="0 0 64 64" className={cls} fill="none">
+        <path d="M8 48 Q20 28 32 48 Q44 28 56 48" stroke={stroke} strokeWidth="1.5" />
+        <path d="M12 44 Q24 32 36 44" stroke={stroke} strokeWidth="1" opacity="0.6" />
+      </svg>
+    )
+  }
+  if (type === 'film') {
+    return (
+      <svg viewBox="0 0 64 64" className={cls} fill="none">
+        <rect x="14" y="14" width="36" height="36" rx="2" stroke={stroke} strokeWidth="1.2" />
+        <rect x="10" y="18" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="10" y="28" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="10" y="38" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="50" y="18" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="50" y="28" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="50" y="38" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <circle cx="32" cy="32" r="8" stroke={stroke} strokeWidth="1.2" />
+        <circle cx="32" cy="32" r="3" fill={stroke} opacity="0.3" />
+      </svg>
+    )
+  }
+  if (type === 'sport') {
+    return (
+      <svg viewBox="0 0 64 64" className={cls} fill="none">
+        <path d="M32 12 L32 52" stroke={stroke} strokeWidth="1.2" />
+        <path d="M20 20 Q32 8 44 20" stroke={stroke} strokeWidth="1.2" fill="none" />
+        <path d="M16 36 L48 36" stroke={stroke} strokeWidth="1" opacity="0.6" />
+        <circle cx="32" cy="28" r="4" stroke={stroke} strokeWidth="1" fill="none" />
+        <path d="M28 44 L32 52 L36 44" stroke={stroke} strokeWidth="1" opacity="0.5" />
+      </svg>
+    )
+  }
+  return (
+    <svg viewBox="0 0 64 64" className={cls} fill="none">
+      <rect x="18" y="14" width="28" height="38" rx="1" stroke={stroke} strokeWidth="1.2" />
+      <line x1="24" y1="22" x2="40" y2="22" stroke={stroke} strokeWidth="0.8" opacity="0.5" />
+      <line x1="24" y1="28" x2="38" y2="28" stroke={stroke} strokeWidth="0.8" opacity="0.5" />
+      <line x1="24" y1="34" x2="36" y2="34" stroke={stroke} strokeWidth="0.8" opacity="0.5" />
+    </svg>
+  )
+}
+
+function CoverCard({
+  cover,
+  isActive,
+  showExplore,
+  href,
+  onClick,
+}: {
   cover: HomeCover
-  index: number
-  total: number
-  isExpanded: boolean
+  isActive: boolean
+  showExplore: boolean
+  href: string
+  onClick: () => void
 }) {
   const { style } = cover
   const isLiteraryBook = cover.id === 'renjianziwei'
 
-  // 堆叠偏移：未展开时明显错落堆叠，展开时扇形散开
-  const stackOffset = isExpanded
-    ? { rotate: (index - (total - 1) / 2) * 10, y: index * 18, x: (index - (total - 1) / 2) * 20 }
-    : { rotate: (index - (total - 1) / 2) * 5, y: index * 8, x: index * 6 }
-  const zIndex = total - index + (isExpanded ? 10 : 0)
-
   return (
     <div
-      className="absolute transition-all duration-500 ease-out"
-      style={{
-        transform: `rotate(${stackOffset.rotate}deg) translate(${stackOffset.x}px, ${stackOffset.y}px)`,
-        zIndex,
-        width: isExpanded ? '160px' : '140px',
-        left: '50%',
-        marginLeft: isExpanded ? '-80px' : '-70px',
-      }}
-    >
-      <div className="relative rounded-md overflow-hidden shadow-lg"
-        style={{
-          background: isLiteraryBook
-            ? 'linear-gradient(155deg, #A65D5D 0%, #8B4545 55%, #6B3333 100%)'
-            : style.bg,
-          aspectRatio: '3 / 4.2',
-          border: `1px solid ${style.border}30`,
-        }}
-      >
-        {cover.image && (
-          <img src={cover.image} alt={cover.title}
-            className="absolute inset-0 w-full h-full object-cover z-10" />
-        )}
-        <div className="absolute top-2 left-2 w-3 h-3 border-t border-l opacity-20"
-          style={{ borderColor: style.border }} />
-        <div className="absolute top-2 right-2 w-3 h-3 border-t border-r opacity-20"
-          style={{ borderColor: style.border }} />
-        <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l opacity-20"
-          style={{ borderColor: style.border }} />
-        <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r opacity-20"
-          style={{ borderColor: style.border }} />
-
-        <div className="flex flex-col items-center justify-center h-full py-4 px-3 z-20 relative">
-          <p className="text-[8px] tracking-[0.15em] uppercase mb-1"
-            style={{ color: isLiteraryBook ? 'rgba(255,255,255,0.6)' : style.subtitle }}>
-            {cover.category}
-          </p>
-          <h4 className="font-serif font-semibold text-center leading-tight"
-            style={{
-              color: isLiteraryBook ? '#fff' : style.title,
-              fontSize: isExpanded ? '1rem' : '0.85rem',
-            }}>
-            {cover.title}
-          </h4>
-          <p className="mt-1 text-[9px] text-center tracking-wide"
-            style={{ color: isLiteraryBook ? 'rgba(255,255,255,0.7)' : style.subtitle }}>
-            {cover.subtitle}
-          </p>
-        </div>
-
-        {/* 左侧书脊 */}
-        <div className="absolute left-0 top-1 bottom-1 w-2.5 rounded-l-md"
-          style={{
-            background: isLiteraryBook ? '#6B3333' : style.border,
-            boxShadow: 'inset -1px 0 3px rgba(0,0,0,0.1)',
-          }} />
-      </div>
-    </div>
-  )
-}
-
-/* ─── 分类堆叠组 ─── */
-function CoverStack({ category, covers, isActive, onClick }: {
-  category: CoverCategory
-  covers: HomeCover[]
-  isActive: boolean
-  onClick: () => void
-}) {
-  // 每个堆叠取最多4本
-  const displayCovers = covers.slice(0, 4)
-
-  return (
-    <div
-      className={cn(
-        'flex flex-col items-center cursor-pointer transition-all duration-500 ease-out',
-        isActive ? 'scale-110' : 'scale-100 hover:scale-105'
-      )}
-      onClick={onClick}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick() } }}
-      aria-label={`${category}封面堆叠`}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick()
+        }
+      }}
+      className={cn(
+        'xc-cover-card snap-center flex-shrink-0 transition-all duration-500 ease-out cursor-pointer',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-literary-wine/40',
+        isActive ? 'xc-cover-card-active' : 'xc-cover-card-inactive'
+      )}
+      aria-label={`选择${cover.title}`}
       aria-pressed={isActive}
     >
-      {/* 堆叠区域 */}
-      <div className="relative"
-        style={{
-          width: isActive ? '240px' : '200px',
-          height: isActive ? '320px' : '260px',
-        }}
+      <div
+        className={cn(
+          'relative transition-transform duration-500',
+          isActive && 'xc-cover-inner-active'
+        )}
       >
-        {displayCovers.map((cover, i) => (
-          <MiniCoverCard
-            key={cover.id}
-            cover={cover}
-            index={i}
-            total={displayCovers.length}
-            isExpanded={isActive}
+        <div
+          className="absolute left-0 top-2 bottom-2 w-4 sm:w-5 rounded-l-md"
+          style={{
+            background: isActive && isLiteraryBook ? '#6B3333' : style.border,
+            boxShadow: isActive ? 'inset -2px 0 6px rgba(0,0,0,0.15)' : undefined,
+          }}
+        />
+        <div
+          className={cn(
+            'relative ml-3 sm:ml-4 rounded-r-md border overflow-hidden',
+            isActive && 'shadow-xl'
+          )}
+          style={{
+            background: isActive && isLiteraryBook
+              ? 'linear-gradient(155deg, #A65D5D 0%, #8B4545 55%, #6B3333 100%)'
+              : style.bg,
+            borderColor: isActive && isLiteraryBook ? '#6B333340' : `${style.border}40`,
+            aspectRatio: '3 / 4.2',
+            boxShadow: isActive
+              ? '8px 12px 32px rgba(107, 51, 51, 0.2), inset 0 1px 0 rgba(255,255,255,0.15)'
+              : '4px 6px 16px rgba(61, 46, 46, 0.08)',
+          }}
+        >
+          {cover.image && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={cover.image}
+              alt={cover.title}
+              className="absolute inset-0 w-full h-full object-cover z-10"
+            />
+          )}
+          <div
+            className="absolute top-4 left-4 w-5 h-5 border-t border-l opacity-25"
+            style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
           />
-        ))}
-      </div>
+          <div
+            className="absolute top-4 right-4 w-5 h-5 border-t border-r opacity-25"
+            style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
+          />
+          <div
+            className="absolute bottom-4 left-4 w-5 h-5 border-b border-l opacity-25"
+            style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
+          />
+          <div
+            className="absolute bottom-4 right-4 w-5 h-5 border-b border-r opacity-25"
+            style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
+          />
 
-      {/* 分类标签 */}
-      <div className={cn(
-        'mt-4 text-center transition-all duration-300',
-        isActive ? 'opacity-100' : 'opacity-60'
-      )}>
-        <p className={cn(
-          'text-sm font-serif font-semibold tracking-wider',
-          isActive ? 'text-literary-wine' : 'text-literary-ink'
-        )}>
-          {category}
-        </p>
-        <p className="text-[10px] text-literary-muted mt-0.5">
-          {covers.length} 本
-        </p>
-      </div>
-    </div>
-  )
-}
-
-/* ─── 展开后的封面网格 ─── */
-function ExpandedGrid({ covers, category, onBack }: {
-  covers: HomeCover[]
-  category: CoverCategory
-  onBack: () => void
-}) {
-  const [hoverId, setHoverId] = useState<string | null>(null)
-
-  return (
-    <div className="w-full max-w-4xl mx-auto animate-fade-in">
-      <button
-        onClick={onBack}
-        className="flex items-center gap-1 text-literary-wine text-sm font-serif mb-6
-                   hover:text-literary-wine-dark transition-colors"
-      >
-        <span>←</span>
-        <span>返回全部</span>
-      </button>
-
-      <h3 className="text-lg font-serif font-semibold text-literary-ink mb-1">
-        {category}
-      </h3>
-      <p className="text-xs text-literary-muted mb-6">
-        {covers.length} 本文化载体，点击封面开始探索
-      </p>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
-        {covers.map((cover) => {
-          const { style } = cover
-          const isLiteraryBook = cover.id === 'renjianziwei'
-          const isHover = hoverId === cover.id
-          const isBookRoute = cover.category === '书籍'
-
-          return (
-            <Link
-              key={cover.id}
-              href={`${cover.route}?cat=${cover.category}`}
-              className={cn(
-                'group block transition-all duration-300',
-                isHover && 'scale-[1.03]'
-              )}
-              onMouseEnter={() => setHoverId(cover.id)}
-              onMouseLeave={() => setHoverId(null)}
-            >
-              <div className="relative rounded-md overflow-hidden shadow-md
-                            group-hover:shadow-xl transition-shadow duration-300"
+          <div className="flex flex-col items-center justify-between h-full py-8 sm:py-10 px-5 sm:px-6">
+            <div className="text-center">
+              <p
+                className="text-[10px] tracking-[0.2em] uppercase mb-2"
                 style={{
-                  background: isLiteraryBook
-                    ? 'linear-gradient(155deg, #A65D5D 0%, #8B4545 55%, #6B3333 100%)'
-                    : style.bg,
-                  aspectRatio: '3 / 4.2',
-                  border: `1px solid ${style.border}30`,
+                  color: isActive && isLiteraryBook ? 'rgba(255,255,255,0.65)' : style.subtitle,
                 }}
               >
-                {cover.image && (
-                  <img src={cover.image} alt={cover.title}
-                    className="absolute inset-0 w-full h-full object-cover z-10" />
+                {cover.category}
+              </p>
+              <h3
+                className="font-serif font-semibold tracking-widest leading-snug"
+                style={{
+                  color: isActive && isLiteraryBook ? '#FFFFFF' : style.title,
+                  fontSize: isActive ? '1.5rem' : '1.2rem',
+                }}
+              >
+                {cover.title}
+              </h3>
+              <p
+                className="mt-3 text-xs sm:text-sm tracking-wide"
+                style={{
+                  color: isActive && isLiteraryBook ? 'rgba(255,255,255,0.78)' : style.subtitle,
+                }}
+              >
+                {cover.subtitle}
+              </p>
+            </div>
+
+            <CoverMotif
+              type={style.motif}
+              color={isActive && isLiteraryBook ? 'rgba(255,255,255,0.45)' : style.border}
+            />
+
+            {isActive && (
+              <div
+                className={cn(
+                  'w-10 h-10 rounded-md flex items-center justify-center',
+                  isLiteraryBook
+                    ? 'bg-white/15 border border-white/25'
+                    : 'border border-literary-wine/30 bg-literary-paper/50'
                 )}
-
-                {/* 左侧书脊 */}
-                <div className="absolute left-0 top-1 bottom-1 w-3.5 rounded-l-md z-20"
-                  style={{
-                    background: isLiteraryBook ? '#6B3333' : style.border,
-                    boxShadow: 'inset -2px 0 4px rgba(0,0,0,0.12)',
-                  }} />
-
-                <div className="absolute top-3 left-5 w-4 h-4 border-t border-l opacity-20 z-20"
-                  style={{ borderColor: style.border }} />
-                <div className="absolute top-3 right-3 w-4 h-4 border-t border-r opacity-20 z-20"
-                  style={{ borderColor: style.border }} />
-                <div className="absolute bottom-3 left-5 w-4 h-4 border-b border-l opacity-20 z-20"
-                  style={{ borderColor: style.border }} />
-                <div className="absolute bottom-3 right-3 w-4 h-4 border-b border-r opacity-20 z-20"
-                  style={{ borderColor: style.border }} />
-
-                <div className="flex flex-col items-center justify-center h-full py-6 px-4 z-20 relative">
-                  <p className="text-[9px] tracking-[0.15em] uppercase mb-1.5"
-                    style={{ color: isLiteraryBook ? 'rgba(255,255,255,0.6)' : style.subtitle }}>
-                    {cover.category}
-                  </p>
-                  <h4 className="font-serif font-semibold text-center leading-tight text-base"
-                    style={{ color: isLiteraryBook ? '#fff' : style.title }}>
-                    {cover.title}
-                  </h4>
-                  <p className="mt-2 text-[10px] text-center tracking-wide"
-                    style={{ color: isLiteraryBook ? 'rgba(255,255,255,0.7)' : style.subtitle }}>
-                    {cover.subtitle}
-                  </p>
-
-                  {isBookRoute && (
-                    <div className="mt-4 px-4 py-1.5 rounded-full text-[10px] font-serif tracking-wide
-                                  bg-literary-wine/80 text-white opacity-0 group-hover:opacity-100
-                                  transition-opacity duration-300">
-                      开始探索 →
-                    </div>
+              >
+                <span
+                  className={cn(
+                    'text-sm font-serif leading-none',
+                    isLiteraryBook ? 'text-white' : 'text-literary-wine'
                   )}
-                </div>
-
-                {/* 非书籍类别：建设中遮罩 */}
-                {!isBookRoute && (
-                  <div className="absolute inset-0 z-30 bg-black/40 flex items-center justify-center
-                                opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <p className="text-[10px] text-white/90 font-serif tracking-wide">建设中</p>
-                  </div>
-                )}
+                >
+                  {isLiteraryBook ? '味' : '寻'}
+                </span>
               </div>
-            </Link>
-          )
-        })}
+            )}
+          </div>
+
+          {showExplore && (
+            cover.category === '书籍' ? (
+              <Link
+                href={href}
+                onClick={(e) => e.stopPropagation()}
+                className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 animate-fade-in"
+                aria-label={`开始探索${cover.title}`}
+              >
+                <span className="xc-explore-btn">
+                  开始探索
+                  <span className="opacity-80">→</span>
+                </span>
+              </Link>
+            ) : (
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 animate-fade-in px-4 text-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/under-development.png"
+                  alt="待开发"
+                  className="h-16 sm:h-20 w-auto object-contain brightness-0 invert"
+                />
+                <p className="mt-2 text-[11px] sm:text-xs text-white/85 font-serif tracking-wide">
+                  该功能正在建设中，敬请期待
+                </p>
+              </div>
+            )
+          )}
+        </div>
       </div>
     </div>
   )
 }
 
-/* ─── 主组件 ─── */
 interface HomeCoverCarouselProps {
   covers: HomeCover[]
 }
 
 export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
-  const [activeCategory, setActiveCategory] = useState<CoverCategory | null>(null)
-  const [expandedCategory, setExpandedCategory] = useState<CoverCategory | null>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [exploreIndex, setExploreIndex] = useState<number | null>(null)
 
   useEffect(() => {
-    setActiveCategory(null)
-    setExpandedCategory(null)
+    setActiveIndex(0)
+    setExploreIndex(null)
   }, [covers])
+
+  const scrollTo = (index: number) => {
+    const el = scrollRef.current
+    if (!el) return
+    const card = el.children[index] as HTMLElement | undefined
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+    }
+    setActiveIndex(index)
+    setExploreIndex(null)
+  }
+
+  const handleScroll = () => {
+    const el = scrollRef.current
+    if (!el || el.children.length === 0) return
+    const center = el.scrollLeft + el.clientWidth / 2
+    let closest = 0
+    let minDist = Infinity
+    Array.from(el.children).forEach((child, i) => {
+      const card = child as HTMLElement
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2
+      const dist = Math.abs(center - cardCenter)
+      if (dist < minDist) {
+        minDist = dist
+        closest = i
+      }
+    })
+    setActiveIndex(closest)
+  }
 
   if (covers.length === 0) return null
 
-  // 按类别分组
-  const grouped = covers.reduce<Record<CoverCategory, HomeCover[]>>((acc, cover) => {
-    if (!acc[cover.category]) acc[cover.category] = []
-    acc[cover.category].push(cover)
-    return acc
-  }, {} as Record<CoverCategory, HomeCover[]>)
+  const activeCover = covers[activeIndex] ?? covers[0]
 
-  const categories = Object.keys(grouped) as CoverCategory[]
-
-  // 展开某个类别
-  if (expandedCategory && grouped[expandedCategory]) {
-    return (
-      <div className="flex items-center justify-center w-full px-4">
-        <ExpandedGrid
-          covers={grouped[expandedCategory]}
-          category={expandedCategory}
-          onBack={() => { setExpandedCategory(null); setActiveCategory(null) }}
-        />
-      </div>
-    )
-  }
-
-  // 堆叠视图
   return (
     <div className="flex flex-col items-center w-full max-w-6xl mx-auto px-4">
-      <div className="flex items-end justify-center gap-6 sm:gap-10 lg:gap-14 px-4">
-        {categories.map((cat) => (
-          <CoverStack
-            key={cat}
-            category={cat}
-            covers={grouped[cat]}
-            isActive={activeCategory === cat}
-            onClick={() => {
-              if (activeCategory === cat) {
-                // 双击展开
-                setExpandedCategory(cat)
-              } else {
-                setActiveCategory(cat)
-              }
-            }}
+      <div className="relative w-full">
+        <button
+          type="button"
+          onClick={() => scrollTo((activeIndex - 1 + covers.length) % covers.length)}
+          className="xc-cover-arrow absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 z-10"
+          aria-label="上一个"
+        >
+          ‹
+        </button>
+
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex items-center gap-10 sm:gap-14 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-20 sm:px-28 py-8 touch-pan-x min-h-[400px] sm:min-h-[460px]"
+        >
+          {covers.map((cover, i) => (
+            <CoverCard
+              key={cover.id}
+              cover={cover}
+              isActive={i === activeIndex}
+              showExplore={i === activeIndex && exploreIndex === i}
+              href={`${cover.route}?cat=${cover.category}`}
+              onClick={() => {
+                scrollTo(i)
+                setExploreIndex(i)
+              }}
+            />
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => scrollTo((activeIndex + 1) % covers.length)}
+          className="xc-cover-arrow absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 z-10"
+          aria-label="下一个"
+        >
+          ›
+        </button>
+      </div>
+
+      <div className="text-center mt-2 px-4 animate-fade-in" key={activeCover.id}>
+        <p className="text-[11px] text-literary-wine tracking-[0.2em] font-serif">
+          {activeCover.category} · 精选
+        </p>
+        <h2 className="mt-1 text-lg sm:text-xl font-serif font-semibold text-literary-ink">
+          {activeCover.title}
+        </h2>
+        <p className="mt-1 text-xs text-literary-muted">{activeCover.subtitle}</p>
+      </div>
+
+      <div className="flex gap-2.5 mt-5">
+        {covers.map((cover, i) => (
+          <button
+            key={cover.id}
+            type="button"
+            onClick={() => scrollTo(i)}
+            className={cn(
+              'rounded-full transition-all duration-300',
+              i === activeIndex
+                ? 'w-8 h-2 bg-literary-wine'
+                : 'w-2 h-2 bg-literary-sand hover:bg-literary-wine/30'
+            )}
+            aria-label={cover.title}
           />
         ))}
       </div>
-
-      {/* 提示文字 */}
-      <p className="mt-6 text-[10px] text-literary-muted tracking-wide font-serif animate-fade-in">
-        点击类别展开堆叠 · 再次点击查看全部
-      </p>
     </div>
   )
 }
