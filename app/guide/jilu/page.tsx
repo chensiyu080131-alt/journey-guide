@@ -1,10 +1,9 @@
 'use client'
 
-import { Suspense, useEffect, useState, useCallback } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Guide } from '@/types'
 import { GuideMapExplorer } from '@/components/guide-map-explorer'
-import { GuideFilterSidebar } from '@/components/guide-filter-sidebar'
 import { GuideExplorerShell } from '@/components/guide-explorer-shell'
 import { JILU_GUIDE_KEY, JILU_GUIDE_UPDATED_EVENT } from '@/lib/jilu-guide-service'
 
