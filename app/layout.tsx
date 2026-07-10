@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import Script from 'next/script'
 import './globals.css'
 import { AmapSecurityBootstrap } from '@/components/amap-security-bootstrap'
 import { JiluFloat } from '@/components/jilu-float'
@@ -29,6 +30,11 @@ export default function RootLayout({
       <body className="min-h-screen bg-paper-warm">
         {children}
         <JiluFloat />
+        {/* 51.LA 网站统计 */}
+        <Script id="la-collect" src="https://sdk.51.la/js-sdk-pro.min.js" strategy="afterInteractive" />
+        <Script id="la-init" strategy="afterInteractive">
+          {`LA.init({id:"3QW9srNLaMfs2Lua",ck:"3QW9srNLaMfs2Lua"})`}
+        </Script>
       </body>
     </html>
   )
