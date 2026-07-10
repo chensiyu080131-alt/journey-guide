@@ -402,22 +402,25 @@ const musicCovers: HomeCover[] = [
   },
 ]
 
-/** 首页推荐：文化载体精选 */
+/** 首页推荐：每个类别各取3本用于堆叠展示 */
 export const featuredCovers: HomeCover[] = [
-  bookCovers[0],
-  filmCovers[0],
-  gameCovers[0],
-  musicCovers[0],
+  ...bookCovers.slice(0, 3),
+  ...filmCovers.slice(0, 3),
+  ...gameCovers.slice(0, 3),
+  ...musicCovers.slice(0, 3),
 ]
 
 export function getCoversForTab(tab: HomeTab): HomeCover[] {
   switch (tab) {
     case '📖 书籍': return bookCovers
+    case '🏙️ 城市': return filmCovers
+    case '🎮 游戏': return gameCovers
+    case '🎵 音乐': return musicCovers
     default: return featuredCovers
   }
 }
 
-/** 待开发的 Tab：中部显示占位提示，不展示封面 */
-export const underDevelopmentTabs: HomeTab[] = ['🏙️ 城市', '🎮 游戏', '🎵 音乐']
+/** 所有Tab都有封面数据，不再显示占位提示 */
+export const underDevelopmentTabs: HomeTab[] = []
 
 export const homeTabs: HomeTab[] = ['首页', '📖 书籍', '🏙️ 城市', '🎮 游戏', '🎵 音乐']
