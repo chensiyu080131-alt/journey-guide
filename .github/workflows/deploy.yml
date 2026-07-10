@@ -1,8 +1,14 @@
-name: Deploy to ECS (Static Export)
+name: Deploy to ECS (Node standalone + pm2)
 
 on:
   push:
     branches: [main]
+
+# 目标服务器目录（pm2 运行此处的 server.js）
+env:
+  DEPLOY_DIR: /opt/xuncheng
+  APP_NAME: xuncheng
+  APP_PORT: '3000'
 
 jobs:
   deploy:
@@ -16,52 +22,92 @@ jobs:
 
       - run: npm ci || npm install
 
-      - name: Build (static export)
+      - name: Build (standalone)
         run: npx next build
         env:
           # NEXT_PUBLIC_* 在 build 时写入前端包，必须在 CI 注入
-          NEXT_PUBLIC_LLM_API_KEY: ${{ secrets.NEXT_PUBLIC_LLM_API_KEY }}
-          NEXT_PUBLIC_LLM_BASE_URL: ${{ secrets.NEXT_PUBLIC_LLM_BASE_URL }}
-          NEXT_PUBLIC_LLM_MODEL: ${{ secrets.NEXT_PUBLIC_LLM_MODEL }}
-          NEXT_PUBLIC_USE_MOCK: ${{ secrets.NEXT_PUBLIC_USE_MOCK }}
           NEXT_PUBLIC_AMAP_KEY: ${{ secrets.NEXT_PUBLIC_AMAP_KEY }}
           NEXT_PUBLIC_AMAP_SECURITY: ${{ secrets.NEXT_PUBLIC_AMAP_SECURITY }}
 
-      - name: Package and deploy
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.ECS_HOST }}
-          username: root
-          key: ${{ secrets.ECS_SSH_KEY }}
-          envs: DEPLOY_DIR
-          script: |
-            set -e
-            DEPLOY_DIR=/usr/share/nginx/html/xuncheng
-            echo "Preparing deploy directory..."
-            rm -rf $DEPLOY_DIR/*
-            mkdir -p $DEPLOY_DIR
+      - name: Assemble standalone bundle
+        run: |
+          # standalone 需要手动带上 static 与 public
+          mkdir -p .next/standalone/.next
+          cp -r .next/static .next/standalone/.next/static
+          if [ -d public ]; then cp -r public .next/standalone/public; fi
+          ls -la .next/standalone
 
-      - name: Upload static files
+      - name: Upload bundle to ECS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.ECS_HOST }}
           username: root
           key: ${{ secrets.ECS_SSH_KEY }}
-          source: "out/*"
-          target: /usr/share/nginx/html/xuncheng
-          strip_components: 1
+          source: ".next/standalone/*"
+          target: ${{ env.DEPLOY_DIR }}
+          strip_components: 2   # 去掉 .next/standalone/ 前缀
           overwrite: true
 
-      - name: Verify deployment
+      - name: Upload nginx config
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: root
+          key: ${{ secrets.ECS_SSH_KEY }}
+          source: "deploy/nginx-xuncheng.conf"
+          target: "/tmp"
+          overwrite: true
+
+      - name: Restart with pm2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.ECS_HOST }}
           username: root
           key: ${{ secrets.ECS_SSH_KEY }}
+          envs: LLM_API_KEY,LLM_BASE_URL,LLM_MODEL,AMAP_WEB_KEY,NEXT_PUBLIC_AMAP_KEY,NEXT_PUBLIC_AMAP_SECURITY,APP_NAME,APP_PORT,DEPLOY_DIR
           script: |
-            echo "Verifying deployment..."
-            FILE_COUNT=$(find /usr/share/nginx/html/xuncheng -type f | wc -l)
-            echo "Deployed $FILE_COUNT files"
-            curl -sf http://127.0.0.1:8080/ > /dev/null && echo "✅ Site accessible" || echo "❌ Site not accessible"
-            # Reload nginx to ensure fresh state
-            nginx -s reload 2>/dev/null || true
+            set -e
+            export LLM_API_KEY="${{ secrets.LLM_API_KEY }}"
+            export LLM_BASE_URL="${{ secrets.LLM_BASE_URL }}"
+            export LLM_MODEL="${{ secrets.LLM_MODEL }}"
+            export AMAP_WEB_KEY="${{ secrets.AMAP_WEB_KEY }}"
+            export NEXT_PUBLIC_AMAP_KEY="${{ secrets.NEXT_PUBLIC_AMAP_KEY }}"
+            export NEXT_PUBLIC_AMAP_SECURITY="${{ secrets.NEXT_PUBLIC_AMAP_SECURITY }}"
+            cd ${{ env.DEPLOY_DIR }}
+
+            # 持久化运行期环境变量（pm2 重启后仍生效）
+            cat > .env.production <<EOF
+            LLM_API_KEY=${LLM_API_KEY}
+            LLM_BASE_URL=${LLM_BASE_URL:-https://api.deepseek.com/v1}
+            LLM_MODEL=${LLM_MODEL:-deepseek-chat}
+            AMAP_WEB_KEY=${AMAP_WEB_KEY:-${NEXT_PUBLIC_AMAP_KEY}}
+            USE_MOCK=false
+            PORT=${{ env.APP_PORT }}
+            HOSTNAME=127.0.0.1
+            NODE_ENV=production
+            EOF
+            chmod 600 .env.production
+
+            if [ -z "$LLM_API_KEY" ]; then
+              echo "ERROR: GitHub Secret LLM_API_KEY 未配置，线上将退回演示模式"
+            fi
+
+            command -v pm2 >/dev/null 2>&1 || npm i -g pm2
+            pm2 delete ${{ env.APP_NAME }} 2>/dev/null || true
+            set -a
+            . ./.env.production
+            set +a
+            pm2 start server.js --name ${{ env.APP_NAME }} --update-env
+            pm2 save
+            pm2 status ${{ env.APP_NAME }}
+
+            # 8080 不能继续指向旧 out 静态目录；必须反代到 Node，API/SSR 才可用。
+            if command -v nginx >/dev/null 2>&1; then
+              cp /tmp/deploy/nginx-xuncheng.conf /etc/nginx/conf.d/xuncheng.conf
+              nginx -t
+              systemctl reload nginx || nginx -s reload
+            fi
+
+            sleep 2
+            echo "--- LLM health check ---"
+            curl -sf "http://127.0.0.1:${{ env.APP_PORT }}/api/book-guide" || echo "WARN: /api/book-guide 不可达"
