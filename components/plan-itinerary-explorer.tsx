@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { Guide, OptionalRecommendSpot, ScheduleBlock, Spot } from '@/types'
 import { PlanAspect } from '@/lib/guide-category'
 import {
@@ -70,6 +70,12 @@ export function PlanItineraryExplorer({ guide, aspect, mapFirst = false }: PlanI
     setSelectedSpot(spot)
     setSelectedIndex(idx)
   }, [spotMap, activeDay])
+
+  const detailsRef = useRef<HTMLDivElement>(null)
+  const revealDetails = () => {
+    setDetailsOpen(true)
+    setTimeout(() => detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60)
+  }
 
   const toggleOptional = (id: string) => {
     setSelectedOptionals(prev => {
@@ -147,7 +153,7 @@ export function PlanItineraryExplorer({ guide, aspect, mapFirst = false }: PlanI
       mapTitle={mapFirst ? 'AI 识别原文景点 · 点击展开详情' : '行程点位'}
       mapClassName={
         mapFirst
-          ? 'h-[min(calc(100vh-280px),520px)] sm:h-[min(calc(100vh-260px),540px)]'
+          ? 'min-h-[260px] h-[min(calc(100vh-440px),440px)] sm:h-[min(calc(100vh-430px),470px)]'
           : 'h-[min(44vh,440px)] sm:h-[min(48vh,480px)]'
       }
       onSpotSelect={(spot, idx) => {
@@ -217,20 +223,61 @@ export function PlanItineraryExplorer({ guide, aspect, mapFirst = false }: PlanI
     </section>
   )
 
+  const timelineStrip = activeDay && activeDay.spotIds.length > 0 && (
+    <div className="mt-3">
+      <div className="flex items-center justify-between gap-2 mb-1.5">
+        <p className="text-[10px] text-celadon-600 tracking-widest uppercase">
+          行程速览 · Day {activeDay.day} · 共 {activeDay.spotIds.length} 站{appliedOptionals.size > 0 ? ` · 含 ${appliedOptionals.size} 项非遗` : ''}
+        </p>
+        <button
+          type="button"
+          onClick={revealDetails}
+          className="text-[11px] text-celadon-700 font-medium hover:text-celadon-800 whitespace-nowrap"
+        >
+          完整时间表 ↓
+        </button>
+      </div>
+      <div className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-hide">
+        {activeDay.spotIds.map((id, i) => {
+          const s = spotMap.get(id)
+          if (!s) return null
+          return (
+            <div key={id} className="flex items-center flex-shrink-0">
+              {i > 0 && <span className="text-celadon-300 mx-0.5 text-xs">›</span>}
+              <button
+                type="button"
+                onClick={() => openSpot(id)}
+                className="flex items-center gap-1 pl-1 pr-2.5 py-1 rounded-full border border-celadon-200/60 bg-white/80 hover:border-celadon-400 hover:bg-celadon-50 transition-colors"
+              >
+                <span className="w-4 h-4 rounded-full bg-celadon-500 text-white text-[9px] flex items-center justify-center flex-shrink-0">{i + 1}</span>
+                <span className="text-xs">{s.emoji}</span>
+                <span className="text-xs text-warm-gray whitespace-nowrap">{s.name}</span>
+              </button>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+
   if (mapFirst) {
     return (
       <div className="flex flex-col min-h-0">
         {variantToolbar}
         {mapSection}
+        {timelineStrip}
         <button
           type="button"
-          onClick={() => setDetailsOpen(v => !v)}
-          className="mt-4 mb-1 inline-flex items-center gap-2 self-start px-5 py-2.5 rounded-xl border border-celadon-300 bg-celadon-50/80 text-base sm:text-lg font-serif font-bold text-celadon-700 hover:bg-celadon-100 hover:border-celadon-400 shadow-sm transition-colors"
+          onClick={() => (detailsOpen ? setDetailsOpen(false) : revealDetails())}
+          className="mt-3 mb-1 inline-flex items-center gap-1.5 self-start px-3.5 py-1.5 rounded-lg border border-celadon-300 bg-celadon-50/80 text-sm font-serif font-semibold text-celadon-700 hover:bg-celadon-100 hover:border-celadon-400 shadow-sm transition-colors"
         >
-          {detailsOpen ? '行程详情 · 方案与时间表 ▲' : '展开行程详情 · 方案与时间表 ▼'}
+          <span>{detailsOpen ? '收起行程详情' : '展开完整行程与时间表'}</span>
+          <span className={cn('text-xs leading-none', !detailsOpen && 'animate-bounce')}>
+            {detailsOpen ? '▲' : '▼'}
+          </span>
         </button>
         {detailsOpen && (
-          <div className="mt-4 grid gap-6 md:grid-cols-2 md:items-start">
+          <div ref={detailsRef} className="mt-4 scroll-mt-4 grid gap-6 md:grid-cols-2 md:items-start">
             {scheduleSection}
             {optionalSection}
           </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { Guide, Spot } from '@/types'
 import { hasAmapKey, loadAmapScript, getAmapConfigStatus } from '@/lib/amap-loader'
 import { planNavigationRoute, routeModeLabels, formatRouteSummary, RouteSummary } from '@/lib/amap-routing'
@@ -48,6 +48,11 @@ export function GuideMapExplorer({
   const amapStatus = getAmapConfigStatus()
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null)
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const chipsScrollRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const draggingRef = useRef(false)
+  const dragStartRef = useRef({ x: 0, scrollLeft: 0 })
+  const [thumb, setThumb] = useState({ width: 100, left: 0 })
 
   const spots = useMemo(
     () => (spotsProp ?? guide.dayPlans.flatMap(d => d.spots))
@@ -65,6 +70,49 @@ export function GuideMapExplorer({
     }
     setSelectedSpot(spot)
     setSelectedIndex(index)
+  }
+
+  // ── 底部滑块：同步卡片行横向滚动 ──
+  const updateThumb = () => {
+    const el = chipsScrollRef.current
+    if (!el) return
+    const { scrollWidth, clientWidth, scrollLeft } = el
+    if (scrollWidth <= clientWidth + 1) {
+      setThumb({ width: 100, left: 0 })
+      return
+    }
+    const w = (clientWidth / scrollWidth) * 100
+    const left = (scrollLeft / (scrollWidth - clientWidth)) * (100 - w)
+    setThumb({ width: w, left })
+  }
+
+  useEffect(() => {
+    updateThumb()
+    const onResize = () => updateThumb()
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [spots])
+
+  const onThumbDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    draggingRef.current = true
+    dragStartRef.current = { x: e.clientX, scrollLeft: chipsScrollRef.current?.scrollLeft || 0 }
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+  const onThumbMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!draggingRef.current) return
+    const el = chipsScrollRef.current
+    const track = trackRef.current
+    if (!el || !track) return
+    const maxScroll = el.scrollWidth - el.clientWidth
+    const thumbW = (el.clientWidth / el.scrollWidth) * track.clientWidth
+    const travel = track.clientWidth - thumbW
+    const dx = e.clientX - dragStartRef.current.x
+    el.scrollLeft = dragStartRef.current.scrollLeft + (travel > 0 ? (dx / travel) * maxScroll : 0)
+  }
+  const onThumbUp = (e: ReactPointerEvent<HTMLDivElement>) => {
+    draggingRef.current = false
+    try { e.currentTarget.releasePointerCapture(e.pointerId) } catch { /* noop */ }
   }
 
   useEffect(() => {
@@ -197,12 +245,17 @@ export function GuideMapExplorer({
       )}>
         {mapTitle || (isExplorer ? 'AI 识别原文景点 · 点击展开详情' : 'AI 识别原文落点 · 点击展开详情')}
       </p>
-      <div className={cn(
-        isExplorer
-          ? 'flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide'
-          : 'flex flex-wrap gap-2 overflow-y-auto scrollbar-hide max-h-[160px]',
-        !isExplorer && layout === 'hero' && 'max-h-[120px]'
-      )}>
+      <div>
+        <div
+          ref={isExplorer ? chipsScrollRef : undefined}
+          onScroll={isExplorer ? updateThumb : undefined}
+          className={cn(
+            isExplorer
+              ? 'flex gap-3 overflow-x-auto pb-2 snap-x scrollbar-hide scroll-smooth'
+              : 'flex flex-wrap gap-2 overflow-y-auto scrollbar-hide max-h-[160px]',
+            !isExplorer && layout === 'hero' && 'max-h-[120px]'
+          )}
+        >
         {spots.map((spot, i) => (
           <button
             key={spot.id}
@@ -253,6 +306,24 @@ export function GuideMapExplorer({
             )}
           </button>
         ))}
+        </div>
+        {isExplorer && thumb.width < 100 && (
+          <div
+            ref={trackRef}
+            className="relative mt-1 h-1.5 w-full rounded-full bg-celadon-100/70"
+          >
+            <div
+              role="scrollbar"
+              aria-label="左右滑动查看更多点位"
+              aria-orientation="horizontal"
+              onPointerDown={onThumbDown}
+              onPointerMove={onThumbMove}
+              onPointerUp={onThumbUp}
+              className="absolute top-1/2 -translate-y-1/2 h-2.5 rounded-full bg-celadon-400 hover:bg-celadon-500 cursor-grab active:cursor-grabbing touch-none transition-colors"
+              style={{ width: `${thumb.width}%`, left: `${thumb.left}%` }}
+            />
+          </div>
+        )}
       </div>
     </div>
   )
