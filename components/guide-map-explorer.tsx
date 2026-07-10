@@ -143,15 +143,13 @@ export function GuideMapExplorer({
         spots.forEach((spot, index) => {
           const position: AMap.LngLatLike = [spot.location!.lng, spot.location!.lat]
 
-          const excerpt = spot.originalText
-            ? spot.originalText.slice(0, 16) + (spot.originalText.length > 16 ? '…' : '')
-            : spot.desc.slice(0, 10)
+          const nameText = spot.name || spot.desc.slice(0, 10)
 
           const markerContent = document.createElement('div')
           markerContent.innerHTML = `
             <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;max-width:130px;">
-              <div style="background:#F7F3EB;border:1px solid #5A7D78;border-radius:6px;padding:3px 6px;margin-bottom:3px;box-shadow:0 1px 6px rgba(90,125,120,0.2);">
-                <p style="font-size:9px;color:#3D3832;margin:0;font-family:serif;line-height:1.3;text-align:center;">「${excerpt}」</p>
+              <div style="background:#F7F3EB;border:1px solid #5A7D78;border-radius:6px;padding:3px 8px;margin-bottom:3px;box-shadow:0 1px 6px rgba(90,125,120,0.2);">
+                <p style="font-size:11px;color:#3D3832;margin:0;font-weight:600;line-height:1.3;text-align:center;">${nameText}</p>
               </div>
               <div style="width:26px;height:26px;border-radius:50%;background:#5A7D78;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:2px solid #F7F3EB;">${index + 1}</div>
             </div>
