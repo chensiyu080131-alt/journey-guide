@@ -119,6 +119,7 @@ const changshuHeritage: OptionalRecommendSpot[] = [
 const gaoyouHeritage: OptionalRecommendSpot[] = [
   {
     id: 'gy-folksong',
+    insertDay: 1,
     name: '高邮民歌展演',
     emoji: '🎶',
     desc: '《数鸭蛋》唱响运河畔，触景生情的即兴民歌',
@@ -134,6 +135,7 @@ const gaoyouHeritage: OptionalRecommendSpot[] = [
   },
   {
     id: 'gy-egg',
+    insertDay: 1,
     name: '高邮咸鸭蛋腌制技艺',
     emoji: '🥚',
     desc: '「滚泥滚灰」腌双黄，筷子一扎红油冒',
@@ -149,6 +151,7 @@ const gaoyouHeritage: OptionalRecommendSpot[] = [
   },
   {
     id: 'gy-chagan',
+    insertDay: 2,
     name: '界首茶干制作技艺',
     emoji: '🟤',
     desc: '运河驿站的茶干，汪曾祺《茶干》里的乡味',
@@ -164,6 +167,7 @@ const gaoyouHeritage: OptionalRecommendSpot[] = [
   },
   {
     id: 'gy-dongtang',
+    insertDay: 2,
     name: '秦邮董糖制作技艺',
     emoji: '🍬',
     desc: '芝麻绵白糖层层裹，高邮传统茶点',
@@ -179,6 +183,7 @@ const gaoyouHeritage: OptionalRecommendSpot[] = [
   },
   {
     id: 'gy-puppet',
+    insertDay: 2,
     name: '临泽高跷 · 杖头木偶',
     emoji: '🎭',
     desc: '运河乡镇的民间绝活，踩高跷、耍木偶',
@@ -194,6 +199,7 @@ const gaoyouHeritage: OptionalRecommendSpot[] = [
   },
   {
     id: 'gy-yuchengyi',
+    insertDay: 1,
     name: '盂城驿',
     emoji: '🏯',
     desc: '全国规模最大的明代驿站，运河漕运活化石',
@@ -216,6 +222,7 @@ const gaoyouHeritage: OptionalRecommendSpot[] = [
 const fenghuangHeritage: OptionalRecommendSpot[] = [
   {
     id: 'fh-silver',
+    insertDay: 1,
     name: '苗族银饰锻制技艺',
     emoji: '🥈',
     desc: '千锤百炼的苗家银饰，环佩叮当的盛装之魂',
@@ -231,6 +238,7 @@ const fenghuangHeritage: OptionalRecommendSpot[] = [
   },
   {
     id: 'fh-embroidery',
+    insertDay: 1,
     name: '苗绣体验',
     emoji: '🧵',
     desc: '「穿在身上的史诗」，与湘苏蜀粤绣并称',
@@ -246,6 +254,7 @@ const fenghuangHeritage: OptionalRecommendSpot[] = [
   },
   {
     id: 'fh-dye',
+    insertDay: 1,
     name: '凤凰扎染·蜡染',
     emoji: '🎨',
     desc: '「守住古城那一抹蓝」，草木靛蓝染方巾',
@@ -261,6 +270,7 @@ const fenghuangHeritage: OptionalRecommendSpot[] = [
   },
   {
     id: 'fh-drum',
+    insertDay: 2,
     name: '湘西苗族鼓舞',
     emoji: '🥁',
     desc: '一人击鼓、众人相和的苗家欢腾',
@@ -276,6 +286,7 @@ const fenghuangHeritage: OptionalRecommendSpot[] = [
   },
   {
     id: 'fh-opera',
+    insertDay: 2,
     name: '阳戏 · 傩堂戏',
     emoji: '🎭',
     desc: '沈从文笔下的古老酬神戏，面具与楚巫遗风',
@@ -291,6 +302,7 @@ const fenghuangHeritage: OptionalRecommendSpot[] = [
   },
   {
     id: 'fh-ginger',
+    insertDay: 1,
     name: '凤凰姜糖制作技艺',
     emoji: '🍬',
     desc: '现熬现拉的琥珀色姜糖，古城巷口的暖味',
@@ -306,6 +318,7 @@ const fenghuangHeritage: OptionalRecommendSpot[] = [
   },
   {
     id: 'fh-costume',
+    insertDay: 1,
     name: '苗族服饰盛装体验',
     emoji: '👗',
     desc: '披银戴冠着盛装，在沱江边拍一组苗家写真',

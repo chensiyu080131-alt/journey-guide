@@ -246,7 +246,20 @@ function mockPoi(keywords: string, city: string): PoiSearchResult {
 /** JSON 解析辅助 */
 export function parseJson<T>(content: string): T {
   let jsonStr = content.trim()
+  // 移除 markdown 代码块标记
   const match = content.match(/```(?:json)?\s*([\s\S]*?)```/)
   if (match) jsonStr = match[1].trim()
-  return JSON.parse(jsonStr) as T
+  // 尝试提取第一个 { 到最后一个 } 之间的内容
+  const firstBrace = jsonStr.indexOf('{')
+  const lastBrace = jsonStr.lastIndexOf('}')
+  if (firstBrace >= 0 && lastBrace > firstBrace) {
+    jsonStr = jsonStr.slice(firstBrace, lastBrace + 1)
+  }
+  try {
+    return JSON.parse(jsonStr) as T
+  } catch {
+    // 最后兜底：移除控制字符后再试
+    const cleaned = jsonStr.replace(/[\x00-\x1f]/g, '')
+    return JSON.parse(cleaned) as T
+  }
 }
