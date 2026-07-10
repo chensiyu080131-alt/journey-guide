@@ -801,92 +801,6 @@ export function getMockGuideById(id: string): Guide | null {
   return mockGuides[id] || null
 }
 
-function normalizeInterests(interests: string[]): Guide['interests'] {
-  const valid = new Set(['文化', '美食', '自然', '体验'])
-  const normalized = interests.filter(item => valid.has(item)) as Guide['interests']
-  return normalized.length > 0 ? normalized : ['文化', '美食']
-}
-
-function normalizeBudget(budget: string): Guide['budget'] {
-  return budget === '穷游' || budget === '舒适' || budget === '轻奢'
-    ? budget
-    : '舒适'
-}
-
-function buildGenericGuide(
-  city: string,
-  days: number,
-  interests: string[],
-  budget: string
-): Guide {
-  const safeDays = Math.min(Math.max(Number(days) || 2, 1), 7)
-  const templates: Array<{
-    label: string
-    desc: string
-    type: Spot['type']
-    emoji: string
-    timeSlot: Spot['timeSlot']
-    tags: string[]
-  }> = [
-    { label: '文学地标', desc: '从书页进入城市现场', type: '景点', emoji: '📖', timeSlot: '上午', tags: ['文化'] },
-    { label: '老街巷', desc: '沿着地方记忆慢慢走', type: '体验', emoji: '🚶', timeSlot: '下午', tags: ['文化', '体验'] },
-    { label: '本地风味小馆', desc: '用一餐理解城市风土', type: '美食', emoji: '🍜', timeSlot: '晚上', tags: ['美食'] },
-    { label: '河岸码头', desc: '寻找作品里的水路意象', type: '景点', emoji: '🛶', timeSlot: '上午', tags: ['自然', '文化'] },
-    { label: '地方博物馆', desc: '补齐历史与民俗背景', type: '景点', emoji: '🏛️', timeSlot: '下午', tags: ['文化'] },
-    { label: '夜间市集', desc: '观察城市的烟火气', type: '美食', emoji: '🏮', timeSlot: '晚上', tags: ['美食', '体验'] },
-  ]
-
-  const spots: Spot[] = Array.from({ length: safeDays * 3 }, (_, index) => {
-    const template = templates[index % templates.length]
-    return {
-      id: `generic-${index + 1}`,
-      name: `${city}${template.label}`,
-      desc: template.desc,
-      duration: template.type === '美食' ? '1.5小时' : '2小时',
-      tags: template.tags,
-      timeSlot: template.timeSlot,
-      address: `${city} · 待按真实 POI 核验`,
-      story: `LLM 暂不可用时生成的${city}演示点位，用于保留攻略结构。恢复模型服务后会替换为真实文学地点和在地推荐。`,
-      type: template.type,
-      budgetHint: template.type === '美食' ? '人均约50-120元（演示）' : '以现场公示为准（演示）',
-      emoji: template.emoji,
-      originalText: `演示模式：请补充与${city}相关的文学原文片段，以生成真实原文对照。`,
-      originalSource: '演示占位',
-      realityNote: `这是 ${city} 的通用演示点位，并非已核验的真实书中地点。`,
-      goodNow: true,
-      goodNowReason: '演示行程结构可用，真实开放时间需核验',
-      photoSpot: template.type !== '美食',
-    }
-  })
-
-  return {
-    id: `generic-${city}`,
-    title: `${city}文学旅行攻略`,
-    subtitle: 'LLM 暂不可用时的演示路线',
-    city,
-    province: '待核验',
-    days: safeDays,
-    interests: normalizeInterests(interests),
-    budget: normalizeBudget(budget),
-    dayPlans: buildDayPlans(spots, safeDays),
-    dialect: [
-      { dialect: '本地方言', meaning: '待补充', scenario: 'LLM 恢复后生成真实方言速查' },
-    ],
-    localExperiences: [
-      { name: `${city}在地走读`, desc: '按真实地点核验后可落地执行', type: '体验', schedule: '建议白天进行' },
-    ],
-    createdAt: new Date().toISOString(),
-    tips: [
-      '当前为 LLM 不可用时的演示攻略，点位需二次核验。',
-      '输入书名、作者或摘录可提升文学地点识别准确度。',
-      '出发前请核对景点开放时间、预约和交通。',
-      '真实原文引用应以纸质书或权威版本为准。',
-    ],
-    entryType: '目的地',
-    routeIntro: `当前 LLM 暂不可用，以下先生成一份与${city}匹配的演示行程结构。恢复模型服务后，可生成真实文学地点、原文对照与 POI 验证结果。`,
-  }
-}
-
 /** 根据搜索参数获取攻略（兼容旧接口） */
 export function getMockGuide(city: string, days: number, interests: string[], budget: string): Guide {
   // 先尝试精确匹配
@@ -901,5 +815,11 @@ export function getMockGuide(city: string, days: number, interests: string[], bu
       ),
     }
   }
-  return buildGenericGuide(city, days, interests, budget)
+  // 兜底返回第一条路线
+  const firstGuide = Object.values(mockGuides)[0]
+  return {
+    ...firstGuide,
+    city,
+    days,
+  }
 }

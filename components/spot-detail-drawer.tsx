@@ -38,16 +38,20 @@ export function SpotDetailDrawer({
       />
       <div
         className={cn(
-          'fixed bottom-0 left-0 right-0 z-50 max-h-[85vh] overflow-y-auto',
-          'rounded-t-3xl shadow-2xl animate-slide-up',
+          'fixed z-50 overflow-y-auto',
+          // 移动端：底部抽屉
+          'bottom-0 left-0 right-0 max-h-[85vh] rounded-t-3xl shadow-2xl animate-slide-up',
+          // 桌面端：右侧滑出面板
+          'md:top-0 md:right-0 md:bottom-0 md:left-auto md:h-full md:w-[440px] md:max-w-[90vw]',
+          'md:max-h-none md:rounded-none md:rounded-l-3xl md:animate-slide-in-right',
           isLiterary
-            ? 'bg-literary-paper border-t border-literary-sand'
-            : 'bg-paper-warm border-t border-celadon-200/60'
+            ? 'bg-literary-paper border-t md:border-t-0 md:border-l border-literary-sand'
+            : 'bg-paper-warm border-t md:border-t-0 md:border-l border-celadon-200/60'
         )}
         role="dialog"
         aria-label={`${spot.name}详情`}
       >
-        <div className="xc-container max-w-2xl py-6 pb-10">
+        <div className="xc-container max-w-2xl md:max-w-none md:mx-0 md:px-6 py-6 pb-10">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
               <span

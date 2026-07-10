@@ -36,7 +36,7 @@
 
 @layer components {
   .xc-container {
-    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10;
   }
 
   .xc-pill {
@@ -261,34 +261,16 @@
   }
 
   .xc-explorer-spot-card {
-    @apply flex-shrink-0 snap-start w-[200px] sm:w-[220px] text-left overflow-hidden
-           rounded-xl border-0 shadow-md transition-all duration-200;
+    @apply flex-shrink-0 snap-start w-[200px] sm:w-[220px] text-left px-4 py-3 rounded-xl border
+           transition-all duration-200;
   }
 
   .xc-explorer-spot-active {
-    @apply ring-2 ring-[#FACC15] shadow-lg;
+    @apply border-celadon-400 bg-celadon-50/80 shadow-sm;
   }
 
   .xc-explorer-spot-inactive {
-    @apply opacity-90 hover:opacity-100 hover:shadow-lg;
-  }
-
-  .xc-explorer-spot-pill {
-    @apply bg-white px-4 py-2 text-center;
-  }
-
-  .xc-explorer-spot-pill-title {
-    @apply text-xs font-bold text-[#1A1A1A] truncate;
-  }
-
-  .xc-explorer-spot-detail {
-    @apply px-3 py-2.5 text-[10px] leading-relaxed text-white;
-    background: rgba(19, 78, 74, 0.88);
-  }
-
-  /* 散人漫游地图容器 */
-  .xc-roaming-map {
-    @apply bg-white;
+    @apply border-celadon-200/50 bg-white/70 hover:border-celadon-300 hover:bg-camel-light/50;
   }
 
   /* ── 古籍纸首页（旧版保留） ── */
@@ -336,46 +318,227 @@
            transition-all duration-200 hover:bg-white/90 hover:shadow-md;
   }
 
-  /* ── 跟书旅行浮窗 ── */
-  .xc-book-guide-fab {
-    @apply fixed bottom-6 right-6 z-[9999] flex items-center gap-2
-           px-4 py-3.5 rounded-full shadow-xl ring-2 ring-white/40
-           bg-literary-wine text-white
-           transition-all duration-300
-           hover:bg-literary-wine-dark hover:shadow-2xl hover:-translate-y-0.5;
+  /* ── 迹录员 · 果冻浮窗 ── */
+  .jilu-float-orb {
+    @apply flex flex-col items-center gap-1;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .jilu-float-orb:hover {
+    transform: scale(1.08);
+  }
+  .jilu-float-orb:active {
+    transform: scale(0.95);
   }
 
-  .xc-book-guide-fab-label {
-    @apply text-sm font-serif font-medium tracking-wide;
+  .jilu-mascot-wrap {
+    position: relative;
+    animation: jiluBounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(255, 107, 157, 0.4));
   }
 
-  .xc-book-guide-panel {
-    @apply fixed bottom-6 right-6 z-[9999]
-           w-[min(calc(100vw-2rem),400px)] max-h-[min(calc(100vh-3rem),680px)]
-           flex flex-col rounded-2xl shadow-2xl
-           border border-literary-sand bg-white overflow-hidden;
+  .jilu-name-tag {
+    @apply px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide;
+    background: linear-gradient(135deg, #FF6B9D 0%, #C084FC 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(255, 107, 157, 0.35);
   }
 
-  .xc-book-guide-header {
-    @apply flex items-start justify-between px-4 pt-4 pb-2 flex-shrink-0;
+  .jilu-aura {
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,107,157,0.15) 0%, transparent 70%);
+    animation: jiluAura 2.5s ease-in-out infinite;
+    pointer-events: none;
   }
 
-  .xc-book-guide-body {
-    @apply flex-1 overflow-y-auto px-4 pb-4 scrollbar-hide min-h-0;
+  /* 对话面板 */
+  .jilu-chat-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 380px;
+    max-width: calc(100vw - 32px);
+    height: 520px;
+    max-height: calc(100vh - 40px);
+    border-radius: 24px;
+    background: #FFFFFF;
+    box-shadow: 0 20px 60px rgba(255, 107, 157, 0.2), 0 4px 20px rgba(0,0,0,0.08);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: jiluPanelIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  .xc-book-guide-input {
-    @apply w-full px-3 py-2.5 rounded-xl border border-literary-sand bg-literary-paper/30
-           text-sm text-literary-ink placeholder:text-literary-muted/60
-           focus:outline-none focus:ring-2 focus:ring-literary-wine/30 focus:border-literary-wine/40;
+  .jilu-chat-header {
+    @apply flex items-center justify-between px-4 py-3;
+    background: linear-gradient(135deg, #FFF1F2 0%, #FDF4FF 50%, #EFF6FF 100%);
+    border-bottom: 1px solid rgba(255, 107, 157, 0.1);
   }
 
-  .xc-book-guide-btn {
-    @apply py-2.5 rounded-full text-sm font-serif tracking-wide text-white
-           bg-literary-wine shadow-sm
-           transition-all duration-200
-           hover:bg-literary-wine-dark
-           disabled:opacity-40 disabled:cursor-not-allowed;
+  .jilu-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: linear-gradient(180deg, #FAFAFF 0%, #FFFFFF 100%);
+  }
+
+  .jilu-chat-messages::-webkit-scrollbar {
+    width: 3px;
+  }
+  .jilu-chat-messages::-webkit-scrollbar-thumb {
+    background: #E5E7EB;
+    border-radius: 999px;
+  }
+
+  .jilu-welcome {
+    @apply flex flex-col items-center justify-center py-8;
+    animation: jiluFadeIn 0.5s ease-out;
+  }
+
+  /* 消息 */
+  .jilu-msg {
+    @apply flex gap-2 items-end;
+  }
+  .jilu-msg-user {
+    @apply justify-end;
+  }
+  .jilu-msg-bot {
+    @apply justify-start;
+  }
+
+  .jilu-msg-avatar {
+    @apply flex-shrink-0;
+    filter: drop-shadow(0 1px 3px rgba(255, 107, 157, 0.2));
+  }
+
+  .jilu-msg-bubble {
+    @apply px-3.5 py-2.5 rounded-2xl max-w-[85%];
+  }
+  .jilu-bubble-user {
+    background: linear-gradient(135deg, #FF6B9D 0%, #C084FC 100%);
+    color: white;
+    border-bottom-right-radius: 6px;
+    box-shadow: 0 2px 10px rgba(255, 107, 157, 0.25);
+  }
+  .jilu-bubble-bot {
+    background: #F8F9FF;
+    border: 1px solid rgba(96, 165, 250, 0.15);
+    border-bottom-left-radius: 6px;
+    color: #1F2937;
+  }
+
+  .jilu-typing-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 14px;
+    background: #C084FC;
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: jiluCursor 0.8s ease-in-out infinite;
+  }
+
+  .jilu-dot {
+    @apply inline-block w-2 h-2 rounded-full;
+    background: linear-gradient(135deg, #FF6B9D, #C084FC);
+    animation: jiluDotBounce 1.2s ease-in-out infinite;
+  }
+
+  /* 输入区域 */
+  .jilu-chat-input-area {
+    @apply px-4 py-3;
+    border-top: 1px solid #F3F4F6;
+    background: white;
+  }
+
+  .jilu-input-row {
+    @apply flex items-center gap-2;
+  }
+
+  .jilu-input {
+    @apply flex-1 px-4 py-2.5 rounded-full text-sm outline-none;
+    background: #F9FAFB;
+    border: 1.5px solid #E5E7EB;
+    transition: all 0.2s;
+  }
+  .jilu-input:focus {
+    border-color: #FF6B9D;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+  }
+  .jilu-input:disabled {
+    opacity: 0.5;
+  }
+
+  .jilu-send-btn {
+    @apply flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0;
+    background: linear-gradient(135deg, #FF6B9D 0%, #C084FC 100%);
+    color: white;
+    box-shadow: 0 2px 10px rgba(255, 107, 157, 0.3);
+    transition: all 0.2s;
+  }
+  .jilu-send-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(255, 107, 157, 0.4);
+  }
+  .jilu-send-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .jilu-quick-tag {
+    @apply px-3 py-1.5 rounded-full text-xs font-medium;
+    background: linear-gradient(135deg, #FFF1F2, #FDF4FF);
+    border: 1px solid rgba(255, 107, 157, 0.2);
+    color: #C084FC;
+    transition: all 0.2s;
+  }
+  .jilu-quick-tag:hover {
+    background: linear-gradient(135deg, #FFE4E6, #FAE8FF);
+    border-color: rgba(255, 107, 157, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .jilu-quick-tag-mini {
+    @apply w-7 h-7 rounded-full flex items-center justify-center text-xs;
+    background: #F9FAFB;
+    border: 1px solid #F3F4F6;
+    transition: all 0.15s;
+  }
+  .jilu-quick-tag-mini:hover {
+    background: linear-gradient(135deg, #FFF1F2, #FDF4FF);
+    border-color: rgba(255, 107, 157, 0.3);
+    transform: scale(1.1);
+  }
+
+  /* 动画 */
+  @keyframes jiluBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes jiluAura {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.15); opacity: 0.3; }
+  }
+  @keyframes jiluPanelIn {
+    0% { transform: scale(0.8) translateY(20px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+  }
+  @keyframes jiluFadeIn {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes jiluCursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  @keyframes jiluDotBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
   }
 }
 
@@ -391,4 +554,31 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+}
+
+  /* 攻略生成成功/更新气泡 */
+  .jilu-bubble-success {
+    background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%) !important;
+    color: #065F46 !important;
+    border: 1px solid #6EE7B7;
+  }
+  /* 攻略错误气泡 */
+  .jilu-bubble-error {
+    background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%) !important;
+    color: #991B1B !important;
+    border: 1px solid #FCA5A5;
+  }
+  /* 工作中脉冲动画 */
+  .jilu-working-pulse {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid #FF6B9D;
+    animation: jiluWorkingPulse 1.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+@keyframes jiluWorkingPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.25); opacity: 0; }
 }

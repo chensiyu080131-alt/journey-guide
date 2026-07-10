@@ -1,26 +1,36 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { useChat } from '@ai-sdk/react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { Guide } from '@/types'
-import { PERSONA_LIST, type Persona } from '@/lib/ai-personas'
+import { PERSONA_LIST, buildSystemPrompt, type Persona, type ChatMode } from '@/lib/ai-personas'
+import { streamLLM, isMockMode, type LLMMessage } from '@/lib/llm-client'
 import { cn } from '@/lib/utils'
+
+interface ChatMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+}
 
 interface AIBookSpiritProps {
   guide: Guide
 }
 
-/** P0 · AI书灵 —— 有人格、有记忆、能挖掘文学关联的对话向导 */
+/** P0 · AI书灵 —— 有人格、有记忆、能挖掘文学关联的对话向导（客户端直连版） */
 export function AIBookSpirit({ guide }: AIBookSpiritProps) {
   const [persona, setPersona] = useState<Persona>('文人风骨')
   const [journalOpen, setJournalOpen] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [input, setInput] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [streamingContent, setStreamingContent] = useState('')
   const loadedRef = useRef(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const abortRef = useRef<AbortController | null>(null)
 
   const storageKey = `xuncheng-bookspirit-${guide.id}`
 
-  // 精简路线上下文（传给后端构建 system prompt）
   const context = {
     title: guide.title,
     city: guide.city,
@@ -30,21 +40,6 @@ export function AIBookSpirit({ guide }: AIBookSpiritProps) {
       .map(s => ({ name: s.name, originalText: s.originalText, originalSource: s.originalSource })),
   }
 
-  const {
-    messages,
-    setMessages,
-    input,
-    handleInputChange,
-    handleSubmit,
-    append,
-    status,
-  } = useChat({
-    api: '/api/chat',
-    id: `bookspirit-${guide.id}`,
-  })
-
-  const busy = status === 'submitted' || status === 'streaming'
-
   // 多轮记忆：挂载时从 sessionStorage 载入
   useEffect(() => {
     try {
@@ -53,40 +48,73 @@ export function AIBookSpirit({ guide }: AIBookSpiritProps) {
         const parsed = JSON.parse(saved)
         if (Array.isArray(parsed) && parsed.length) setMessages(parsed)
       }
-    } catch {
-      /* ignore */
-    }
+    } catch { /* ignore */ }
     loadedRef.current = true
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [storageKey])
 
   // 记忆回写
   useEffect(() => {
     if (!loadedRef.current) return
     try {
       sessionStorage.setItem(storageKey, JSON.stringify(messages))
-    } catch {
-      /* ignore */
-    }
+    } catch { /* ignore */ }
   }, [messages, storageKey])
 
   // 新消息滚动到底
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
-  }, [messages])
+  }, [messages, streamingContent])
+
+  const sendMessage = useCallback(async (userContent: string, mode: ChatMode = 'chat') => {
+    if (!userContent.trim() || busy) return
+
+    const userMsg: ChatMessage = { id: `u-${Date.now()}`, role: 'user', content: userContent }
+    const newMessages = [...messages, userMsg]
+    setMessages(newMessages)
+    setInput('')
+    setBusy(true)
+    setStreamingContent('')
+
+    const systemPrompt = buildSystemPrompt(persona, mode, context)
+    const llmMessages: LLMMessage[] = [
+      { role: 'system', content: systemPrompt },
+      ...newMessages.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
+    ]
+
+    let fullContent = ''
+
+    await streamLLM(llmMessages, {
+      onToken: (token) => {
+        fullContent += token
+        setStreamingContent(fullContent)
+      },
+      onDone: () => {
+        const assistantMsg: ChatMessage = { id: `a-${Date.now()}`, role: 'assistant', content: fullContent }
+        setMessages(prev => [...prev, assistantMsg])
+        setStreamingContent('')
+        setBusy(false)
+      },
+      onError: (error) => {
+        console.error('Stream error:', error)
+        const errorMsg: ChatMessage = {
+          id: `e-${Date.now()}`,
+          role: 'assistant',
+          content: `⚠️ 回复失败：${error.message}`,
+        }
+        setMessages(prev => [...prev, errorMsg])
+        setStreamingContent('')
+        setBusy(false)
+      },
+    })
+  }, [busy, messages, persona, context])
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim() || busy) return
-    handleSubmit(e, { body: { persona, mode: 'chat', context } })
+    sendMessage(input, 'chat')
   }
 
   const findAssociation = () => {
-    if (busy) return
-    append(
-      { role: 'user', content: '🔗 找关联：请从本路线里挑两个看似无关的景点，揭示它们隐秘的文学关联。' },
-      { body: { persona, mode: 'association', context } }
-    )
+    sendMessage('🔗 找关联：请从本路线里挑两个看似无关的景点，揭示它们隐秘的文学关联。', 'association')
   }
 
   const copyJournal = async () => {
@@ -95,21 +123,20 @@ export function AIBookSpirit({ guide }: AIBookSpiritProps) {
       await navigator.clipboard.writeText(text)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
-    } catch {
-      /* ignore */
-    }
+    } catch { /* ignore */ }
   }
 
   const clearMemory = () => {
     setMessages([])
-    try {
-      sessionStorage.removeItem(storageKey)
-    } catch {
-      /* ignore */
-    }
+    try { sessionStorage.removeItem(storageKey) } catch { /* ignore */ }
   }
 
   const activePersona = PERSONA_LIST.find(p => p.id === persona)!
+
+  // 显示消息：已完成的 + 正在流式的
+  const displayMessages = [...messages]
+  const lastMsg = displayMessages[displayMessages.length - 1]
+  const showStreaming = busy && streamingContent && lastMsg?.role === 'user'
 
   return (
     <div className="rounded-3xl border border-xuncheng-100 bg-gradient-to-br from-xuncheng-50/40 to-paper overflow-hidden">
@@ -119,6 +146,9 @@ export function AIBookSpirit({ guide }: AIBookSpiritProps) {
           <span className="text-xl">🪄</span>
           <h3 className="font-serif font-bold text-ink-900">AI 书灵</h3>
           <span className="text-xs text-ink-400">· {activePersona.hint}</span>
+          {isMockMode() && (
+            <span className="text-xs text-amber-500 ml-1">（演示模式）</span>
+          )}
         </div>
 
         {/* 人格切换 */}
@@ -143,7 +173,7 @@ export function AIBookSpirit({ guide }: AIBookSpiritProps) {
 
       {/* 对话区 */}
       <div ref={scrollRef} className="max-h-80 overflow-y-auto px-5 space-y-3 py-2">
-        {messages.length === 0 && (
+        {messages.length === 0 && !busy && (
           <p className="text-sm text-ink-400 py-6 text-center">
             问我关于「{guide.title}」的一切——文学背景、行程建议、原文出处，或点下方「找关联」。
           </p>
@@ -162,7 +192,14 @@ export function AIBookSpirit({ guide }: AIBookSpiritProps) {
             </div>
           </div>
         ))}
-        {busy && messages[messages.length - 1]?.role === 'user' && (
+        {showStreaming && (
+          <div className="flex justify-start">
+            <div className="max-w-[85%] bg-white border border-ink-100 rounded-2xl rounded-bl-sm px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap text-ink-700">
+              {streamingContent}
+            </div>
+          </div>
+        )}
+        {busy && !showStreaming && messages[messages.length - 1]?.role === 'user' && (
           <div className="flex justify-start">
             <div className="bg-white border border-ink-100 rounded-2xl rounded-bl-sm px-3.5 py-2.5">
               <span className="inline-flex gap-1">
@@ -207,7 +244,7 @@ export function AIBookSpirit({ guide }: AIBookSpiritProps) {
         <form onSubmit={onSubmit} className="flex gap-2">
           <input
             value={input}
-            onChange={handleInputChange}
+            onChange={e => setInput(e.target.value)}
             placeholder={`以「${activePersona.label}」口吻提问...`}
             className="flex-1 px-4 py-2.5 rounded-full border border-ink-200 bg-white text-sm text-ink-900 placeholder:text-ink-300 focus:outline-none focus:ring-2 focus:ring-xuncheng-400"
           />
@@ -248,7 +285,6 @@ export function AIBookSpirit({ guide }: AIBookSpiritProps) {
   )
 }
 
-/** 把对话序列化为纯文本手账 */
 function buildJournalText(title: string, messages: { role: string; content: string }[]): string {
   const header = `📜 我的文学手账 · ${title}\n（由寻城 AI 书灵生成）\n${'—'.repeat(20)}\n`
   const body = messages

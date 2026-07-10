@@ -27,7 +27,7 @@ const tabAlts: Record<HomeTab, string> = {
 export function HomeNav({ active, onChange }: HomeNavProps) {
   return (
     <nav
-      className="flex items-center justify-center gap-3 sm:gap-6 flex-wrap px-2"
+      className="flex items-center justify-center gap-3 sm:gap-6 md:gap-8 flex-wrap px-2"
       aria-label="主导航"
     >
       {homeTabs.map(tab => (
