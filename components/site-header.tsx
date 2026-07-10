@@ -10,6 +10,7 @@ const navLinks = [
   { href: '/#how', label: '怎么用' },
   { href: '/yicheng', label: '非遗工坊' },
   { href: '/renjian', label: '人间滋味' },
+  { href: '/xhs', label: '小红书文案' },
   { href: '/guide/destination', label: '搜目的地' },
 ]
 

@@ -49,6 +49,7 @@ export function SiteFooter() {
           <div>
             <p className="font-semibold mb-3 text-white/90">功能</p>
             <ul className="space-y-2 text-white/50">
+              <li><Link href="/xhs" className="hover:text-xuncheng-400">小红书文案生成</Link></li>
               <li>原文对照</li>
               <li>路线地图</li>
               <li>AI 生成攻略</li>
