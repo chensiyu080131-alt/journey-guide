@@ -5,6 +5,7 @@ import {
   createDataStreamResponse,
   formatDataStreamPart,
   type Message,
+  type DataStreamWriter,
 } from 'ai'
 import {
   buildSystemPrompt,
@@ -15,6 +16,20 @@ import {
 
 // LLM 流式响应可能较慢
 export const maxDuration = 60
+
+async function writeMockText(
+  dataStream: DataStreamWriter,
+  text: string,
+  reason?: string
+) {
+  const body = reason ? text.replace(/未配置 LLM_API_KEY/g, reason) : text
+  const chunks = body.match(/[\s\S]{1,6}/g) ?? [body]
+
+  for (const c of chunks) {
+    dataStream.write(formatDataStreamPart('text', c))
+    await new Promise(r => setTimeout(r, 18))
+  }
+}
 
 /**
  * 统一 AI 流式代理 —— 所有前端 AI 调用都经此后端，密钥仅存在于服务端环境变量。
@@ -52,11 +67,7 @@ export async function POST(req: Request) {
     const text = getMockResponse(mode, persona)
     return createDataStreamResponse({
       execute: async dataStream => {
-        const chunks = text.match(/[\s\S]{1,6}/g) ?? [text]
-        for (const c of chunks) {
-          dataStream.write(formatDataStreamPart('text', c))
-          await new Promise(r => setTimeout(r, 18))
-        }
+        await writeMockText(dataStream, text)
       },
     })
   }
@@ -68,13 +79,44 @@ export async function POST(req: Request) {
   })
   const model = provider(process.env.LLM_MODEL || 'gpt-4o-mini')
 
-  const result = streamText({
-    model,
-    system,
-    messages: convertToCoreMessages(messages),
-    temperature: 0.85,
-    maxTokens: 2000,
-  })
+  return createDataStreamResponse({
+    execute: async dataStream => {
+      try {
+        const result = streamText({
+          model,
+          system,
+          messages: convertToCoreMessages(messages),
+          temperature: 0.85,
+          maxTokens: 2000,
+        })
 
-  return result.toDataStreamResponse()
+        let wroteText = false
+        for await (const part of result.fullStream) {
+          if (part.type === 'text-delta') {
+            wroteText = true
+            dataStream.write(formatDataStreamPart('text', part.textDelta))
+          }
+
+          if (part.type === 'error') {
+            throw part.error
+          }
+        }
+
+        if (!wroteText) {
+          await writeMockText(
+            dataStream,
+            getMockResponse(mode, persona),
+            'LLM 未返回内容'
+          )
+        }
+      } catch (error) {
+        console.error('chat API 流式生成失败，回退 Mock:', error)
+        await writeMockText(
+          dataStream,
+          getMockResponse(mode, persona),
+          'LLM 暂不可用'
+        )
+      }
+    },
+  })
 }

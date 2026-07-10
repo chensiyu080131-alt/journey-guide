@@ -70,6 +70,23 @@ function buildPrompt(city: string, days: number, interests: InterestTag[], budge
 - 贴士至少4个`
 }
 
+/** 将 LLM/解析错误转为用户可读提示 */
+export function formatLlmError(error: unknown): string {
+  const msg = error instanceof Error ? error.message : String(error)
+  if (msg.includes('401') || msg.includes('额度已用尽') || msg.includes('invalid_api_key')) {
+    return 'AI 服务令牌无效或额度已用尽，请联系管理员更新 LLM_API_KEY'
+  }
+  if (msg.includes('429') || msg.includes('rate limit')) {
+    return 'AI 服务请求过于频繁，请稍后再试'
+  }
+  if (msg.includes('SyntaxError') || msg.includes('JSON') || msg.includes('parse')) {
+    return 'AI 返回格式异常，请重试'
+  }
+  if (msg.startsWith('LLM API')) return msg
+  if (msg.startsWith('攻略生成失败')) return msg
+  return `攻略生成失败：${msg}`
+}
+
 function parseLLMResponse(
   content: string,
   city: string,
@@ -77,31 +94,47 @@ function parseLLMResponse(
   interests: InterestTag[],
   budget: BudgetLevel
 ): Guide {
-  let jsonStr = content
+  let jsonStr = content.trim()
   const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/)
   if (jsonMatch) jsonStr = jsonMatch[1].trim()
 
-  const parsed = JSON.parse(jsonStr)
+  let parsed: Record<string, unknown>
+  try {
+    parsed = JSON.parse(jsonStr)
+  } catch (error) {
+    throw new Error(formatLlmError(error))
+  }
+
+  const stringOr = (value: unknown, fallback = '') =>
+    typeof value === 'string' ? value : fallback
+  const optionalString = (value: unknown) =>
+    typeof value === 'string' ? value : undefined
+  const entryType =
+    parsed.entryType === '书籍' || parsed.entryType === '人物' || parsed.entryType === '目的地'
+      ? parsed.entryType
+      : '目的地'
 
   return {
     id: `${city}-${Date.now()}`,
-    title: parsed.title || `${city}旅行攻略`,
-    subtitle: parsed.subtitle || '',
-    city: parsed.city || city,
-    province: parsed.province || '',
+    title: stringOr(parsed.title, `${city}旅行攻略`),
+    subtitle: stringOr(parsed.subtitle),
+    city: stringOr(parsed.city, city),
+    province: stringOr(parsed.province),
     days,
     interests,
     budget,
-    dayPlans: parsed.dayPlans || [],
-    dialect: parsed.dialect || [],
-    localExperiences: parsed.localExperiences || [],
+    dayPlans: Array.isArray(parsed.dayPlans) ? parsed.dayPlans as Guide['dayPlans'] : [],
+    dialect: Array.isArray(parsed.dialect) ? parsed.dialect as Guide['dialect'] : [],
+    localExperiences: Array.isArray(parsed.localExperiences)
+      ? parsed.localExperiences as Guide['localExperiences']
+      : [],
     createdAt: new Date().toISOString(),
-    tips: parsed.tips || [],
-    entryType: parsed.entryType || '目的地',
-    relatedBook: parsed.relatedBook,
-    relatedAuthor: parsed.relatedAuthor,
-    relatedCharacter: parsed.relatedCharacter,
-    routeIntro: parsed.routeIntro,
+    tips: Array.isArray(parsed.tips) ? parsed.tips as string[] : [],
+    entryType,
+    relatedBook: optionalString(parsed.relatedBook),
+    relatedAuthor: optionalString(parsed.relatedAuthor),
+    relatedCharacter: optionalString(parsed.relatedCharacter),
+    routeIntro: optionalString(parsed.routeIntro),
   }
 }
 
