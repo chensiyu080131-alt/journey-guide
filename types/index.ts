@@ -147,7 +147,7 @@ export interface OptionalRecommendSpot {
   emoji: string
   desc: string
   duration: string
-  category: '非遗文化' | '历史文化' | '民俗体验'
+  category: string
   heritage?: string
   location?: { lat: number; lng: number }
   address?: string
@@ -158,7 +158,9 @@ export interface OptionalRecommendSpot {
   originalSource?: string
   story?: string
   tags?: InterestTag[]
+  budgetLevels?: BudgetLevel[]
   budgetHint?: string
+  recommend?: boolean
 }
 
 /** 完整攻略 */

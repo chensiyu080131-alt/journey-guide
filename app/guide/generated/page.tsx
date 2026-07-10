@@ -47,7 +47,7 @@ function GeneratedGuideContent() {
   return (
     <main className="xc-explorer-bg min-h-screen pb-10">
       <header className="sticky top-0 z-40 bg-literary-paper/90 backdrop-blur-md border-b border-literary-sand">
-        <div className="xc-container max-w-6xl py-3 flex items-center gap-3">
+        <div className="xc-container py-3 flex items-center gap-3">
           <Link
             href="/"
             className="text-xs text-literary-muted hover:text-literary-wine transition-colors"
@@ -63,7 +63,7 @@ function GeneratedGuideContent() {
         </div>
       </header>
 
-      <div className="xc-container max-w-6xl pt-6 space-y-8">
+      <div className="xc-container pt-6 space-y-8">
         {/* 结构化摘要 */}
         <section className="rounded-2xl border border-literary-sand bg-white/80 p-5 sm:p-6 shadow-sm">
           <BookGuideResultView result={result} />

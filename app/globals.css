@@ -36,7 +36,7 @@
 
 @layer components {
   .xc-container {
-    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10;
   }
 
   .xc-pill {
@@ -515,33 +515,7 @@
     transform: scale(1.1);
   }
 
-  /* 攻略生成成功/更新气泡 */
-  .jilu-bubble-success {
-    background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%) !important;
-    color: #065F46 !important;
-    border: 1px solid #6EE7B7;
-  }
-  /* 攻略错误气泡 */
-  .jilu-bubble-error {
-    background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%) !important;
-    color: #991B1B !important;
-    border: 1px solid #FCA5A5;
-  }
-  /* 工作中脉冲动画 */
-  .jilu-working-pulse {
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 2px solid #FF6B9D;
-    animation: jiluWorkingPulse 1.5s ease-in-out infinite;
-    pointer-events: none;
-  }
-
   /* 动画 */
-  @keyframes jiluWorkingPulse {
-    0%, 100% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.25); opacity: 0; }
-  }
   @keyframes jiluBounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-6px); }
@@ -580,4 +554,31 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+}
+
+  /* 攻略生成成功/更新气泡 */
+  .jilu-bubble-success {
+    background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%) !important;
+    color: #065F46 !important;
+    border: 1px solid #6EE7B7;
+  }
+  /* 攻略错误气泡 */
+  .jilu-bubble-error {
+    background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%) !important;
+    color: #991B1B !important;
+    border: 1px solid #FCA5A5;
+  }
+  /* 工作中脉冲动画 */
+  .jilu-working-pulse {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid #FF6B9D;
+    animation: jiluWorkingPulse 1.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+@keyframes jiluWorkingPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.25); opacity: 0; }
 }

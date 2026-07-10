@@ -42,7 +42,7 @@ export function GaoyouPoiGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
       {spots.map((spot, i) => {
         const cat = getGaoyouPoiCategory(spot.id)
         const meta = GAOYOU_POI_CATEGORIES[cat]
@@ -261,7 +261,7 @@ export function LifeTrajectoryTimeline({
                   <span>{phase.emoji}</span>
                   {detail.location}
                 </p>
-                <p className="text-sm text-literary-muted mt-2 leading-relaxed max-w-xl">
+                <p className="text-sm text-literary-muted mt-2 leading-relaxed max-w-xl lg:max-w-3xl">
                   {detail.summary}
                 </p>
                 <div className="flex flex-wrap gap-2 mt-3">

@@ -31,7 +31,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      <main className="xc-container max-w-4xl py-10 space-y-10">
+      <main className="xc-container max-w-5xl py-10 lg:py-14 space-y-10 lg:space-y-12">
         <AssetBoard />
         <WhitepaperGenerator />
         <ContactForm />

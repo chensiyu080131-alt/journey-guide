@@ -18,6 +18,12 @@ export interface HomeCover {
   style: CoverStyle
   /** 若提供，则封面直接渲染该图片（覆盖默认的排版封面） */
   image?: string
+  /** 首页总览封面：点击「开始探索」后切换到该版块，而非进入攻略 */
+  targetTab?: HomeTab
+  /** 覆盖封面上方的分类小标签展示文案 */
+  eyebrow?: string
+  /** 首页总览封面：背景堆叠的其它封面缩影，营造「多张封面」的视觉 */
+  stack?: Array<{ bg: string; border: string; image?: string }>
 }
 
 // ──────────────────────────────────────
@@ -402,12 +408,51 @@ const musicCovers: HomeCover[] = [
   },
 ]
 
-/** 首页推荐：文化载体精选 */
+/** 首页「城市」版块入口封面（自设计的城市名封面，点击进入城市版块） */
+const suzhouCityCover: HomeCover = {
+  id: 'city-suzhou',
+  category: '🎬 影视',
+  title: '苏州',
+  subtitle: '姑苏城 · 园林诗画',
+  route: '/guide/suzhou',
+  targetTab: '🏙️ 城市',
+  eyebrow: '🏙️ 城市',
+  style: {
+    bg: 'linear-gradient(165deg, #E4EEEA 0%, #A7C7BC 100%)',
+    border: '#4E7A6E',
+    title: '#26463C',
+    subtitle: '#517468',
+    motif: 'city',
+  },
+}
+
+/** 由封面样式提取堆叠层缩影 */
+function toStackLayer(c: HomeCover) {
+  return { bg: c.style.bg, border: c.style.border, image: c.image }
+}
+
+/** 首页推荐：文化载体精选。点击「开始探索」→ 切换到对应版块进行封面选择。
+ *  每个类别以「多张封面堆叠」的视觉呈现（stack 为背景缩影层）。 */
 export const featuredCovers: HomeCover[] = [
-  bookCovers[0],
-  filmCovers[0],
-  gameCovers[0],
-  musicCovers[0],
+  {
+    ...bookCovers[0],
+    targetTab: '📖 书籍',
+    stack: [toStackLayer(bookCovers[5]), toStackLayer(bookCovers[2])],
+  },
+  {
+    ...suzhouCityCover,
+    stack: [toStackLayer(filmCovers[4]), toStackLayer(filmCovers[3])],
+  },
+  {
+    ...gameCovers[0],
+    targetTab: '🎮 游戏',
+    stack: [toStackLayer(gameCovers[1]), toStackLayer(gameCovers[3])],
+  },
+  {
+    ...musicCovers[0],
+    targetTab: '🎵 音乐',
+    stack: [toStackLayer(musicCovers[4]), toStackLayer(musicCovers[5])],
+  },
 ]
 
 export function getCoversForTab(tab: HomeTab): HomeCover[] {

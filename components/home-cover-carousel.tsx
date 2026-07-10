@@ -5,6 +5,12 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { HomeCover } from '@/lib/home-covers'
 
+/** 首页总览封面：背景堆叠层的错位变换（营造多张封面叠放的视觉） */
+const STACK_TRANSFORMS = [
+  'rotate(7deg) translate(11px, 7px)',
+  'rotate(-5deg) translate(-9px, 4px)',
+]
+
 function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color: string }) {
   const stroke = color
   const cls = 'w-24 h-24 sm:w-28 sm:h-28 opacity-35'
@@ -87,12 +93,14 @@ function CoverCard({
   showExplore,
   href,
   onClick,
+  onExplore,
 }: {
   cover: HomeCover
   isActive: boolean
   showExplore: boolean
   href: string
   onClick: () => void
+  onExplore?: () => void
 }) {
   const { style } = cover
   const isLiteraryBook = cover.id === 'renjianziwei'
@@ -122,11 +130,37 @@ function CoverCard({
           isActive && 'xc-cover-inner-active'
         )}
       >
+        {cover.stack?.map((layer, li) => (
+          <div
+            key={li}
+            aria-hidden
+            className="absolute left-3 sm:left-4 right-0 top-0 rounded-r-md border overflow-hidden"
+            style={{
+              aspectRatio: '3 / 4.2',
+              background: layer.bg,
+              borderColor: `${layer.border}55`,
+              transform: STACK_TRANSFORMS[li] ?? 'none',
+              transformOrigin: 'center',
+              boxShadow: '4px 6px 18px rgba(61, 46, 46, 0.12)',
+              zIndex: 0,
+            }}
+          >
+            {layer.image && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={layer.image}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover opacity-95"
+              />
+            )}
+          </div>
+        ))}
         <div
           className="absolute left-0 top-2 bottom-2 w-4 sm:w-5 rounded-l-md"
           style={{
             background: isActive && isLiteraryBook ? '#6B3333' : style.border,
             boxShadow: isActive ? 'inset -2px 0 6px rgba(0,0,0,0.15)' : undefined,
+            zIndex: 1,
           }}
         />
         <div
@@ -140,6 +174,7 @@ function CoverCard({
               : style.bg,
             borderColor: isActive && isLiteraryBook ? '#6B333340' : `${style.border}40`,
             aspectRatio: '3 / 4.2',
+            zIndex: 2,
             boxShadow: isActive
               ? '8px 12px 32px rgba(107, 51, 51, 0.2), inset 0 1px 0 rgba(255,255,255,0.15)'
               : '4px 6px 16px rgba(61, 46, 46, 0.08)',
@@ -178,7 +213,7 @@ function CoverCard({
                   color: isActive && isLiteraryBook ? 'rgba(255,255,255,0.65)' : style.subtitle,
                 }}
               >
-                {cover.category}
+                {cover.eyebrow ?? cover.category}
               </p>
               <h3
                 className="font-serif font-semibold tracking-widest leading-snug"
@@ -226,7 +261,19 @@ function CoverCard({
           </div>
 
           {showExplore && (
-            cover.category === '书籍' ? (
+            cover.targetTab ? (
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); onExplore?.() }}
+                className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 animate-fade-in"
+                aria-label={`进入${cover.title}版块`}
+              >
+                <span className="xc-explore-btn">
+                  开始探索
+                  <span className="opacity-80">→</span>
+                </span>
+              </button>
+            ) : cover.category === '书籍' ? (
               <Link
                 href={href}
                 onClick={(e) => e.stopPropagation()}
@@ -260,9 +307,11 @@ function CoverCard({
 
 interface HomeCoverCarouselProps {
   covers: HomeCover[]
+  /** 首页总览封面点击「开始探索」时回调（用于切换到目标版块） */
+  onExploreCover?: (cover: HomeCover) => void
 }
 
-export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
+export function HomeCoverCarousel({ covers, onExploreCover }: HomeCoverCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
   const [exploreIndex, setExploreIndex] = useState<number | null>(null)
@@ -320,7 +369,7 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex items-center gap-10 sm:gap-14 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-20 sm:px-28 py-8 touch-pan-x min-h-[400px] sm:min-h-[460px]"
+          className="flex items-center gap-10 sm:gap-14 lg:gap-16 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-20 sm:px-28 lg:px-40 py-8 touch-pan-x min-h-[400px] sm:min-h-[460px]"
         >
           {covers.map((cover, i) => (
             <CoverCard
@@ -333,6 +382,7 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
                 scrollTo(i)
                 setExploreIndex(i)
               }}
+              onExplore={() => onExploreCover?.(cover)}
             />
           ))}
         </div>
