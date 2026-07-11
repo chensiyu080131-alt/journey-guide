@@ -92,14 +92,14 @@ export async function generateGuide(
 - 方言至少5个
 - 在地体验至少3个
 - 贴士至少4个
-- 安排${days}天行程，每天4-8个景点`
+- 安排${days}天行程，每天3-5个景点`
 
     const result = await callLLM(
       [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
-      { temperature: 0.8, max_tokens: 4000 }
+      { temperature: 0.8, max_tokens: 8000 }
     )
 
     return parseJson<Guide>(result)
@@ -149,7 +149,7 @@ dayPlans 中每个 spot 需含 originalText、originalSource、realityNote。`
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
-      { temperature: 0.8, max_tokens: 4000 }
+      { temperature: 0.8, max_tokens: 8000 }
     )
 
     return parseJson<Guide>(result)
