@@ -301,3 +301,9 @@ export function getCoversForTab(tab: HomeTab): HomeCover[] {
 }
 
 export const homeTabs: HomeTab[] = ['首页', '城市', '书籍', '音乐', '游戏']
+
+const comingSoonTabs = new Set<HomeTab>(['音乐', '游戏'])
+
+export function isComingSoonTab(tab: HomeTab): boolean {
+  return comingSoonTabs.has(tab)
+}

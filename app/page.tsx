@@ -4,7 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { HomeNav } from '@/components/home-nav'
 import { HomeCoverCarousel } from '@/components/home-cover-carousel'
-import { HomeTab, getCoversForTab } from '@/lib/home-covers'
+import { HomeComingSoon } from '@/components/home-coming-soon'
+import { HomeTab, getCoversForTab, isComingSoonTab } from '@/lib/home-covers'
 
 const tabHints: Record<HomeTab, string> = {
   '首页': '江苏省城市 · 精选推荐',
@@ -12,6 +13,11 @@ const tabHints: Record<HomeTab, string> = {
   '书籍': '跟着书走，寻迹而至',
   '音乐': '听一曲江南，走进故事里',
   '游戏': '互动体验，读懂一座城',
+}
+
+const comingSoonHints: Record<'音乐' | '游戏', string> = {
+  '音乐': '江南曲调与戏曲唱段，功能筹备中',
+  '游戏': '诗词挑战与互动体验，功能筹备中',
 }
 
 const tabStats: Record<HomeTab, { value: string; label: string }[]> = {
@@ -51,6 +57,7 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<HomeTab>('首页')
   const covers = getCoversForTab(activeTab)
   const stats = tabStats[activeTab]
+  const isComingSoon = isComingSoonTab(activeTab)
 
   return (
     <main className="xc-home-bg min-h-screen flex flex-col">
@@ -72,19 +79,30 @@ export default function HomePage() {
           {activeTab === '首页' ? 'Featured Routes' : activeTab}
         </p>
         <h1 className="mt-2 text-xl sm:text-2xl font-serif font-semibold text-literary-ink tracking-wide">
-          {activeTab === '首页' ? '有迹可循，寻迹而至' : tabHints[activeTab]}
+          {activeTab === '首页'
+            ? '有迹可循，寻迹而至'
+            : isComingSoon
+              ? comingSoonHints[activeTab as '音乐' | '游戏']
+              : tabHints[activeTab]}
         </h1>
         <p className="mt-2 text-xs text-literary-muted tracking-wide font-serif max-w-md mx-auto leading-relaxed">
           {activeTab === '首页'
             ? '跟着书本去旅行 · 从一座城、一本书、一曲江南开始'
-            : '左右滑动选择封面，点击进入探索'}
+            : isComingSoon
+              ? '该模块正在开发中，暂不提供浏览与跳转'
+              : '左右滑动选择封面，点击封面进入详情'}
         </p>
       </div>
 
       <section className="flex-1 flex items-center justify-center py-4 sm:py-6 min-h-[50vh]">
-        <HomeCoverCarousel key={activeTab} covers={covers} />
+        {isComingSoon ? (
+          <HomeComingSoon tab={activeTab as '音乐' | '游戏'} />
+        ) : (
+          <HomeCoverCarousel key={activeTab} covers={covers} />
+        )}
       </section>
 
+      {!isComingSoon && (
       <div className="px-4 sm:px-6 pb-6 flex-shrink-0">
         <div className="xc-home-stats-bar">
           {stats.map(stat => (
@@ -95,6 +113,7 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+      )}
 
       <footer className="px-4 sm:px-6 pb-8 sm:pb-10 flex-shrink-0">
         <div className="xc-home-quote-banner">

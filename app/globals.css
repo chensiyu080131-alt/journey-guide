@@ -261,16 +261,34 @@
   }
 
   .xc-explorer-spot-card {
-    @apply flex-shrink-0 snap-start w-[200px] sm:w-[220px] text-left px-4 py-3 rounded-xl border
-           transition-all duration-200;
+    @apply flex-shrink-0 snap-start w-[200px] sm:w-[220px] text-left overflow-hidden
+           rounded-xl border-0 shadow-md transition-all duration-200;
   }
 
   .xc-explorer-spot-active {
-    @apply border-celadon-400 bg-celadon-50/80 shadow-sm;
+    @apply ring-2 ring-[#FACC15] shadow-lg;
   }
 
   .xc-explorer-spot-inactive {
-    @apply border-celadon-200/50 bg-white/70 hover:border-celadon-300 hover:bg-camel-light/50;
+    @apply opacity-90 hover:opacity-100 hover:shadow-lg;
+  }
+
+  .xc-explorer-spot-pill {
+    @apply bg-white px-4 py-2 text-center;
+  }
+
+  .xc-explorer-spot-pill-title {
+    @apply text-xs font-bold text-[#1A1A1A] truncate;
+  }
+
+  .xc-explorer-spot-detail {
+    @apply px-3 py-2.5 text-[10px] leading-relaxed text-white;
+    background: rgba(19, 78, 74, 0.88);
+  }
+
+  /* 散人漫游地图容器 */
+  .xc-roaming-map {
+    @apply bg-white;
   }
 
   /* ── 古籍纸首页（旧版保留） ── */

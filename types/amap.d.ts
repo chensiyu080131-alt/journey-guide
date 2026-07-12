@@ -2,13 +2,14 @@ export {}
 
 declare global {
   namespace AMap {
-    type LngLatLike = [number, number] | { lng: number; lat: number }
+    type LngLatLike = [number, number] | { lng: number; lat: number } | LngLat
 
     function plugin(plugins: string[], callback: () => void): void
 
     class Map {
       constructor(container: HTMLElement | string, opts?: Record<string, unknown>)
       add(overlay: Marker | Polyline): void
+      on(event: string, handler: () => void): void
       setFitView(
         overlays?: unknown,
         immediately?: boolean,
@@ -52,6 +53,17 @@ declare global {
         destination: LngLatLike,
         callback: (status: string, result: unknown) => void
       ): void
+    }
+
+    class LngLat {
+      constructor(lng: number, lat: number)
+      getLng(): number
+      getLat(): number
+      toArray(): [number, number]
+    }
+
+    namespace GeometryUtil {
+      function decodePolyline(str: string): LngLatLike[]
     }
   }
 
