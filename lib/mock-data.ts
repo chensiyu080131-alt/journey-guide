@@ -1,5 +1,6 @@
 import { Guide, Spot, EntryCard } from '@/types'
 import { cityGuides } from './city-guides'
+import { nationalCityGuides } from './national-city-guides'
 import { renjianziweiGuide } from './renjianziwei-guide'
 
 // ============================================================
@@ -14,52 +15,57 @@ const shajiabangSpots: Spot[] = [
   {
     id: 'sjb-1', name: '春来茶馆', desc: '阿庆嫂的春来茶馆，戏里的故事从这里开始',
     duration: '1.5小时', tags: ['文化', '历史'], timeSlot: '上午',
-    location: { lat: 31.5250, lng: 120.7280 }, address: '常熟市沙家浜风景区内',
+    location: { lat: 31.5250, lng: 120.7280 }, address: '常熟市沙家浜镇芦苇荡路188号',
     story: '春来茶馆是京剧《沙家浜》的核心场景。阿庆嫂以茶馆老板娘的身份掩护新四军伤员，在日伪军面前周旋。历史上沙家浜确实有地下交通站，当年多位"阿庆嫂"式的人物在此活动。',
-    type: '景点', budgetHint: '含景区门票', goodNow: true, goodNowReason: '上午游客少，适合慢慢品', photoSpot: true, emoji: '🍵',
+    type: '景点', budgetHint: '旺季100元/淡季70-80元', goodNow: true, goodNowReason: '上午游客少，适合慢慢品', photoSpot: true, emoji: '🍵',
     originalText: '"来的都是客，全凭嘴一张。相逢开口笑，过后不思量。"',
     originalSource: '京剧《沙家浜》·阿庆嫂唱词',
     realityNote: '如今的春来茶馆按戏中场景1:1还原，可入内喝茶，八仙桌、长条凳，和阿庆嫂时代别无二致。',
+    culturalTag: '🎬影视', culturalTagDetail: '🎬 京剧《沙家浜》经典场景——阿庆嫂茶馆',
   },
   {
     id: 'sjb-2', name: '沙家浜芦苇荡', desc: '千亩芦苇荡，新四军藏身的水上迷宫',
     duration: '2.5小时', tags: ['自然', '历史'], timeSlot: '上午',
-    location: { lat: 31.5220, lng: 120.7350 }, address: '沙家浜风景区',
+    location: { lat: 31.5220, lng: 120.7350 }, address: '常熟市沙家浜镇芦苇荡路188号',
     story: '芦苇荡是沙家浜的标志性景观，也是当年新四军伤员藏身之处。迷宫般的芦苇水道让日伪军无从搜寻。如今可以坐手摇船穿行芦苇丛中，感受当年水上游击的惊险。',
     type: '体验', budgetHint: '船票60元', goodNow: true, goodNowReason: '上午芦苇间光线最美', photoSpot: true, emoji: '🌾',
     originalText: '"芦花放，稻谷香，岸柳成行。"',
     originalSource: '京剧《沙家浜》·郭建光唱词',
     realityNote: '秋天来最应景——芦花飞雪，稻谷金黄，和戏中唱的一模一样。手摇船穿过芦苇迷宫，水道至今保持着当年的走势。',
+    culturalTag: '🎬影视', culturalTagDetail: '🎬 京剧《沙家浜》——新四军芦苇荡藏身地',
   },
   {
     id: 'sjb-3', name: '阳澄湖大闸蟹', desc: '就在阳澄湖边，吃的就是湖里捞上来的',
     duration: '1.5小时', tags: ['美食'], timeSlot: '下午',
-    location: { lat: 31.5300, lng: 120.7400 }, address: '沙家浜镇蟹庄',
+    location: { lat: 31.5300, lng: 120.7400 }, address: '常熟市沙家浜镇芦苇荡路188号',
     story: '沙家浜就在阳澄湖畔，这里是阳澄湖大闸蟹的核心产区。不同于上海苏州的蟹庄溢价，在产地吃不仅更新鲜，价格也实在。九月开捕季来，一蟹三吃（清蒸、蟹粉豆腐、蟹黄面）能鲜到怀疑人生。',
     type: '美食', budgetHint: '人均100-180元', goodNow: false, goodNowReason: '9-11月蟹季最佳', emoji: '🦀',
     originalText: '"西风响，蟹脚痒。"',
     originalSource: '江南谚语',
     realityNote: '阳澄湖边的蟹庄每年9月开捕，当地人认准"戴戒指"（防伪扣）的湖蟹。在沙家浜吃蟹，窗外就是阳澄湖。',
+    culturalTag: '🎬影视', culturalTagDetail: '🎬 京剧《沙家浜》故事发生地——阳澄湖畔',
   },
   {
     id: 'sjb-4', name: '横泾老街', desc: '《沙家浜》影视剧取景地，老街还是那个老街',
     duration: '1.5小时', tags: ['文化', '体验'], timeSlot: '下午',
-    location: { lat: 31.5260, lng: 120.7300 }, address: '沙家浜镇横泾',
+    location: { lat: 31.5260, lng: 120.7300 }, address: '常熟市沙家浜镇芦苇荡路188号',
     story: '横泾老街保留了江南水乡的原始格局，是电视剧《沙家浜》的取景地。石板路沿河铺开，老房子里还住着当地人。比起周庄同里，这里安静得不像景区。',
     type: '景点', budgetHint: '免费', goodNow: true, goodNowReason: '下午散步最佳', photoSpot: true, emoji: '🏘️',
     originalText: '"朝霞映在阳澄湖上，芦花放稻谷香岸柳成行。"',
     originalSource: '京剧《沙家浜》·开场合唱',
     realityNote: '走在横泾老街的石板路上，河对岸白墙黛瓦倒映水中，和半个世纪前剧组看到的风景几乎一样。',
+    culturalTag: '🎬影视', culturalTagDetail: '🎬 电视剧《沙家浜》取景地——横泾老街',
   },
   {
     id: 'sjb-5', name: '沙家浜革命历史纪念馆', desc: '那些真实发生过的事，比戏更震撼',
     duration: '1小时', tags: ['文化', '历史'], timeSlot: '下午',
-    location: { lat: 31.5240, lng: 120.7290 }, address: '沙家浜风景区',
+    location: { lat: 31.5240, lng: 120.7290 }, address: '常熟市沙家浜镇芦苇荡路188号',
     story: '纪念馆用大量实物和影像还原了当年新四军在阳澄湖畔养伤、斗争的真实历史。最触动的是"36个伤病员"的故事——他们在芦苇荡中养伤，在当地百姓掩护下全部康复归队。这段历史比任何戏剧都更动人。',
-    type: '景点', budgetHint: '含景区门票', emoji: '🏛️',
+    type: '景点', budgetHint: '旺季100元/淡季70-80元', emoji: '🏛️',
     originalText: '"要学那泰山顶上一青松，挺然屹立傲苍穹。"',
     originalSource: '京剧《沙家浜》·郭建光唱段',
     realityNote: '馆内陈列着当年新四军使用过的医疗器械、武器和百姓的掩护用具。实物比戏更有力量。',
+    culturalTag: '🎬影视', culturalTagDetail: '🎬 京剧《沙家浜》——真实历史原型纪念馆',
   },
   {
     id: 'sjb-6', name: '叫花鸡', desc: '常熟招牌菜，黄泥裹了煨，掰开满屋香',
@@ -70,6 +76,7 @@ const shajiabangSpots: Spot[] = [
     originalText: '"叫花子没路走，拿了鸡就用黄泥裹了烤。"',
     originalSource: '常熟民间传说',
     realityNote: '常熟叫花鸡发源地就在虞山一带。现在的做法比传说讲究多了，但那个掰开泥壳满屋飘香的仪式感，几百年没变。',
+    culturalTag: '🎬影视', culturalTagDetail: '🎬 京剧《沙家浜》故事地——常熟叫花鸡',
   },
 ]
 
@@ -80,22 +87,24 @@ const niehaifengSpots: Spot[] = [
   {
     id: 'nhf-1', name: '曾园（虚廓园）', desc: '曾朴家的园子，小说里写的那些事就在这儿发生',
     duration: '2小时', tags: ['文化', '历史'], timeSlot: '上午',
-    location: { lat: 31.6500, lng: 120.7400 }, address: '常熟市翁府前',
+    location: { lat: 31.6500, lng: 120.7400 }, address: '常熟市翁府前7号',
     story: '曾园是晚清常熟望族曾家的私家园林，《孽海花》作者曾朴就生长于此。园中亭台楼阁、小桥流水，处处透着江南文人园林的精致。曾朴在这里度过的少年时光，成为小说中许多场景的原型。',
     type: '景点', budgetHint: '免费', goodNow: true, goodNowReason: '清晨园中无人，最可体味', photoSpot: true, emoji: '🏡',
     originalText: '"那园子虽不甚大，却也亭台曲折，花木扶疏，颇有几分雅致。"',
     originalSource: '曾朴《孽海花》第一回',
     realityNote: '曾园现为虞山公园的一部分，免费开放。园中照山楼、不碍云山楼等建筑保存完好，和曾朴笔下的格局基本一致。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 曾朴《孽海花》——作者曾朴故宅园林',
   },
   {
     id: 'nhf-2', name: '铁琴铜剑楼', desc: '中国四大藏书楼之一，瞿氏五代人守了一百年的书',
     duration: '1.5小时', tags: ['文化', '历史'], timeSlot: '上午',
-    location: { lat: 31.6550, lng: 120.7500 }, address: '常熟市古里镇',
+    location: { lat: 31.6550, lng: 120.7500 }, address: '常熟市古里镇铁琴铜剑楼',
     story: '铁琴铜剑楼是清代四大私家藏书楼之一，与宁波天一阁齐名。瞿氏家族五代人倾尽家财收藏古籍善本，最盛时藏书十余万卷。抗战时期，瞿家后人冒死将珍本转移，使大量孤本免于战火。这种"以命护书"的精神，和《孽海花》中描写的晚清文人风骨一脉相承。',
     type: '景点', budgetHint: '免费', emoji: '📚',
     originalText: '"铁琴铮铮，铜剑光寒。藏书万卷，不负青山。"',
     originalSource: '瞿氏铁琴铜剑楼旧联',
     realityNote: '铁琴铜剑楼已修复开放，可看到瞿家当年藏书的楼阁原貌。楼内有部分珍贵刻本展出，值得细细看。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 中国四大藏书楼之一——铁琴铜剑楼',
   },
   {
     id: 'nhf-3', name: '蕈油面', desc: '虞山野蕈熬的浇头面，鲜到眉毛掉',
@@ -106,6 +115,7 @@ const niehaifengSpots: Spot[] = [
     originalText: '"常熟人的清晨是从一碗面开始的。"',
     originalSource: '常熟饮食文化',
     realityNote: '兴福寺旁的望岳楼老面馆，开了几十年。蕈油面的关键在于蕈——虞山松林里的野生蕈，只有懂行的山民才找得到。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 常熟文人日常——蕈油面前世今生',
   },
   {
     id: 'nhf-4', name: '虞山剑门', desc: '虞山最险处，曾朴笔下文人的退隐之地',
@@ -116,16 +126,18 @@ const niehaifengSpots: Spot[] = [
     originalText: '"虞山之阳，有石如剑劈，名曰剑门。登之则百里之远，尽在目前。"',
     originalSource: '常熟县志·虞山篇',
     realityNote: '剑门观景台是虞山最高处的最佳观景点。天气好时可以看到阳澄湖和远处的苏州城，和古人看到的视野一样辽阔。',
+    culturalTag: '🏃运动', culturalTagDetail: '🏃 中国森林氧吧——虞山',
   },
   {
     id: 'nhf-5', name: '方塔', desc: '南宋古塔，常熟城里最老的建筑',
     duration: '1小时', tags: ['文化', '历史'], timeSlot: '下午',
-    location: { lat: 31.6480, lng: 120.7450 }, address: '常熟市方塔街',
+    location: { lat: 31.6480, lng: 120.7450 }, address: '常熟市环城东路28号',
     story: '方塔建于南宋建炎四年（1130年），因塔身呈方形而得名，是常熟现存最古老的建筑。塔下有南宋古井和银杏树，树龄超过800年。曾朴在《孽海花》中多次写到方塔——这是常熟城的标志，文人墨客的地理锚点。',
     type: '景点', budgetHint: '方塔园免费/登塔10元', photoSpot: true, emoji: '🗼',
     originalText: '"方塔耸立，飞檐如翼，城中望之，如在目前。"',
     originalSource: '曾朴《孽海花》相关描写',
     realityNote: '方塔周围已辟为方塔园，园内古井、古银杏均为南宋遗物。塔身可登，九层四面，每层都是常熟城不同角度的画卷。',
+    culturalTag: '🎵音乐', culturalTagDetail: '🎵 虞山琴派UNESCO古琴艺术保护地',
   },
   {
     id: 'nhf-6', name: '桂花酒酿圆子', desc: '虞山脚下小摊的甜，常熟文人的下午茶',
@@ -136,6 +148,7 @@ const niehaifengSpots: Spot[] = [
     originalText: '"桂花蒸过，酒酿新熟，小圆子一颗颗浮起来，就是秋天的味道。"',
     originalSource: '常熟饮食文化',
     realityNote: '这碗甜品只能在常熟吃到正宗的。虞山上的桂花、本地的酒酿，换一个地方就不是那个味。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 常熟文人秋日记忆——桂花酒酿圆子',
   },
 ]
 
@@ -146,12 +159,13 @@ const wengtongheSpots: Spot[] = [
   {
     id: 'wth-1', name: '彩衣堂（翁同龢纪念馆）', desc: '翁家老宅，帝师从这里走出',
     duration: '2小时', tags: ['文化', '历史'], timeSlot: '上午',
-    location: { lat: 31.6520, lng: 120.7420 }, address: '常熟市翁家巷门2号',
+    location: { lat: 31.6520, lng: 120.7420 }, address: '常熟市翁家巷门2号（翁同龢纪念馆）',
     story: '彩衣堂是翁同龢的出生地和少年居所，始建于明代，是江南保存最完好的明代建筑群之一。翁同龢在此度过了18年，从蒙童到状元。"彩衣"取自"老莱子彩衣娱亲"的典故，是翁家孝道家风的象征。堂内明代彩绘建筑至今色彩可辨，全国罕见。',
     type: '景点', budgetHint: '20元', goodNow: true, goodNowReason: '上午人少，可静心感受', photoSpot: true, emoji: '🏛️',
     originalText: '"每念先帝付托之重，不敢以老病自懈。"',
     originalSource: '翁同龢日记·光绪二十四年',
     realityNote: '彩衣堂内最珍贵的是明代建筑彩绘——500多年前的苏式彩画，在国内民居中极为罕见。翁同龢的书房按原样布置，笔墨纸砚如旧。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 帝师故居——翁同龢纪念馆',
   },
   {
     id: 'wth-2', name: '读书台', desc: '翁同龢少年读书处，虞山腰上的一方净土',
@@ -162,6 +176,7 @@ const wengtongheSpots: Spot[] = [
     originalText: '"读书台畔松风过，犹闻萧统编书声。"',
     originalSource: '常熟古迹诗咏',
     realityNote: '读书台至今保存完好，石台可坐。周围古木参天，松涛阵阵，和翁同龢读书时听到的声音一样。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 帝师翁同龢少年读书处——虞山读书台',
   },
   {
     id: 'wth-3', name: '蕈油面', desc: '帝师也爱的一碗面，虞山野蕈浇头',
@@ -172,6 +187,7 @@ const wengtongheSpots: Spot[] = [
     originalText: '"晨起，步至兴福寺，食素面一盂。"',
     originalSource: '翁同龢日记',
     realityNote: '翁同龢在日记中多次记载到兴福寺吃面。如今兴福寺旁的面馆仍用虞山野蕈做浇头，面汤清亮，和他当年吃到的是同一种鲜。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 翁同龢日记中记载的虞山素面',
   },
   {
     id: 'wth-4', name: '翁同龢墓', desc: '帝师归葬虞山，墓碑上只有"翁文恭公墓"六字',
@@ -182,6 +198,7 @@ const wengtongheSpots: Spot[] = [
     originalText: '"六十年中事，伤心到盖棺。不将两行泪，暗向众人弹。"',
     originalSource: '翁同龢临终诗',
     realityNote: '翁墓如今仍极简朴，和百年前一样。墓前有翁同龢自撰的墓志铭，字迹已被风雨侵蚀，但精神永在。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 帝师翁同龢归葬之地——虞山鹁鸽峰',
   },
   {
     id: 'wth-5', name: '虞山城墙', desc: '腾山而建的明代城墙，走在上面半个常熟尽收眼底',
@@ -192,6 +209,7 @@ const wengtongheSpots: Spot[] = [
     originalText: '"登城远望，湖山如画，城郭如带。"',
     originalSource: '翁同龢日记',
     realityNote: '虞山城墙是常熟最美的步行道。城墙沿山脊而建，一面是虞山苍翠，一面是尚湖碧波，和翁同龢日记中的描写一模一样。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 翁同龢日记中的虞山城墙远眺',
   },
   {
     id: 'wth-6', name: '叫花鸡', desc: '翁同龢也写进日记的常熟头牌菜',
@@ -202,6 +220,7 @@ const wengtongheSpots: Spot[] = [
     originalText: '"晚食叫花鸡，味甚佳。"',
     originalSource: '翁同龢日记',
     realityNote: '翁同龢确实在日记中记载过吃叫花鸡。虞山脚下的王四酒家是百年老店，叫花鸡是招牌。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 翁同龢日记中记载的常熟叫花鸡',
   },
 ]
 
@@ -212,12 +231,13 @@ const qianliuSpots: Spot[] = [
   {
     id: 'ql-1', name: '半野堂旧址', desc: '钱柳初遇之处，虞山脚下的一场惊鸿',
     duration: '1.5小时', tags: ['文化', '历史'], timeSlot: '上午',
-    location: { lat: 31.6480, lng: 120.7400 }, address: '常熟市虞山南路',
+    location: { lat: 31.6480, lng: 120.7400 }, address: '常熟市虞山南路（兴福寺）',
     story: '崇祯十三年（1640年），柳如是女扮男装，以"柳儒士"之名拜访钱谦益于半野堂。钱谦益见其才情惊人，当即赋诗相赠，两人从此结缘。半野堂虽已不存，但虞山南路一带仍可寻踪。',
     type: '景点', budgetHint: '免费', emoji: '🏯',
     originalText: '"逢人已觉无意味，遇汝方知有此生。"',
     originalSource: '钱谦益《半野堂赠柳如是》',
     realityNote: '半野堂原址在虞山南麓，现已不存。虞山南路沿途有指示牌标注历史遗迹位置，可驻足遥想当年。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 钱柳情缘初遇之地——半野堂旧址',
     interactiveTask: {
       type: '诗词诵读', title: '诵读钱柳定情诗', description: '品读钱谦益与柳如是初遇时的诗词',
       poem: '逢人已觉无意味，遇汝方知有此生。\n——钱谦益《半野堂赠柳如是》',
@@ -232,6 +252,7 @@ const qianliuSpots: Spot[] = [
     originalText: '"红豆初生，如相思之渐深。"',
     originalSource: '钱谦益《红豆诗》',
     realityNote: '红豆山庄已修复开放，庄内红豆树为清代补植，但树龄仍超百年。4-5月花期最盛，绛红色花簇如旧。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 钱柳定情之地——红豆山庄',
     interactiveTask: {
       type: '诗词诵读', title: '诵读红豆诗词', description: '在红豆树下，品读钱谦益的红豆诗和王维的相思',
       poem: '红豆生南国，春来发几枝。\n愿君多采撷，此物最相思。\n——王维《相思》',
@@ -246,6 +267,7 @@ const qianliuSpots: Spot[] = [
     originalText: '"有恨寒潮，无情残照，正是萧萧南浦。"',
     originalSource: '柳如是《金明池·咏寒柳》',
     realityNote: '尚湖是常熟最大湖泊，可租电动船或手划船环湖。推荐从拂水堤上船，沿钱柳当年可能泛舟的水域行进。',
+    culturalTag: '🏃运动', culturalTagDetail: '🏃 常熟尚湖半程马拉松最美赛道',
     interactiveTask: {
       type: '诗词诵读', title: '诗词唱和', description: 'AI与你对诗——吟出上句，等你接下句',
       poem: '有恨寒潮，无情残照，正是萧萧南浦。\n更吹起，霜条孤影，还记得，旧时飞絮。\n——柳如是《金明池·咏寒柳》',
@@ -254,12 +276,13 @@ const qianliuSpots: Spot[] = [
   {
     id: 'ql-4', name: '铁琴铜剑楼', desc: '清末四大藏书楼之一，钱氏文脉绵延',
     duration: '1.5小时', tags: ['文化'], timeSlot: '下午',
-    location: { lat: 31.6380, lng: 120.7650 }, address: '常熟市古里镇',
+    location: { lat: 31.6380, lng: 120.7650 }, address: '常熟市古里镇铁琴铜剑楼',
     story: '铁琴铜剑楼是瞿氏家族的藏书楼，与钱谦益的绛云楼一脉相承。钱谦益绛云楼藏书为当世之冠，后毁于大火；瞿氏承其遗风，使常熟藏书传统绵延不绝。楼内现存古籍善本数千册。',
     type: '景点', budgetHint: '免费', emoji: '📚',
     originalText: '"绛云楼上万余卷，半是平生心血来。"',
     originalSource: '钱谦益《绛云楼题跋》',
     realityNote: '铁琴铜剑楼已修复为纪念馆，展示瞿氏藏书历史和部分善本。古里镇本身也是江南水乡，值得慢慢走走。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 中国四大藏书楼之一——铁琴铜剑楼',
     interactiveTask: {
       type: '古籍寻宝', title: '古籍寻宝游戏', description: '古文中藏着一处错字，你能找出来吗？',
       treasureOriginal: '铁琴铮铮，铜剑光寒。藏书万卷，不负青山。',
@@ -275,6 +298,7 @@ const qianliuSpots: Spot[] = [
     originalText: '"此去泉台应不远，一丘一壑任悠悠。"',
     originalSource: '钱谦益绝笔',
     realityNote: '钱柳墓在虞山南麓深处，需沿山路步行约15分钟。墓区清幽，游客稀少，适合静思。建议傍晚前往，夕阳下的虞山格外肃穆。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 钱柳乱世情缘最后归宿——虞山合葬',
     interactiveTask: {
       type: '诗词诵读', title: '诵读绝命词', description: '钱谦益临终之作，字字泣血',
       poem: '此去泉台应不远，一丘一壑任悠悠。\n——钱谦益绝笔',
@@ -284,7 +308,8 @@ const qianliuSpots: Spot[] = [
     id: 'ql-6', name: '蕈油面', desc: '虞山三宝之一，菌菇鲜到眉毛掉',
     duration: '1小时', tags: ['美食'], timeSlot: '中午',
     location: { lat: 31.6500, lng: 120.7410 }, address: '虞山脚下兴福寺旁',
-    story: '蕈油面用虞山野生菌菇熬制浇头，是常熟最有特色的早餐。松蕈、桂花蕈、栗蕈——不同季节有不同的菌，但都鲜到让人闭眼。柳如是当年是否也在这山间吃过一碗热蕈面？史料无载，但风物犹存。',
+    story: '蕈油面用虞山野生菌菇熬制浇头，是常熟最有特色的早餐。松蕈、桂花蕈、栗蕈——不同季节有不同的菌，但都鲜到让人闭眼。柳如是当年是否也在这山间吃过面？史料无载，但味觉传统千年未变。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 钱柳时代延续至今的虞山蕈油面',
     type: '美食', budgetHint: '25-40元', emoji: '🍜',
     originalText: '"山中之蕈，味胜肉食。"',
     originalSource: '常熟方志',
@@ -299,6 +324,7 @@ const qianliuSpots: Spot[] = [
     originalText: '"桂花香里说丰年，听取蛙声一片。"',
     originalSource: '辛弃疾《西江月》',
     realityNote: '方塔街上多家老店都有，推荐"桂花坊"，手工圆子现煮，桂花酱是自家酿的。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 柳如是笔下江南甜味——桂花酒酿圆子',
     interactiveTask: {
       type: '知识问答', title: '钱柳知识问答', description: '关于钱谦益与柳如是的故事，你知道多少？',
       questions: [
@@ -317,6 +343,7 @@ const qianliuSpots: Spot[] = [
     originalText: '"虞山之石可刻字，虞山之人不可忘。"',
     originalSource: '虞山志',
     realityNote: '碑刻博物馆在虞山国家森林公园入口附近，与兴福寺相邻。可先看碑刻再登山，约需1.5小时。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 钱谦益笔墨遗存——虞山碑刻',
     interactiveTask: {
       type: '书法临摹', title: '书法临摹', description: '试一笔钱谦益风格，感受文人笔墨',
       calligraphyText: '牧斋',
@@ -339,6 +366,7 @@ const yangzhouSpots: Spot[] = [
     originalText: '故人西辞黄鹤楼，烟花三月下扬州。孤帆远影碧空尽，唯见长江天际流。',
     originalSource: '李白《黄鹤楼送孟浩然之广陵》',
     realityNote: '瘦西湖南门入园，建议先走五亭桥再到二十四桥。春季桃红柳绿，与李白诗中「烟花」意境最合。游船可穿行桥下，体验「画舫听箫声一夜，看红灯千盏」的意境。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 李白"烟花三月下扬州"·姜夔"二十四桥仍在"',
   },
   {
     id: 'yz-2', name: '个园', desc: '四季假山，一步一景，竹西佳处的私家园林',
@@ -349,6 +377,7 @@ const yangzhouSpots: Spot[] = [
     originalText: '淮左名都，竹西佳处，解鞍少驻初程。',
     originalSource: '姜夔《扬州慢·淮左名都》',
     realityNote: '个园与东关街相邻，可从北门出直接步入古街。园中宜园小筑的月亮门是拍照经典机位，建议沿春→夏→秋→冬顺序穿假山。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 姜夔"淮左名都，竹西佳处"',
   },
   {
     id: 'yz-3', name: '大明寺', desc: '栖灵塔下，鉴真东渡前的最后一站',
@@ -359,6 +388,7 @@ const yangzhouSpots: Spot[] = [
     originalText: '山横翠霭千层合，水抱芳洲两岸分。',
     originalSource: '欧阳修《题平山堂》',
     realityNote: '大明寺在蜀冈之巅，与瘦西湖仅一墙之隔。登栖灵塔可俯瞰瘦西湖全景，是理解「淮左名都」地理格局的最佳视角。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 欧阳修平山堂赋诗之地',
   },
   {
     id: 'yz-4', name: '东关街', desc: '千年古街，淮扬味道与市井烟火',
@@ -369,6 +399,7 @@ const yangzhouSpots: Spot[] = [
     originalText: '腰缠十万贯，骑鹤上扬州。',
     originalSource: '宋·俚谚',
     realityNote: '东关街从个园北门到古运河码头，约1.2公里。建议傍晚前往，赵氏叠汤圆、四美红庙豆腐脑等老店仍在，非景区预制小吃。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 "腰缠十万贯，骑鹤上扬州"',
   },
   {
     id: 'yz-5', name: '富春茶社', desc: '蟹黄汤包、三丁包，淮扬早茶的百年老店',
@@ -379,6 +410,7 @@ const yangzhouSpots: Spot[] = [
     originalText: '天下三分明月夜，二分无赖是扬州。',
     originalSource: '徐凝《忆扬州》',
     realityNote: '国庆路总店最正宗，周末需排队。建议点蟹黄汤包、三丁包、魁龙珠茶，避开景区旁的高价仿店。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 徐凝"天下三分明月夜，二分无赖是扬州"',
   },
   {
     id: 'yz-6', name: '何园', desc: '晚清第一园，复道回廊串联六进院落',
@@ -389,6 +421,7 @@ const yangzhouSpots: Spot[] = [
     originalText: '天下三分明月夜，二分无赖是扬州。',
     originalSource: '徐凝《忆扬州》',
     realityNote: '何园复道回廊是摄影经典，建议从东门入、沿回廊上至二楼俯瞰水心亭。与个园风格不同，更见晚清中西交融的痕迹。',
+    culturalTag: '🎬影视', culturalTagDetail: '🎬 影视剧取景地——晚清第一园何园',
   },
   {
     id: 'yz-7', name: '史可法纪念馆', desc: '梅花岭上，忠义气节与扬州城防记忆',
@@ -399,6 +432,7 @@ const yangzhouSpots: Spot[] = [
     originalText: '自胡马窥江去后，废池乔木，犹厌言兵。',
     originalSource: '姜夔《扬州慢·淮左名都》',
     realityNote: '纪念馆在城北，与瘦西湖、个园构成三角。园内梅花冬末春初盛开，与姜夔词中「念桥边红药，年年知为谁生」意境呼应。',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 姜夔"废池乔木，犹厌言兵"',
   },
 ]
 
@@ -599,6 +633,7 @@ export const mockGuides: Record<string, Guide> = {
   },
   'renjianziwei': renjianziweiGuide,
   ...cityGuides,
+  ...nationalCityGuides,
 }
 
 // ============================================================

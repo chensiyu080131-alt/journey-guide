@@ -45,6 +45,32 @@ function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color:
       </svg>
     )
   }
+  if (type === 'film') {
+    return (
+      <svg viewBox="0 0 64 64" className={cls} fill="none">
+        <rect x="14" y="14" width="36" height="36" rx="2" stroke={stroke} strokeWidth="1.2" />
+        <rect x="10" y="18" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="10" y="28" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="10" y="38" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="50" y="18" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="50" y="28" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="50" y="38" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <circle cx="32" cy="32" r="8" stroke={stroke} strokeWidth="1.2" />
+        <circle cx="32" cy="32" r="3" fill={stroke} opacity="0.3" />
+      </svg>
+    )
+  }
+  if (type === 'sport') {
+    return (
+      <svg viewBox="0 0 64 64" className={cls} fill="none">
+        <path d="M32 12 L32 52" stroke={stroke} strokeWidth="1.2" />
+        <path d="M20 20 Q32 8 44 20" stroke={stroke} strokeWidth="1.2" fill="none" />
+        <path d="M16 36 L48 36" stroke={stroke} strokeWidth="1" opacity="0.6" />
+        <circle cx="32" cy="28" r="4" stroke={stroke} strokeWidth="1" fill="none" />
+        <path d="M28 44 L32 52 L36 44" stroke={stroke} strokeWidth="1" opacity="0.5" />
+      </svg>
+    )
+  }
   return (
     <svg viewBox="0 0 64 64" className={cls} fill="none">
       <rect x="18" y="14" width="28" height="38" rx="1" stroke={stroke} strokeWidth="1.2" />
@@ -58,23 +84,40 @@ function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color:
 function CoverCard({
   cover,
   isActive,
-  onActivate,
+  showExplore,
+  href,
+  onClick,
+  onExplore,
 }: {
   cover: HomeCover
   isActive: boolean
-  onActivate: () => void
+  showExplore: boolean
+  href: string
+  onClick: () => void
+  onExplore?: () => void
 }) {
   const { style } = cover
   const isLiteraryBook = cover.id === 'renjianziwei'
-  const href = `${cover.route}?cat=${cover.category}`
 
-  const cardClass = cn(
-    'xc-cover-card snap-center flex-shrink-0 transition-all duration-500 ease-out',
-    'focus:outline-none focus-visible:ring-2 focus-visible:ring-literary-wine/40',
-    isActive ? 'xc-cover-card-active' : 'xc-cover-card-inactive'
-  )
-
-  const cardInner = (
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick()
+        }
+      }}
+      className={cn(
+        'xc-cover-card snap-center flex-shrink-0 transition-all duration-500 ease-out cursor-pointer',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-literary-wine/40',
+        isActive ? 'xc-cover-card-active' : 'xc-cover-card-inactive'
+      )}
+      aria-label={`选择${cover.title}`}
+      aria-pressed={isActive}
+    >
       <div
         className={cn(
           'relative transition-transform duration-500',
@@ -104,6 +147,14 @@ function CoverCard({
               : '4px 6px 16px rgba(61, 46, 46, 0.08)',
           }}
         >
+          {cover.image && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={cover.image}
+              alt={cover.title}
+              className="absolute inset-0 w-full h-full object-cover z-10"
+            />
+          )}
           <div
             className="absolute top-4 left-4 w-5 h-5 border-t border-l opacity-25"
             style={{ borderColor: isActive && isLiteraryBook ? '#fff' : style.border }}
@@ -129,7 +180,7 @@ function CoverCard({
                   color: isActive && isLiteraryBook ? 'rgba(255,255,255,0.65)' : style.subtitle,
                 }}
               >
-                {cover.category}
+                {cover.eyebrow ?? cover.category}
               </p>
               <h3
                 className="font-serif font-semibold tracking-widest leading-snug"
@@ -175,40 +226,66 @@ function CoverCard({
               </div>
             )}
           </div>
+
+          {showExplore && (
+            cover.targetTab ? (
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); onExplore?.() }}
+                className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 animate-fade-in"
+                aria-label={`进入${cover.title}版块`}
+              >
+                <span className="xc-explore-btn">
+                  开始探索
+                  <span className="opacity-80">→</span>
+                </span>
+              </button>
+            ) : cover.category === '书籍' ? (
+              <Link
+                href={href}
+                onClick={(e) => e.stopPropagation()}
+                className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 animate-fade-in"
+                aria-label={`开始探索${cover.title}`}
+              >
+                <span className="xc-explore-btn">
+                  开始探索
+                  <span className="opacity-80">→</span>
+                </span>
+              </Link>
+            ) : (
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 animate-fade-in px-4 text-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/under-development.png"
+                  alt="待开发"
+                  className="h-16 sm:h-20 w-auto object-contain brightness-0 invert"
+                />
+                <p className="mt-2 text-[11px] sm:text-xs text-white/85 font-serif tracking-wide">
+                  该功能正在建设中，敬请期待
+                </p>
+              </div>
+            )
+          )}
         </div>
       </div>
-  )
-
-  if (isActive) {
-    return (
-      <Link href={href} className={cardClass} aria-label={`进入${cover.title}`}>
-        {cardInner}
-      </Link>
-    )
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={onActivate}
-      className={cardClass}
-      aria-label={`选择${cover.title}`}
-    >
-      {cardInner}
-    </button>
+    </div>
   )
 }
 
 interface HomeCoverCarouselProps {
   covers: HomeCover[]
+  /** 首页总览封面点击「开始探索」时回调（用于切换到目标版块） */
+  onExploreCover?: (cover: HomeCover) => void
 }
 
-export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
+export function HomeCoverCarousel({ covers, onExploreCover }: HomeCoverCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [exploreIndex, setExploreIndex] = useState<number | null>(null)
 
   useEffect(() => {
     setActiveIndex(0)
+    setExploreIndex(null)
   }, [covers])
 
   const scrollTo = (index: number) => {
@@ -219,6 +296,7 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
       card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
     }
     setActiveIndex(index)
+    setExploreIndex(null)
   }
 
   const handleScroll = () => {
@@ -244,7 +322,7 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
   const activeCover = covers[activeIndex] ?? covers[0]
 
   return (
-    <div className="flex flex-col items-center w-full max-w-5xl mx-auto px-4">
+    <div className="flex flex-col items-center w-full max-w-6xl mx-auto px-4">
       <div className="relative w-full">
         <button
           type="button"
@@ -258,14 +336,20 @@ export function HomeCoverCarousel({ covers }: HomeCoverCarouselProps) {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex items-center gap-10 sm:gap-14 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-20 sm:px-28 py-8 touch-pan-x min-h-[400px] sm:min-h-[460px]"
+          className="flex items-center gap-10 sm:gap-14 lg:gap-16 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-20 sm:px-28 lg:px-40 py-8 touch-pan-x min-h-[400px] sm:min-h-[460px]"
         >
           {covers.map((cover, i) => (
             <CoverCard
               key={cover.id}
               cover={cover}
               isActive={i === activeIndex}
-              onActivate={() => scrollTo(i)}
+              showExplore={i === activeIndex && exploreIndex === i}
+              href={`${cover.route}?cat=${cover.category}`}
+              onClick={() => {
+                scrollTo(i)
+                setExploreIndex(i)
+              }}
+              onExplore={() => onExploreCover?.(cover)}
             />
           ))}
         </div>

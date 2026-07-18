@@ -165,6 +165,8 @@ export function getAllSpots(guide: Guide): Spot[] {
 export function getRouteVariants(guide: Guide, aspect: PlanAspect): RouteVariant[] {
   const allSpots = getAllSpots(guide)
   const baseDays = guide.days
+  const landmarks = allSpots.filter(s => s.originalText).length || allSpots.length
+  const city = guide.city
 
   if (aspect === 'days') {
     const options = [1, 2, 3].filter(d => d <= Math.max(baseDays, Math.ceil(allSpots.length / 2)))
@@ -174,10 +176,10 @@ export function getRouteVariants(guide: Guide, aspect: PlanAspect): RouteVariant
       title: `${days} 天行程`,
       summary:
         days === 1
-          ? '一日精华线：核心原文落点串联，适合周末快闪'
+          ? `一日精华：串联 ${Math.min(landmarks, 5)} 处核心原文落点，适合周末快闪`
           : days === 2
-            ? '两日经典线：园林古街与淮扬风味，节奏适中'
-            : '三日深度线：含非遗体验与历史人文，悠闲细品',
+            ? `两日经典：${landmarks} 处落点 + 沿途非遗，节奏舒适`
+            : `三日深度：全部落点 + 非遗体验 + 在地美食，悠闲细品`,
       pace: (days === 1 ? '紧凑' : days === 2 ? '适中' : '悠闲') as RouteVariant['pace'],
       budgetHint: days === 1 ? '约200元/天' : days === 2 ? '约180元/天' : '约160元/天',
     }))
@@ -185,9 +187,9 @@ export function getRouteVariants(guide: Guide, aspect: PlanAspect): RouteVariant
 
   if (aspect === 'budget') {
     const levels: { id: BudgetLevel; hint: string; summary: string }[] = [
-      { id: '穷游', hint: '约80-120元/天', summary: '免费景点为主，公共交通，本地小吃' },
-      { id: '舒适', hint: '约150-220元/天', summary: '经典门票+特色餐饮，步行与短途接驳' },
-      { id: '轻奢', hint: '约300元+/天', summary: '精品体验、非遗手作、特色宴席' },
+      { id: '穷游', hint: '约80-120元/天', summary: `免费落点为主：${city}公共交通 + 平价小吃 + 免费非遗展演` },
+      { id: '舒适', hint: '约150-220元/天', summary: '经典门票 + 特色餐饮 + 手作非遗，步行短途接驳' },
+      { id: '轻奢', hint: '约300元+/天', summary: '精品体验 + 非遗雅集/手作 + 特色宴席' },
     ]
     return levels.map(l => ({
       id: l.id,
@@ -203,36 +205,97 @@ export function getRouteVariants(guide: Guide, aspect: PlanAspect): RouteVariant
   const tags: InterestTag[] = ['文化', '美食', '自然', '体验']
   return tags
     .filter(tag => allSpots.some(s => s.tags.includes(tag)))
-    .map(tag => ({
-      id: tag,
-      days: Math.min(baseDays, Math.max(1, Math.ceil(allSpots.filter(s => s.tags.includes(tag)).length / 3))),
-      title: `偏爱${tag}`,
-      summary: `以${tag}为主题筛选点位，AI 优化游览顺序`,
-      pace: '适中' as const,
-      budgetHint: guide.budget === '穷游' ? '约100元/天' : '约180元/天',
-    }))
+    .map(tag => {
+      const sample = allSpots.filter(s => s.tags.includes(tag)).slice(0, 2).map(s => s.name)
+      return {
+        id: tag,
+        days: Math.min(baseDays, Math.max(1, Math.ceil(allSpots.filter(s => s.tags.includes(tag)).length / 3))),
+        title: `偏爱${tag}`,
+        summary: `聚焦${tag}：${sample.join('、')}${sample.length ? ' 等' : ''}，优先${tag}相关非遗`,
+        pace: '适中' as const,
+        budgetHint: guide.budget === '穷游' ? '约100元/天' : '约180元/天',
+      }
+    })
 }
 
-function filterSpotsByAspect(
-  spots: Spot[],
-  aspect: PlanAspect,
-  variantId: string
-): Spot[] {
-  if (aspect === 'interests') {
-    const tag = variantId as InterestTag
-    return spots.filter(s => s.tags.includes(tag))
+/** 消费档位：依据 budgetHint 关键字稳健判断 */
+function spotCostTier(spot: Spot): 'free' | 'low' | 'high' {
+  const h = spot.budgetHint || ''
+  if (!h || h.includes('免费')) return 'free'
+  const nums = (h.match(/\d+/g) || []).map(Number)
+  const max = nums.length ? Math.max(...nums) : 0
+  if (max === 0) return 'free'
+  if (max <= 50) return 'low'
+  return 'high'
+}
+
+/** 点位基础优先级：书中原文落点 > 景点 > 可拍照 */
+function baseScore(spot: Spot): number {
+  let s = 0
+  if (spot.originalText) s += 3
+  if (spot.type === '景点') s += 1
+  if (spot.photoSpot) s += 1
+  return s
+}
+
+/** 保证子集中至少含 n 个美食点（安排正餐），优先平价 */
+function ensureMeals(chosen: Spot[], pool: Spot[], n: number): Spot[] {
+  const meals = chosen.filter(s => s.type === '美食')
+  if (meals.length >= n) return chosen
+  const rank = (s: Spot) => (spotCostTier(s) === 'low' ? 0 : spotCostTier(s) === 'free' ? 1 : 2)
+  const extra = pool
+    .filter(s => s.type === '美食' && !chosen.includes(s))
+    .sort((a, b) => rank(a) - rank(b))
+    .slice(0, n - meals.length)
+  return [...chosen, ...extra]
+}
+
+/**
+ * 按方案（天数/预算/喜好）选择并排序点位——三种分类产生差异的核心。
+ */
+function selectSpotsForVariant(guide: Guide, aspect: PlanAspect, variantId: string): Spot[] {
+  const all = getAllSpots(guide)
+
+  if (aspect === 'days') {
+    const days = parseInt(variantId, 10) || guide.days
+    if (days >= 3) return all
+    const scenicCap = days <= 1 ? 4 : 6
+    const mealCap = days <= 1 ? 1 : 2
+    const scenic = all.filter(s => s.type !== '美食')
+      .sort((a, b) => baseScore(b) - baseScore(a)).slice(0, scenicCap)
+    const meals = all.filter(s => s.type === '美食')
+      .sort((a, b) => baseScore(b) - baseScore(a)).slice(0, mealCap)
+    return [...scenic, ...meals]
   }
+
   if (aspect === 'budget') {
     const level = variantId as BudgetLevel
     if (level === '穷游') {
-      return spots.filter(s => !s.budgetHint || s.budgetHint.includes('免费') || (s.budgetHint && parseInt(s.budgetHint) < 50))
+      let spots = all.filter(s => spotCostTier(s) !== 'high')
+      spots = ensureMeals(spots, all, 1)
+      if (spots.filter(s => s.type !== '美食').length === 0) {
+        spots = [
+          ...all.filter(s => s.type !== '美食').sort((a, b) => baseScore(b) - baseScore(a)).slice(0, 3),
+          ...spots,
+        ]
+      }
+      return spots
     }
     if (level === '轻奢') {
-      return spots.filter(s => s.budgetHint && !s.budgetHint.includes('免费'))
+      return [...all].sort(
+        (a, b) => (spotCostTier(b) === 'high' ? 1 : 0) - (spotCostTier(a) === 'high' ? 1 : 0)
+      )
     }
-    return spots
+    return all // 舒适
   }
-  return spots
+
+  // interests
+  const tag = variantId as InterestTag
+  const matched = all.filter(s => s.tags.includes(tag))
+  if (matched.length >= 3) {
+    return ensureMeals(matched, all, 1)
+  }
+  return all
 }
 
 export function buildItinerary(
@@ -241,8 +304,7 @@ export function buildItinerary(
   variantId: string,
   selectedOptionalIds: string[] = []
 ): { dayPlans: DayPlan[]; itineraryDays: ItineraryDayDetail[]; spotMap: Map<string, Spot> } {
-  let spots = getAllSpots(guide)
-  spots = filterSpotsByAspect(spots, aspect, variantId)
+  const spots = selectSpotsForVariant(guide, aspect, variantId)
 
   const variant = getRouteVariants(guide, aspect).find(v => v.id === variantId)
   const days = aspect === 'days'

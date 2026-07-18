@@ -188,6 +188,222 @@ export const cityBooksMap: Record<string, CityBooksMeta> = {
       },
     ],
   },
+  fenghuang: {
+    citySlug: 'fenghuang',
+    cityName: '凤凰',
+    province: '湖南',
+    tagline: '边城凤凰 · 沈从文',
+    intro:
+      '「由四川过湖南去……有一小溪，溪边有座白色小塔。」沈从文《边城》开篇写的就是这片湘西土地。沱江、吊脚楼、跳岩——选一本书，走进边城。',
+    books: [
+      {
+        id: 'fenghuang-biancheng',
+        guideId: 'fenghuang',
+        title: '边城',
+        author: '沈从文',
+        intro: '翠翠与白塔、渡船与黄狗，湘西最纯美的故事。沱江泛舟、跳岩、虹桥——跟着《边城》走进凤凰。',
+        style: bookStyle(
+          'linear-gradient(165deg, #C8D0D8 0%, #98A8B8 100%)',
+          '#5A6878',
+          '#2E3E4E',
+          '#5A6A7A'
+        ),
+      },
+    ],
+  },
+  shanghai: {
+    citySlug: 'shanghai',
+    cityName: '上海',
+    province: '上海',
+    tagline: '繁花上海 · 不响',
+    intro:
+      '「做生意要先学会两个字，不响。」金宇澄《繁花》写尽上海人的精明与深情，张爱玲在常德公寓写下《倾城之恋》，鲁迅在山阴路度过最后的岁月。选一本书，走进上海。',
+    books: [
+      {
+        id: 'shanghai-fanhua',
+        guideId: 'shanghai',
+        title: '繁花',
+        author: '金宇澄 · 王家卫',
+        intro: '黄河路、进贤路、和平饭店——跟着《繁花》走进90年代的上海繁华。',
+        style: bookStyle(
+          'linear-gradient(165deg, #E8D4CC 0%, #C4A898 100%)',
+          '#8A5A4A',
+          '#4A2E24',
+          '#7A5A4A'
+        ),
+      },
+      {
+        id: 'shanghai-eileen',
+        guideId: 'shanghai',
+        title: '倾城之恋',
+        author: '张爱玲',
+        intro: '常德公寓里写出的传世之作，上海弄堂里的爱情与苍凉。',
+        style: bookStyle(
+          'linear-gradient(165deg, #E8D8E0 0%, #C8B0C0 100%)',
+          '#7A5A6A',
+          '#4A2E3A',
+          '#7A5A6A'
+        ),
+      },
+      {
+        id: 'shanghai-luxun',
+        guideId: 'shanghai',
+        title: '野草',
+        author: '鲁迅',
+        intro: '虹口山阴路"老虎尾巴"书房诞生的经典，上海最后的鲁迅足迹。',
+        style: bookStyle(
+          'linear-gradient(165deg, #D8D4CC 0%, #B8B0A4 100%)',
+          '#6B6560',
+          '#3D3832',
+          '#8A8278'
+        ),
+      },
+    ],
+  },
+  hangzhou: {
+    citySlug: 'hangzhou',
+    cityName: '杭州',
+    province: '浙江',
+    tagline: '诗画杭州 · 西湖',
+    intro:
+      '「未能抛得杭州去，一半勾留是此湖。」白居易、苏轼、郁达夫，千年文人在西湖边写下了最美的诗句。选一本书，走进杭州。',
+    books: [
+      {
+        id: 'hangzhou-baijuyi',
+        guideId: 'hangzhou',
+        title: '钱塘湖春行',
+        author: '白居易 · 苏轼',
+        intro: '白堤、苏堤、灵隐寺——跟着唐诗宋词漫步西湖。',
+        style: bookStyle(
+          'linear-gradient(165deg, #C8E0D4 0%, #90C4A8 100%)',
+          '#4A7A5A',
+          '#2E4A38',
+          '#5A7A5A'
+        ),
+      },
+      {
+        id: 'hangzhou-chiguihua',
+        guideId: 'hangzhou',
+        title: '迟桂花',
+        author: '郁达夫',
+        intro: '翁家山的桂花比满觉陇晚开十几天，郁达夫在此写下"迟"与"慢"的诗意。',
+        style: bookStyle(
+          'linear-gradient(165deg, #E8DCC8 0%, #C8B898 100%)',
+          '#8A7A5A',
+          '#4A4228',
+          '#7A6A4A'
+        ),
+      },
+    ],
+  },
+  beijing: {
+    citySlug: 'beijing',
+    cityName: '北京',
+    province: '北京',
+    tagline: '北平之秋 · 胡同深处',
+    intro:
+      '「北平之秋便是天堂。」老舍笔下的北京，有丹柿小院的柿子树，有地坛银杏大道的长椅。选一本书，读一座城的精神史。',
+    books: [
+      {
+        id: 'beijing-sishitongtang',
+        guideId: 'beijing',
+        title: '四世同堂',
+        author: '老舍',
+        intro: '小杨家胡同的葫芦形、白塔寺的红墙——老舍笔下最深沉的北平记忆。',
+        style: bookStyle(
+          'linear-gradient(165deg, #E0C8C0 0%, #C09888 100%)',
+          '#8A4A3A',
+          '#4A2E24',
+          '#7A4A3A'
+        ),
+      },
+      {
+        id: 'beijing-ditan',
+        guideId: 'beijing',
+        title: '我与地坛',
+        author: '史铁生',
+        intro: '地坛银杏大道的长椅，史铁生"常坐的那棵柏树"旁——文学圣殿。',
+        style: bookStyle(
+          'linear-gradient(165deg, #D8D4C0 0%, #B8B498 100%)',
+          '#7A7658',
+          '#4A4638',
+          '#7A7658'
+        ),
+      },
+    ],
+  },
+  chengdu: {
+    citySlug: 'chengdu',
+    cityName: '成都',
+    province: '四川',
+    tagline: '诗圣故里 · 巴适安逸',
+    intro:
+      '「安得广厦千万间，大庇天下寒士俱欢颜。」杜甫在草堂写下千古名句，巴金在《家》中写尽成都。选一本书，感受成都的慢与诗。',
+    books: [
+      {
+        id: 'chengdu-dufu',
+        guideId: 'chengdu',
+        title: '茅屋为秋风所破歌',
+        author: '杜甫',
+        intro: '草堂、浣花溪、武侯祠——诗圣在成都留下的千古足迹。',
+        style: bookStyle(
+          'linear-gradient(165deg, #C8E0C8 0%, #90C490 100%)',
+          '#4A7A4A',
+          '#2E4A2E',
+          '#5A7A5A'
+        ),
+      },
+      {
+        id: 'chengdu-bajin',
+        guideId: 'chengdu',
+        title: '家',
+        author: '巴金',
+        intro: '慧园还原高家大院格局，觉慧的呐喊——读懂巴金笔下成都的旧与新。',
+        style: bookStyle(
+          'linear-gradient(165deg, #D8E8D4 0%, #A8C8A0 100%)',
+          '#5A7A5A',
+          '#3A4A38',
+          '#6A8A68'
+        ),
+      },
+    ],
+  },
+  xian: {
+    citySlug: 'xian',
+    cityName: '西安',
+    province: '陕西',
+    tagline: '盛唐长安 · 千年帝都',
+    intro:
+      '「春风得意马蹄疾，一日看尽长安花。」李白、杜甫、白居易，唐诗里的长安气象万千。贾平凹写当代西安的厚重与苍凉。选一本书，梦回千年帝都。',
+    books: [
+      {
+        id: 'xian-tangshi',
+        guideId: 'xian',
+        title: '唐诗三百首',
+        author: '李白 · 杜甫 · 白居易',
+        intro: '大雁塔、城墙、华清宫——唐诗里的长安，脚下都能走到。',
+        style: bookStyle(
+          'linear-gradient(165deg, #E0D0B8 0%, #C8A878 100%)',
+          '#8A6A3A',
+          '#4A3A1E',
+          '#7A5A2A'
+        ),
+      },
+      {
+        id: 'xian-jiapingwa',
+        guideId: 'xian',
+        title: '废都',
+        author: '贾平凹',
+        intro: '贾平凹文化艺术馆、棣花古镇——当代文学与古都的对话。',
+        style: bookStyle(
+          'linear-gradient(165deg, #D8CCC0 0%, #B8A898 100%)',
+          '#7A6A5A',
+          '#4A3A28',
+          '#7A6A58'
+        ),
+      },
+    ],
+  },
 }
 
 export const CITY_BOOK_SLUGS = Object.keys(cityBooksMap)

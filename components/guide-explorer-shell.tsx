@@ -34,7 +34,7 @@ export function GuideExplorerShell({
 }: GuideExplorerShellProps) {
   return (
     <main className={cn('xc-explorer-bg min-h-screen flex flex-col', className)}>
-      <div className="xc-container max-w-6xl flex-1 flex flex-col py-4 sm:py-5 pb-8 min-h-0">
+      <div className="xc-container w-full flex-1 flex flex-col py-4 sm:py-5 pb-8 min-h-0">
         <header className="flex-shrink-0 mb-3 sm:mb-4">
           <Link
             href={backHref}
@@ -46,22 +46,22 @@ export function GuideExplorerShell({
             {eyebrow && (
               <p className="text-[10px] text-celadon-600 tracking-widest uppercase mb-1">{eyebrow}</p>
             )}
-            <h1 className="text-xl sm:text-2xl font-serif font-bold text-warm-gray tracking-tight leading-snug">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-serif font-bold text-warm-gray tracking-tight leading-snug">
               {title}
             </h1>
             {subtitle && (
-              <p className="mt-1 text-xs sm:text-sm text-warm-gray-muted line-clamp-2 leading-relaxed">
+              <p className="mt-1 text-xs sm:text-sm lg:text-base text-warm-gray-muted line-clamp-2 md:line-clamp-none leading-relaxed">
                 {subtitle}
               </p>
             )}
           </div>
         </header>
 
-        <div className="flex flex-col lg:flex-row gap-4 lg:gap-5 flex-1 min-h-0">
-          <div className="flex-shrink-0 order-2 lg:order-1 lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-5 lg:gap-6 flex-1 min-h-0">
+          <div className="flex-shrink-0 order-2 md:order-1 md:max-h-[calc(100vh-140px)] md:overflow-y-auto">
             {sidebar}
           </div>
-          <div className="flex-1 min-w-0 flex flex-col min-h-0 order-1 lg:order-2">
+          <div className="flex-1 min-w-0 flex flex-col min-h-0 order-1 md:order-2">
             {toolbar && <div className="flex-shrink-0 mb-2">{toolbar}</div>}
             <div className="flex-1 min-h-0 flex flex-col">{children}</div>
             {below && <div className="flex-shrink-0 mt-4">{below}</div>}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { Guide, OptionalRecommendSpot, ScheduleBlock, Spot } from '@/types'
 import { PlanAspect } from '@/lib/guide-category'
 import {
@@ -8,7 +8,7 @@ import {
   getRouteVariants,
   getSpotsForMap,
 } from '@/lib/itinerary-planner'
-import { getOptionalSpotsForGuide } from '@/lib/optional-spots'
+import { getOptionalSpotsForAspect } from '@/lib/optional-spots'
 import { cn } from '@/lib/utils'
 import { Card, Badge } from './ui'
 import { GuideMapExplorer } from './guide-map-explorer'
@@ -34,20 +34,28 @@ export function PlanItineraryExplorer({ guide, aspect, mapFirst = false }: PlanI
   const variants = useMemo(() => getRouteVariants(guide, aspect), [guide, aspect])
   const [variantId, setVariantId] = useState(variants[0]?.id ?? '1d')
   const [selectedDay, setSelectedDay] = useState(1)
-  const [pendingOptionals, setPendingOptionals] = useState<Set<string>>(new Set())
-  const [confirmedOptionals, setConfirmedOptionals] = useState<Set<string>>(new Set())
-  const [routeOptimized, setRouteOptimized] = useState(false)
+  const [selectedOptionals, setSelectedOptionals] = useState<Set<string>>(new Set())
+  const [appliedOptionals, setAppliedOptionals] = useState<Set<string>>(new Set())
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null)
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [checkedIn, setCheckedIn] = useState<Set<string>>(new Set())
-  const [detailsOpen, setDetailsOpen] = useState(!mapFirst)
+  const [detailsOpen, setDetailsOpen] = useState(true)
 
-  const optionalSpots = useMemo(() => getOptionalSpotsForGuide(guide.id, guide), [guide])
+  const optionalSpots = useMemo(
+    () => getOptionalSpotsForAspect(guide.id, guide, aspect, variantId),
+    [guide, aspect, variantId]
+  )
+
+  const activeVariant = variants.find(v => v.id === variantId)
 
   const { itineraryDays, spotMap } = useMemo(
-    () => buildItinerary(guide, aspect, variantId, Array.from(confirmedOptionals)),
-    [guide, aspect, variantId, confirmedOptionals]
+    () => buildItinerary(guide, aspect, variantId, Array.from(appliedOptionals)),
+    [guide, aspect, variantId, appliedOptionals]
   )
+
+  const setsEqual = (a: Set<string>, b: Set<string>) =>
+    a.size === b.size && Array.from(a).every(x => b.has(x))
+  const optionalsDirty = !setsEqual(selectedOptionals, appliedOptionals)
 
   const activeDay = itineraryDays.find(d => d.day === selectedDay) ?? itineraryDays[0]
   const mapSpots = useMemo(
@@ -63,27 +71,28 @@ export function PlanItineraryExplorer({ guide, aspect, mapFirst = false }: PlanI
     setSelectedIndex(idx)
   }, [spotMap, activeDay])
 
-  const togglePending = (id: string) => {
-    setPendingOptionals(prev => {
+  const detailsRef = useRef<HTMLDivElement>(null)
+  const revealDetails = () => {
+    setDetailsOpen(true)
+    setTimeout(() => detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60)
+  }
+
+  const toggleOptional = (id: string) => {
+    setSelectedOptionals(prev => {
       const next = new Set(prev)
       if (next.has(id)) next.delete(id)
       else next.add(id)
       return next
     })
-    setRouteOptimized(false)
   }
 
   const confirmOptionals = () => {
-    if (pendingOptionals.size === 0) return
-    setConfirmedOptionals(prev => new Set([...Array.from(prev), ...Array.from(pendingOptionals)]))
-    setPendingOptionals(new Set())
-    setRouteOptimized(true)
+    setAppliedOptionals(new Set(selectedOptionals))
   }
 
   const handleVariantChange = (id: string) => {
     setVariantId(id)
     setSelectedDay(1)
-    setRouteOptimized(false)
   }
 
   const handleCheckIn = (spotId: string) => {
@@ -91,38 +100,47 @@ export function PlanItineraryExplorer({ guide, aspect, mapFirst = false }: PlanI
   }
 
   const variantToolbar = (
-    <div className="flex flex-wrap items-center gap-1.5 mb-2">
-      {variants.map(v => (
-        <button
-          key={v.id}
-          type="button"
-          onClick={() => handleVariantChange(v.id)}
-          className={cn(
-            'px-3 py-1.5 rounded-full text-[11px] border transition-all',
-            variantId === v.id
-              ? 'bg-celadon-500 text-white border-celadon-500'
-              : 'bg-white/70 border-celadon-200/50 text-warm-gray-muted hover:border-celadon-300'
-          )}
-        >
-          {v.title}
-        </button>
-      ))}
-      {itineraryDays.length > 1 &&
-        itineraryDays.map(d => (
+    <div className="mb-2">
+      <div className="flex flex-wrap items-center gap-1.5">
+        {variants.map(v => (
           <button
-            key={d.day}
+            key={v.id}
             type="button"
-            onClick={() => setSelectedDay(d.day)}
+            onClick={() => handleVariantChange(v.id)}
             className={cn(
               'px-3 py-1.5 rounded-full text-[11px] border transition-all',
-              selectedDay === d.day
+              variantId === v.id
                 ? 'bg-celadon-500 text-white border-celadon-500'
                 : 'bg-white/70 border-celadon-200/50 text-warm-gray-muted hover:border-celadon-300'
             )}
           >
-            Day {d.day}
+            {v.title}
           </button>
         ))}
+        {itineraryDays.length > 1 &&
+          itineraryDays.map(d => (
+            <button
+              key={d.day}
+              type="button"
+              onClick={() => setSelectedDay(d.day)}
+              className={cn(
+                'px-3 py-1.5 rounded-full text-[11px] border transition-all',
+                selectedDay === d.day
+                  ? 'bg-celadon-500 text-white border-celadon-500'
+                  : 'bg-white/70 border-celadon-200/50 text-warm-gray-muted hover:border-celadon-300'
+              )}
+            >
+              Day {d.day}
+            </button>
+          ))}
+      </div>
+      {activeVariant && (
+        <p className="mt-2 text-xs text-celadon-700 bg-celadon-50/70 border border-celadon-200/40 rounded-lg px-3 py-1.5">
+          <span className="font-medium">方案特点：</span>
+          {activeVariant.summary}
+          <span className="text-warm-gray-muted"> · {activeVariant.pace} · {activeVariant.budgetHint}</span>
+        </p>
+      )}
     </div>
   )
 
@@ -130,12 +148,12 @@ export function PlanItineraryExplorer({ guide, aspect, mapFirst = false }: PlanI
     <GuideMapExplorer
       guide={guide}
       spots={mapSpots}
-      showChips={mapFirst}
+      showChips={false}
       layout="explorer"
       mapTitle={mapFirst ? 'AI 识别原文景点 · 点击展开详情' : '行程点位'}
       mapClassName={
         mapFirst
-          ? 'h-[min(calc(100vh-280px),520px)] sm:h-[min(calc(100vh-260px),540px)]'
+          ? 'min-h-[260px] h-[min(calc(100vh-440px),440px)] sm:h-[min(calc(100vh-430px),470px)]'
           : 'h-[min(44vh,440px)] sm:h-[min(48vh,480px)]'
       }
       onSpotSelect={(spot, idx) => {
@@ -170,36 +188,76 @@ export function PlanItineraryExplorer({ guide, aspect, mapFirst = false }: PlanI
   const optionalSection = optionalSpots.length > 0 && (
     <section>
       <p className="text-[10px] text-celadon-600 tracking-widest uppercase mb-2">
-        沿途推荐 · 非遗文化 / 历史文化（可选项）
+        沿途推荐 · 非遗文化 / 历史文化（{optionalSpots.length} 项 · 可选加入）
       </p>
       <div className="space-y-2">
         {optionalSpots.map(opt => (
           <OptionalSpotCard
             key={opt.id}
             opt={opt}
-            selected={pendingOptionals.has(opt.id) || confirmedOptionals.has(opt.id)}
-            confirmed={confirmedOptionals.has(opt.id)}
-            onToggle={() => !confirmedOptionals.has(opt.id) && togglePending(opt.id)}
+            selected={selectedOptionals.has(opt.id)}
+            applied={appliedOptionals.has(opt.id)}
+            onToggle={() => toggleOptional(opt.id)}
           />
         ))}
       </div>
-      {pendingOptionals.size > 0 && (
+      {optionalsDirty && (
         <div className="mt-3 flex items-center gap-3 flex-wrap">
           <button
             type="button"
             onClick={confirmOptionals}
             className="px-5 py-2.5 rounded-full bg-celadon-500 text-white text-sm font-medium hover:bg-celadon-600 transition-colors"
           >
-            确认选择（{pendingOptionals.size} 项）并优化路线
+            {selectedOptionals.size > 0
+              ? `确认选择（${selectedOptionals.size} 项）并优化路线`
+              : '清空选择并更新路线'}
           </button>
+          <span className="text-[11px] text-warm-gray-muted">选择有变动，需确认后更新行程</span>
         </div>
       )}
-      {routeOptimized && (
+      {!optionalsDirty && appliedOptionals.size > 0 && (
         <p className="mt-2 text-xs text-celadon-600 bg-celadon-50 px-3 py-2 rounded-lg border border-celadon-200/40">
-          ✓ 路线已优化，地图与行程表已更新
+          ✓ 路线已优化，已加入 {appliedOptionals.size} 项非遗，地图与行程表已更新
         </p>
       )}
     </section>
+  )
+
+  const timelineStrip = activeDay && activeDay.spotIds.length > 0 && (
+    <div className="mt-3">
+      <div className="flex items-center justify-between gap-2 mb-1.5">
+        <p className="text-[10px] text-celadon-600 tracking-widest uppercase">
+          行程速览 · Day {activeDay.day} · 共 {activeDay.spotIds.length} 站{appliedOptionals.size > 0 ? ` · 含 ${appliedOptionals.size} 项非遗` : ''}
+        </p>
+        <button
+          type="button"
+          onClick={revealDetails}
+          className="text-[11px] text-celadon-700 font-medium hover:text-celadon-800 whitespace-nowrap"
+        >
+          完整时间表 ↓
+        </button>
+      </div>
+      <div className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-hide">
+        {activeDay.spotIds.map((id, i) => {
+          const s = spotMap.get(id)
+          if (!s) return null
+          return (
+            <div key={id} className="flex items-center flex-shrink-0">
+              {i > 0 && <span className="text-celadon-300 mx-0.5 text-xs">›</span>}
+              <button
+                type="button"
+                onClick={() => openSpot(id)}
+                className="flex items-center gap-1 pl-1 pr-2.5 py-1 rounded-full border border-celadon-200/60 bg-white/80 hover:border-celadon-400 hover:bg-celadon-50 transition-colors"
+              >
+                <span className="w-4 h-4 rounded-full bg-celadon-500 text-white text-[9px] flex items-center justify-center flex-shrink-0">{i + 1}</span>
+                <span className="text-xs">{s.emoji}</span>
+                <span className="text-xs text-warm-gray whitespace-nowrap">{s.name}</span>
+              </button>
+            </div>
+          )
+        })}
+      </div>
+    </div>
   )
 
   if (mapFirst) {
@@ -207,15 +265,19 @@ export function PlanItineraryExplorer({ guide, aspect, mapFirst = false }: PlanI
       <div className="flex flex-col min-h-0">
         {variantToolbar}
         {mapSection}
+        {timelineStrip}
         <button
           type="button"
-          onClick={() => setDetailsOpen(v => !v)}
-          className="mt-3 text-xs text-celadon-600 hover:text-celadon-700 font-serif text-left"
+          onClick={() => (detailsOpen ? setDetailsOpen(false) : revealDetails())}
+          className="mt-3 mb-1 inline-flex items-center gap-1.5 self-start px-3.5 py-1.5 rounded-lg border border-celadon-300 bg-celadon-50/80 text-sm font-serif font-semibold text-celadon-700 hover:bg-celadon-100 hover:border-celadon-400 shadow-sm transition-colors"
         >
-          {detailsOpen ? '收起行程详情 ▲' : '展开行程详情 · 方案与时间表 ▼'}
+          <span>{detailsOpen ? '收起行程详情' : '展开完整行程与时间表'}</span>
+          <span className={cn('text-xs leading-none', !detailsOpen && 'animate-bounce')}>
+            {detailsOpen ? '▲' : '▼'}
+          </span>
         </button>
         {detailsOpen && (
-          <div className="mt-4 space-y-6">
+          <div ref={detailsRef} className="mt-4 scroll-mt-4 grid gap-6 md:grid-cols-2 md:items-start">
             {scheduleSection}
             {optionalSection}
           </div>
@@ -278,8 +340,10 @@ export function PlanItineraryExplorer({ guide, aspect, mapFirst = false }: PlanI
         </div>
       )}
 
-      {scheduleSection}
-      {optionalSection}
+      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+        {scheduleSection}
+        {optionalSection}
+      </div>
 
       <section>
         <p className="text-[10px] text-celadon-600 tracking-widest uppercase mb-2">
@@ -364,19 +428,19 @@ function ScheduleBlockView({
 function OptionalSpotCard({
   opt,
   selected,
-  confirmed,
+  applied,
   onToggle,
 }: {
   opt: OptionalRecommendSpot
   selected: boolean
-  confirmed: boolean
+  applied: boolean
   onToggle: () => void
 }) {
   return (
     <div
       className={cn(
         'flex items-start gap-3 p-3 rounded-xl border transition-all',
-        confirmed
+        applied
           ? 'border-celadon-400 bg-celadon-50/50'
           : selected
             ? 'border-camel bg-camel-light/60'
@@ -386,23 +450,26 @@ function OptionalSpotCard({
       <button
         type="button"
         onClick={onToggle}
-        disabled={confirmed}
         className={cn(
-          'flex-shrink-0 w-5 h-5 rounded border mt-0.5 flex items-center justify-center text-xs',
-          selected || confirmed
+          'flex-shrink-0 w-5 h-5 rounded border mt-0.5 flex items-center justify-center text-xs transition-colors',
+          selected
             ? 'bg-celadon-500 border-celadon-500 text-white'
-            : 'border-celadon-300 bg-white'
+            : 'border-celadon-300 bg-white hover:border-celadon-400'
         )}
         aria-label={selected ? '取消选择' : '选择'}
+        aria-pressed={selected}
       >
-        {(selected || confirmed) && '✓'}
+        {selected && '✓'}
       </button>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-sm">{opt.emoji}</span>
           <span className="text-sm font-medium text-warm-gray">{opt.name}</span>
           <Badge variant="default">{opt.category}</Badge>
-          {confirmed && <Badge variant="default">已加入行程</Badge>}
+          {opt.recommend && !applied && (
+            <span className="text-[10px] text-seal bg-seal/10 border border-seal/30 px-1.5 py-0.5 rounded-full">★ 推荐</span>
+          )}
+          {applied && <Badge variant="default">已加入行程</Badge>}
         </div>
         <p className="text-xs text-warm-gray-light mt-1">{opt.desc}</p>
         <p className="text-[10px] text-warm-gray-muted mt-1">

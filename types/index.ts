@@ -79,6 +79,10 @@ export interface Spot {
   region?: string
   /** 五味标签：酸/甜/苦/辣/咸 */
   flavor?: '酸' | '甜' | '苦' | '辣' | '咸'
+  /** ★ 光影记忆：文化载体类型 */
+  culturalTag?: '📖书籍' | '🎬影视' | '🎮游戏' | '🎵音乐' | '🏃运动'
+  /** ★ 光影记忆：具体描述，如"🎬 京剧《沙家浜》经典场景拍摄地" */
+  culturalTagDetail?: string
 }
 
 /** 一天的行程 */
@@ -143,7 +147,7 @@ export interface OptionalRecommendSpot {
   emoji: string
   desc: string
   duration: string
-  category: '非遗文化' | '历史文化' | '民俗体验'
+  category: string
   heritage?: string
   location?: { lat: number; lng: number }
   address?: string
@@ -154,7 +158,9 @@ export interface OptionalRecommendSpot {
   originalSource?: string
   story?: string
   tags?: InterestTag[]
+  budgetLevels?: BudgetLevel[]
   budgetHint?: string
+  recommend?: boolean
 }
 
 /** 完整攻略 */

@@ -33,3 +33,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 node_modules_cache/
+.env.production
+.env.local
