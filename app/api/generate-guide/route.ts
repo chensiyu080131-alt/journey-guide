@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { InterestTag, BudgetLevel } from '@/types'
-import { generateGuideServer, recognizeGuideServer } from '@/lib/llm-server'
+import { generateGuideServer, recognizeGuideServer, formatLlmError } from '@/lib/llm-server'
 
 // LLM 调用可能较慢，放宽到 60s（Vercel 上按套餐上限生效）
 export const maxDuration = 60
@@ -38,6 +38,6 @@ export async function POST(request: Request) {
     return NextResponse.json(guide)
   } catch (error) {
     console.error('generate-guide API 出错:', error)
-    return NextResponse.json({ error: '攻略生成失败，请稍后重试' }, { status: 500 })
+    return NextResponse.json({ error: formatLlmError(error) }, { status: 500 })
   }
 }

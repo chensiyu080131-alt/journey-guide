@@ -9,7 +9,10 @@ function buildDayPlans(spots: Spot[], days: number) {
   return Array.from({ length: days }, (_, i) => ({
     day: i + 1,
     title: `第${i + 1}天`,
-    spots: sorted.slice(i * spotsPerDay, (i + 1) * spotsPerDay),
+    spots: sorted.slice(i * spotsPerDay, (i + 1) * spotsPerDay).map(spot => ({
+      ...spot,
+      trustLevel: spot.trustLevel ?? 'verified',
+    })),
     budgetEstimate: i === 0 ? '约150-280元' : '约100-200元',
   }))
 }

@@ -210,10 +210,20 @@ export async function generateGuideServer(
       { role: 'system', content: SYSTEM_PROMPT },
       { role: 'user', content: prompt },
     ])
-    return parseLLMResponse(content, city, days, interests, budget)
+    const guide = parseLLMResponse(content, city, days, interests, budget)
+    return {
+      ...guide,
+      dayPlans: guide.dayPlans.map(day => ({
+        ...day,
+        spots: day.spots.map(spot => ({
+          ...spot,
+          trustLevel: spot.trustLevel ?? (spot.location ? 'ai' : 'unverified'),
+        })),
+      })),
+    }
   } catch (error) {
-    console.error('生成攻略失败，回退 Mock:', error)
-    return getMockGuide(city, days, interests, budget)
+    console.error('生成攻略失败:', error)
+    throw new Error(formatLlmError(error))
   }
 }
 
@@ -237,9 +247,19 @@ ${buildPrompt('（从上文识别出的城市）', 2, ['文化', '美食'], '舒
       { role: 'system', content: SYSTEM_PROMPT },
       { role: 'user', content: userPrompt },
     ])
-    return parseLLMResponse(content, fallbackCity, 2, ['文化', '美食'], '舒适')
+    const guide = parseLLMResponse(content, fallbackCity, 2, ['文化', '美食'], '舒适')
+    return {
+      ...guide,
+      dayPlans: guide.dayPlans.map(day => ({
+        ...day,
+        spots: day.spots.map(spot => ({
+          ...spot,
+          trustLevel: spot.trustLevel ?? (spot.location ? 'ai' : 'unverified'),
+        })),
+      })),
+    }
   } catch (error) {
-    console.error('识别书籍生成攻略失败，回退 Mock:', error)
-    return getMockGuide(fallbackCity, 2, ['文化', '美食'], '舒适')
+    console.error('识别书籍生成攻略失败:', error)
+    throw new Error(formatLlmError(error))
   }
 }

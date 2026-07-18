@@ -240,9 +240,10 @@ function attachBookContext(spots: ScheduleSpot[], rows: BookLocation对照[]): S
       originalSource: match.originalSource || spot.originalSource,
       address: match.address || spot.address,
       location: match.location || spot.location,
+      trustLevel: match.verified ? 'ai' : 'unverified',
       realityNote:
         spot.realityNote ||
-        `书中称「${match.bookName}」，现实对应 ${match.realName}。${match.verified ? '已通过地图验证。' : ''}`,
+        `书中称「${match.bookName}」，现实对应 ${match.realName}。${match.verified ? '已通过地图验证。' : 'POI 尚未验证。'}`,
     }
   })
 }

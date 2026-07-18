@@ -798,12 +798,19 @@ export const entryCards: EntryCard[] = [
 
 /** 根据ID获取攻略 */
 export function getMockGuideById(id: string): Guide | null {
-  return mockGuides[id] || null
+  const guide = mockGuides[id]
+  if (!guide) return null
+  return {
+    ...guide,
+    dayPlans: guide.dayPlans.map(day => ({
+      ...day,
+      spots: day.spots.map(spot => ({ ...spot, trustLevel: spot.trustLevel ?? 'verified' })),
+    })),
+  }
 }
 
 /** 根据搜索参数获取攻略（兼容旧接口） */
 export function getMockGuide(city: string, days: number, interests: string[], budget: string): Guide {
-  // 先尝试精确匹配
   const guide = mockGuides[city]
   if (guide) {
     return {
@@ -812,14 +819,59 @@ export function getMockGuide(city: string, days: number, interests: string[], bu
       dayPlans: buildDayPlans(
         guide.dayPlans.flatMap(d => d.spots),
         days
-      ),
+      ).map(day => ({
+        ...day,
+        spots: day.spots.map(spot => ({ ...spot, trustLevel: spot.trustLevel ?? 'verified' })),
+      })),
     }
   }
-  // 兜底返回第一条路线
-  const firstGuide = Object.values(mockGuides)[0]
+
+  // 未知城市：返回带城市名的演示结构，避免「扬州标题却显示沙家浜」
+  const safeDays = Math.min(Math.max(Number(days) || 2, 1), 7)
   return {
-    ...firstGuide,
+    id: `generic-${city}`,
+    title: `${city}文学旅行攻略（演示）`,
+    subtitle: 'LLM 暂不可用或演示模式',
     city,
-    days,
+    province: '待核验',
+    days: safeDays,
+    interests: (interests.filter(i =>
+      ['文化', '美食', '自然', '体验'].includes(i)
+    ) as Guide['interests']).length
+      ? (interests.filter(i =>
+          ['文化', '美食', '自然', '体验'].includes(i)
+        ) as Guide['interests'])
+      : ['文化', '美食'],
+    budget:
+      budget === '穷游' || budget === '舒适' || budget === '轻奢' ? budget : '舒适',
+    dayPlans: [
+      {
+        day: 1,
+        title: `${city}·文学地标一日`,
+        spots: [
+          {
+            id: `${city}-demo-1`,
+            name: `${city}文学地标`,
+            desc: '演示点位，请配置 LLM 后重新生成',
+            duration: '约1小时',
+            tags: ['文化'],
+            timeSlot: '上午',
+            address: `${city}`,
+            story: '当前为演示占位，真实原文与 POI 需在 LLM 可用后生成。',
+            type: '景点',
+            emoji: '📖',
+            originalText: '（演示）请粘贴书中原文后使用跟书旅行生成。',
+            originalSource: '演示占位',
+            realityNote: '演示模式，地址待核验。',
+            trustLevel: 'unverified',
+          },
+        ],
+        budgetEstimate: '演示估算',
+      },
+    ],
+    createdAt: new Date().toISOString(),
+    tips: ['当前为演示攻略，点位需二次核验。', '配置 LLM_API_KEY 后可生成真实路线。'],
+    entryType: '目的地',
+    routeIntro: `${city} 演示行程结构。恢复模型服务后可生成真实文学地点与原文对照。`,
   }
 }
