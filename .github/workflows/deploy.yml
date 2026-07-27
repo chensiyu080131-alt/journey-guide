@@ -56,13 +56,15 @@ jobs:
           script: |
             set -e
             SRC=/opt/xuncheng-upload/out
-            # 1) 新部署根：原子替换 /opt/xuncheng/out
+            REAL_ROOT=/usr/share/nginx/html/xuncheng
+            # 1) 真实 root（nginx -T 实测 8080 实际 root 即此）：原子替换
+            rm -rf "$REAL_ROOT"
+            mkdir -p "$REAL_ROOT"
+            cp -r "$SRC/." "$REAL_ROOT/"
+            # 2) 兼容：同步到 /opt/xuncheng/out（与新 conf root 一致，防以后切换）
             rm -rf ${{ env.DEPLOY_DIR }}/out
             mkdir -p ${{ env.DEPLOY_DIR }}/out
             cp -r "$SRC/." ${{ env.DEPLOY_DIR }}/out/
-            # 2) 兼容旧部署：若 nginx 实际 root 是 /opt/xuncheng（而非 /opt/xuncheng/out），同步覆盖
-            rm -rf ${{ env.DEPLOY_DIR }}/xunji-mvp
-            cp -r "$SRC/xunji-mvp" ${{ env.DEPLOY_DIR }}/xunji-mvp 2>/dev/null || true
             # 3) 清理历史 standalone 残留（旧部署方式遗留，已不再需要）
             rm -rf ${{ env.DEPLOY_DIR }}/.next ${{ env.DEPLOY_DIR }}/public ${{ env.DEPLOY_DIR }}/server.js /opt/xuncheng-upload 2>/dev/null || true
             # 4) 写配置并强制重载（reload 失效时整体重启 nginx，确保新 conf 生效）
@@ -74,8 +76,7 @@ jobs:
             sleep 1
             echo "--- effective nginx root ---"
             nginx -T 2>/dev/null | grep -E "root|listen|server_name" | head -20 || true
-            echo "--- db 文件大小（应为 21365 含商户）---"
-            ls -l ${{ env.DEPLOY_DIR }}/out/xunji-mvp/db/literary-routes.json 2>/dev/null || true
-            ls -l ${{ env.DEPLOY_DIR }}/xunji-mvp/db/literary-routes.json 2>/dev/null || true
+            echo "--- 真实 root db 大小（应为 21365 含商户）---"
+            ls -l "$REAL_ROOT/xunji-mvp/db/literary-routes.json" 2>/dev/null || true
             echo "--- health check ---"
             curl -sf "http://127.0.0.1:8080/xunji-mvp/db/literary-routes.json" -o /tmp/db_check.json && echo "served db bytes: $(wc -c < /tmp/db_check.json)" || echo "WARN: /xunji-mvp/ 不可达"
