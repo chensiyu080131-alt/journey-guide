@@ -167,3 +167,13 @@
   - 读回确认：`checkins?user_id=eq.…` → HTTP 200，记录在库 ✅
 - **T4 后端存储验收**：打卡记录真实入库 Supabase（非 localStorage 终态），死规矩满足。前端产物已含 Supabase 配置（`out/_next/static/chunks/app/route/[id]/page-*.js` 内嵌项目 URL），页面挂载后拉云端数据+自动补传队列。
 - 至此任务书 T0–T5 全部完成（T4 的浏览器 Sensors 伪造 GPS 截图需 GUI，留待 PM/用户端自测；卡片插图/照片素材等设计）。
+
+### 2026-07-27 22:42 — ✅ 线上部署完成（全自动化）
+- 用 gh CLI 自动配 GitHub Secrets（`NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`），推送 `f676d24` 触发 Actions，3 分 26 秒构建+部署完成（全绿）。
+- 线上自检全部通过：
+  - 首页 http://47.109.91.112:8080/ → **HTTP 200**
+  - 路线详情页 http://47.109.91.112:8080/route/yangzhou-wangzengqi-zaocha/ → **HTTP 200**（38188B），5 点位/地图/打卡/文学卡片/分享图区块齐全
+  - Supabase 凭证已注入线上产物：线上 `app/route/%5Bid%5D/page-2562e08c…js` chunk 内含 `dnfuqobsgtmyinmruovn` ✅（页面挂载即连云端）
+  - 数据库直连：SELECT routes → HTTP 200，返回 `[{"slug":"yangzhou-wangzengqi-zaocha","title":"汪曾祺的扬州早茶地图"}]`
+  - 既有 xunji-mvp 仍正常（HTTP 200），未受影响
+- 已知：未知 route id（/route/not-exist-route/）线上返回 200 回退首页（非白屏/报错，体验可接受），因 nginx 缺 `error_page 404 /404.html`——已在 BLOCKED，待 PM 确认改 deploy/nginx-xuncheng.conf。

@@ -41,7 +41,7 @@ export function SiteHeader({ variant = 'light' }: SiteHeaderProps) {
             寻
           </span>
           <span className={cn('font-serif text-lg font-bold tracking-wide', variant === 'transparent' && isHome ? 'text-white' : '')}>
-            寻城
+            寻迹
           </span>
         </Link>
 

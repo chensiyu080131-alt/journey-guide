@@ -35,7 +35,7 @@ export function HowItWorks() {
               四步<br />跟着书走
             </h2>
             <p className="xc-section-subtitle !mx-0 mt-4 text-left">
-              从选书到出发，寻城帮你把文学变成可落地的旅行路线。
+              从选书到出发，寻迹帮你把文学变成可落地的旅行路线。
             </p>
           </div>
 

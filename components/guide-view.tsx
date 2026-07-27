@@ -215,7 +215,7 @@ export function GuideView({ guide }: GuideViewProps) {
 
       {/* 底部信息 */}
       <div className="text-center text-xs text-ink-300 pb-8 pt-4 space-y-2">
-        <p>攻略由寻城AI生成 · 内容仅供参考</p>
+        <p>攻略由寻迹AI生成 · 内容仅供参考</p>
         <p>📝 核心理念：跟着书本去旅行，让文学照进现实</p>
         <p className="text-xuncheng-400">可落地常熟 · 合作洽谈：常熟文旅局</p>
       </div>
@@ -248,7 +248,7 @@ function getCulturalBadge(guide: Guide): { emoji: string; name: string; desc: st
   if (guide.entryType === '人物') {
     return { emoji: '👤', name: '足迹追随者', desc: '追寻了前人的足迹，感受了历史的风骨' }
   }
-  return { emoji: '🗺️', name: '寻城行者', desc: '在陌生的城市找到了熟悉的故事' }
+  return { emoji: '🗺️', name: '寻迹行者', desc: '在陌生的城市找到了熟悉的故事' }
 }
 
 function LocalExperienceCard({ experience }: { experience: LocalExperience }) {

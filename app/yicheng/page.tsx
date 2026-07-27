@@ -4,7 +4,7 @@ import { Badge, Card } from '@/components/ui'
 import { heritages, masters, toneBg, toneGrad } from '@/lib/yicheng-data'
 
 export const metadata = {
-  title: '遗承 · 虞山非遗手作 — 寻城',
+  title: '遗承 · 虞山非遗手作 — 寻迹',
   description: '常熟非遗传承手作体验平台:虞山琴派、白茆山歌、常熟花边、明式家具。在线预约工坊、AR手作教学、传承人直播。',
 }
 

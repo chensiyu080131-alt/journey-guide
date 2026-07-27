@@ -33,7 +33,7 @@ export default function HomePage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/logo.png"
-            alt="寻城 Xun Cheng"
+            alt="寻迹 Xun Ji"
             className="h-[2.56rem] sm:h-[3.2rem] w-auto"
           />
         </div>

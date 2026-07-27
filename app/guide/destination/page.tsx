@@ -208,7 +208,7 @@ function DestinationGuideContent() {
         {loading && (
           <div className="text-center space-y-6 py-10 animate-fade-in">
             <h2 className="text-xl font-serif font-bold text-ink-900">
-              正在为你<span className="text-xuncheng-500">寻城</span>
+              正在为你<span className="text-xuncheng-500">寻迹</span>
             </h2>
             <div className="space-y-4">
               {stageTexts.map((text, i) => (

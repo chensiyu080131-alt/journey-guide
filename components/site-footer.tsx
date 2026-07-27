@@ -46,7 +46,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-10 pt-6 border-t border-white/10 text-center text-xs text-white/40">
-          © 2026 寻城 · journey-guide
+          © 2026 寻迹 · journey-guide
         </div>
       </div>
     </footer>

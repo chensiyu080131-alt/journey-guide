@@ -56,7 +56,7 @@ function GuidePageContent({ guideId }: { guideId: string }) {
     return (
       <main className="xc-home-bg min-h-screen flex items-center justify-center px-4">
         <div className="text-center space-y-6 max-w-md">
-          <h2 className="text-xl font-serif font-medium text-celadon-700">正在寻城</h2>
+          <h2 className="text-xl font-serif font-medium text-celadon-700">正在寻迹</h2>
           <p className="text-sm text-warm-gray-muted">{stageTexts[loadingStage]}</p>
           <div className="h-1 w-32 mx-auto bg-celadon-100 rounded-full overflow-hidden">
             <div

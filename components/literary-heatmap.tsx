@@ -84,7 +84,7 @@ export function LiteraryHeatmap({ guide }: LiteraryHeatmapProps) {
             </span>
           </div>
         ))}
-        <div className="absolute bottom-2 right-3 text-[10px] text-white/40">寻城 · 意象热力（Mock）</div>
+        <div className="absolute bottom-2 right-3 text-[10px] text-white/40">寻迹 · 意象热力（Mock）</div>
       </div>
 
       {/* 意象排行 */}

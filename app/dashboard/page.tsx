@@ -6,7 +6,7 @@ import { ContactForm } from '@/components/dashboard/contact-form'
 import Link from 'next/link'
 
 export const metadata = {
-  title: '文旅局工作台 · 寻城',
+  title: '文旅局工作台 · 寻迹',
   description: '为文旅局提供的 AI 文学旅行内容工作台：一键生成城市白皮书、内容资产看板、商务合作。',
 }
 

@@ -132,7 +132,7 @@ export function BookGuideFloat() {
           {/* 顶栏 */}
           <div className="xc-book-guide-header">
             <div>
-              <p className="text-[10px] tracking-widest text-literary-wine uppercase">寻城 AI</p>
+              <p className="text-[10px] tracking-widest text-literary-wine uppercase">寻迹 AI</p>
               <h2 className="font-serif font-semibold text-literary-ink text-sm">
                 跟书旅行向导
               </h2>

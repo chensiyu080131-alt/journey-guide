@@ -4,7 +4,7 @@ import { nationalCityGuides } from './national-city-guides'
 import { renjianziweiGuide } from './renjianziwei-guide'
 
 // ============================================================
-//  寻城 v2 Mock 数据 — 跟着书本去旅行
+//  寻迹 v2 Mock 数据 — 跟着书本去旅行
 //  常熟主线 + 江苏省展示路线（扬州）
 // ============================================================
 
