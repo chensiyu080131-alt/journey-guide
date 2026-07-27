@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>寻迹小程序 · 源码托管</title>
+  <style>
+    body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; max-width: 880px; margin: 40px auto; padding: 0 20px; color: #222; line-height: 1.7; }
+    h1 { color: #b8860b; }
+    code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; }
+    .card { border: 1px solid #e5e5e5; border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+    a { color: #b8860b; }
+    ul { padding-left: 20px; }
+  </style>
+</head>
+<body>
+  <h1>寻迹 · 传统文学 + 现代文旅 小程序</h1>
+  <p>本目录托管「寻迹」微信小程序的完整源码，由 <code>journey-guide</code> 仓库的 <code>public/xunji-mvp/</code> 自动发布。</p>
+
+  <div class="card">
+    <h3>如何导入微信开发者工具</h3>
+    <ol>
+      <li>克隆仓库或下载本目录。</li>
+      <li>打开微信开发者工具 → 导入项目。</li>
+      <li>项目目录选择 <code>weapp/</code> 文件夹（含 <code>app.js</code> / <code>app.json</code> / <code>project.config.json</code>）。</li>
+      <li>AppID 可使用「测试号」；如需真实云开发，替换 <code>app.js</code> 中的 <code>USE_CLOUD</code> 与 <code>CLOUD_ENV</code>。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>目录结构</h3>
+    <ul>
+      <li><code>weapp/</code> —— 小程序前端（首页 / 路线 / 分享海报 / B端统计 四页）</li>
+      <li><code>weapp/cloudfunctions/</code> —— 3 个云函数：getRoutes / checkin / stats</li>
+      <li><code>db/literary-routes.json</code> —— 单一数据源：10 首诗 / 20 个景点 / 10 条路线</li>
+      <li><code>selftest.js</code> —— Node 模拟器自测（本地 28/28，云端 34/34）</li>
+      <li><code>competitor-analysis.md</code> / <code>mvp-design.md</code> / <code>business-plan.md</code> / <code>partnership-proposal.md</code> —— 商业文档</li>
+      <li><code>PROGRESS.md</code> / <code>BLOCKED.md</code> —— 进度与待决事项</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>运行模式</h3>
+    <p>默认 <code>USE_CLOUD = false</code>（本地模式）：无需后端即可体验打卡、路线、海报。切换为 <code>true</code> 并填入云环境 ID 后，打卡与统计数据接入微信云开发。</p>
+  </div>
+
+  <p style="color:#888;font-size:13px;">最后更新见仓库提交记录。</p>
+</body>
+</html>
