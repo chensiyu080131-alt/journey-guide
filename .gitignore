@@ -38,3 +38,9 @@ node_modules_cache/
 
 # agent/project data (never commit)
 .workbuddy/
+
+# Supabase service_role 密钥（仅本地脚本用，绝不进 git）
+.env.local-superadmin
+.env.local-backend
+supabase/.env
+*.service-role*
