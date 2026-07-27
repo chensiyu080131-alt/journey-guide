@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>寻迹 · 云函数控制台</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1f2329; --sub:#646a73;
+    --line:#e6e8eb; --brand:#c0392b; --brand2:#a93226; --ok:#1e8e5a;
+    --code-bg:#1e1e2e; --code-ink:#e6e6e6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.6}
+  header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:22px 24px}
+  header h1{margin:0;font-size:20px;font-weight:700}
+  header p{margin:6px 0 0;font-size:13px;opacity:.92}
+  .wrap{max-width:980px;margin:0 auto;padding:18px 16px 60px}
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+  .tab{padding:9px 16px;border:1px solid var(--line);background:var(--card);border-radius:999px;
+    cursor:pointer;font-size:14px;color:var(--sub);user-select:none}
+  .tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .panel{display:none;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+  .panel.active{display:block}
+  h2{margin:0 0 4px;font-size:17px}
+  .desc{color:var(--sub);font-size:13.5px;margin:0 0 14px}
+  .schema{background:#f1f3f5;border-radius:8px;padding:10px 12px;font-size:12.5px;color:var(--sub);margin-bottom:14px}
+  .schema code{color:var(--ink)}
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
+  label{font-size:13px;color:var(--sub);min-width:64px}
+  select,input{flex:1;min-width:160px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fff}
+  button.call{background:var(--brand);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:14px;cursor:pointer}
+  button.call:hover{background:var(--brand2)}
+  button.ghost{background:#fff;color:var(--brand);border:1px solid var(--brand);border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer}
+  .res{margin-top:12px}
+  .res pre{background:var(--code-bg);color:var(--code-ink);padding:14px;border-radius:8px;overflow:auto;font-size:12.5px;max-height:340px;margin:0}
+  details{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
+  summary{cursor:pointer;color:var(--brand);font-size:13px}
+  .src pre{background:var(--code-bg);color:var(--code-ink);padding:14px;border-radius:8px;overflow:auto;font-size:12px;max-height:420px}
+  .kv{font-size:13px;color:var(--sub)}
+  .kv b{color:var(--ink)}
+  .note{background:#fff8e6;border:1px solid #ffe2a8;border-radius:8px;padding:12px 14px;font-size:13px;color:#7a5a12;margin-top:8px}
+  .note a{color:var(--brand)}
+  .pill{display:inline-block;background:#eef7f1;color:var(--ok);border-radius:999px;padding:2px 10px;font-size:12px;margin-left:8px}
+  footer{text-align:center;color:var(--sub);font-size:12px;margin-top:20px}
+  a{color:var(--brand)}
+</style>
+</head>
+<body>
+<header>
+  <h1>寻迹 · 云函数控制台</h1>
+  <p>公开浏览 &amp; 本地操作 getRoutes / checkin / stats 三个云函数 · 数据源 <code>db/literary-routes.json</code></p>
+</header>
+
+<div class="wrap">
+  <div class="tabs">
+    <div class="tab active" data-tab="getRoutes">① 取路线 getRoutes</div>
+    <div class="tab" data-tab="checkin">② 打卡 checkin</div>
+    <div class="tab" data-tab="stats">③ 统计 stats</div>
+    <div class="tab" data-tab="data">本地数据</div>
+  </div>
+
+  <!-- getRoutes -->
+  <section class="panel active" id="p-getRoutes">
+    <h2>getRoutes <span class="pill">读 poems/spots/routes</span></h2>
+    <p class="desc">返回文学路线全量数据，并按本地 openid 返回已解锁景点，前端据此渲染卡片与进度。</p>
+    <div class="schema">请求参数：<code>无</code>　返回：<code>{ poems, spots, routes, unlockedSpotIds }</code></div>
+    <div class="row"><button class="call" id="btn-getRoutes">调用 getRoutes()</button></div>
+    <div class="res"><pre id="res-getRoutes">// 点击「调用」查看返回</pre></div>
+    <details><summary>查看云函数源码（真实文件）</summary>
+      <div class="src"><pre id="src-getRoutes">加载中…</pre></div></details>
+  </section>
+
+  <!-- checkin -->
+  <section class="panel" id="p-checkin">
+    <h2>checkin <span class="pill">写 checkins / collections</span></h2>
+    <p class="desc">记录一次打卡（按 openid+spotId 去重），更新用户收集进度，返回最新已解锁列表。</p>
+    <div class="schema">请求参数：<code>{ routeId, spotId, city }</code>　返回：<code>{ ok, unlockedSpotIds }</code></div>
+    <div class="row">
+      <label>路线</label>
+      <select id="ck-route"></select>
+    </div>
+    <div class="row">
+      <label>景点</label>
+      <select id="ck-spot"></select>
+    </div>
+    <div class="row">
+      <label>城市</label>
+      <input id="ck-city" placeholder="随景点自动带出，可改" />
+    </div>
+    <div class="row"><button class="call" id="btn-checkin">调用 checkin()</button></div>
+    <div class="res"><pre id="res-checkin">// 选择路线/景点后点击「调用」</pre></div>
+    <details><summary>查看云函数源码（真实文件）</summary>
+      <div class="src"><pre id="src-checkin">加载中…</pre></div></details>
+  </section>
+
+  <!-- stats -->
+  <section class="panel" id="p-stats">
+    <h2>stats <span class="pill">B 端聚合</span></h2>
+    <p class="desc">聚合 checkins 集合，输出参与人数、打卡次数、各景点热力、城市分布。</p>
+    <div class="schema">请求参数：<code>无</code>　返回：<code>{ participants, totalCheckins, heat, city }</code></div>
+    <div class="row"><button class="call" id="btn-stats">调用 stats()</button>
+      <button class="ghost" id="btn-reset">重置本地数据</button></div>
+    <div class="res"><pre id="res-stats">// 先去「打卡」页打几个点，再回来看统计</pre></div>
+    <details><summary>查看云函数源码（真实文件）</summary>
+      <div class="src"><pre id="src-stats">加载中…</pre></div></details>
+  </section>
+
+  <!-- local data -->
+  <section class="panel" id="p-data">
+    <h2>本地数据（localStorage 模拟云数据库）</h2>
+    <p class="desc">本控制台在浏览器内用 localStorage 模拟 checkins / collections 两个集合，打卡与统计都基于它，刷新不丢失。</p>
+    <div class="kv" id="kv-openid"></div>
+    <div class="res"><pre id="res-data"></pre></div>
+    <div class="note">
+      说明：微信云函数源码位于 <a href="../weapp/cloudfunctions/" target="_blank">weapp/cloudfunctions/</a>，使用 <code>wx-server-sdk</code> 连接云数据库，
+      需在微信开发者工具「上传并部署」并配置 AppID 后才能真正上云（见 <a href="../weapp/cloudfunctions/README.md" target="_blank">README</a>）。
+      本控制台为<b>免后端的可视化操作/测试版</b>，逻辑与云函数一致。
+    </div>
+  </section>
+
+  <div class="note">
+    💡 想用命令行跑通逻辑？运行 <code>node cloudfunctions/local-test.mjs</code>（仓库内自带，无需任何依赖）即可看到 getRoutes / checkin / stats 的完整 JSON 输出。
+  </div>
+  <footer>寻迹 xunji-mvp · 云函数公开控制台 · 数据仅供演示</footer>
+</div>
+
+<script src="simulator.js"></script>
+</body>
+</html>
