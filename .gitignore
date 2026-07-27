@@ -35,3 +35,6 @@ next-env.d.ts
 node_modules_cache/
 .env.production
 .env.local
+
+# agent/project data (never commit)
+.workbuddy/

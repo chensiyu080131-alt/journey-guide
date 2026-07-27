@@ -1,0 +1,46 @@
+<view class="page">
+  <view class="head">数据面板
+    <text class="tag {{isReal ? 'tag-real' : 'tag-demo'}}">{{isReal ? '真实统计' : 'B端·演示'}}</text>
+  </view>
+  <view class="note">{{isReal ? '数据来自云端 checkins 真实聚合（参与人数按用户去重）。' : '以下为模拟聚合数据，接微信云开发后自动切换为真实统计。'}}</view>
+
+  <view class="stat-row">
+    <view class="stat"><view class="stat-num">{{participants}}</view><view class="stat-label">累计参与人数</view></view>
+    <view class="stat"><view class="stat-num">{{totalCheckins}}</view><view class="stat-label">累计打卡</view></view>
+    <view class="stat"><view class="stat-num">{{totalRoutes}}</view><view class="stat-label">上线路线</view></view>
+    <view class="stat"><view class="stat-num">{{totalSpots}}</view><view class="stat-label">景点位点</view></view>
+    <view class="stat"><view class="stat-num">{{myCheckins}}</view><view class="stat-label">我的打卡</view></view>
+  </view>
+
+  <view class="block">
+    <view class="block-title">打卡热力（Top 景点）</view>
+    <view class="heat-item" wx:for="{{heat}}" wx:key="name">
+      <view class="heat-rank">{{item.rank}}</view>
+      <view class="heat-name">{{item.name}}<text class="heat-city">{{item.city}}</text></view>
+      <view class="heat-bar-wrap">
+        <view class="heat-bar" style="width:{{item.count / maxHeat * 100}}%;"></view>
+      </view>
+      <view class="heat-count">{{item.count}}{{item.mine ? ' ★' : ''}}</view>
+    </view>
+    <view class="heat-tip">★ 为你已打卡的景点</view>
+  </view>
+
+  <view class="block">
+    <view class="block-title">用户画像 · 来源城市{{isReal ? '' : '（模拟）'}}</view>
+    <view class="bar-item" wx:for="{{city}}" wx:key="city">
+      <view class="bar-label">{{item.city}}</view>
+      <view class="bar-wrap"><view class="bar" style="width:{{item.pct * 2}}%;"></view></view>
+      <view class="bar-pct">{{item.pct}}%</view>
+    </view>
+  </view>
+
+  <view class="block">
+    <view class="block-title">用户画像 · 年龄（示例）</view>
+    <view class="bar-item" wx:for="{{age}}" wx:key="age">
+      <view class="bar-label">{{item.age}}</view>
+      <view class="bar-wrap"><view class="bar bar-age" style="width:{{item.pct * 2}}%;"></view></view>
+      <view class="bar-pct">{{item.pct}}%</view>
+    </view>
+    <view class="heat-tip">年龄分布为示例数据；如需真实采集，可在打卡时让用户授权填写（待产品决策）。</view>
+  </view>
+</view>

@@ -1,0 +1,45 @@
+<view class="page" wx:if="{{routeId}}">
+  <view class="route-head">
+    <view class="route-title">{{routeTitle}}</view>
+    <view class="route-poem">《{{poemTitle}}》 {{poemBody}}</view>
+    <view class="route-progress">已打卡 {{unlockedCount}} / {{total}}</view>
+  </view>
+
+  <map
+    class="map"
+    longitude="{{center.lng}}"
+    latitude="{{center.lat}}"
+    scale="14"
+    markers="{{markers}}"
+    show-location
+  ></map>
+
+  <view class="nav-btn" bindtap="navigateToSpot" data-idx="0">🧭 开始导航（到第一个景点）</view>
+
+  <view class="spots">
+    <view class="spot" wx:for="{{spots}}" wx:key="spotId" wx:for-index="index">
+      <view class="spot-no">{{item.index}}</view>
+      <view class="spot-body">
+        <view class="spot-name">{{item.name}} <text class="spot-city">{{item.city}}</text></view>
+        <view class="spot-ori">「{{item.original_text}}」</view>
+        <view class="spot-label">现代解读</view>
+        <view class="spot-text">{{item.ai_interpret}}</view>
+        <view class="spot-label">历史背景</view>
+        <view class="spot-text">{{item.history_bg}}</view>
+        <view class="spot-label">打卡任务</view>
+        <view class="spot-text">{{item.checkin_task}}</view>
+        <view class="spot-actions">
+          <view class="btn-nav" bindtap="navigateToSpot" data-idx="{{index}}">导航</view>
+          <block wx:if="{{item.unlocked}}">
+            <view class="btn-done">✓ 已解锁</view>
+          </block>
+          <block wx:else>
+            <view class="btn-check" bindtap="checkin" data-idx="{{index}}">GPS打卡</view>
+            <view class="btn-demo" bindtap="demoCheckin" data-idx="{{index}}">演示打卡</view>
+          </block>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+<view wx:else class="empty">路线加载中…</view>

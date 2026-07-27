@@ -1,0 +1,19 @@
+<view class="page">
+  <view class="head">我的文学卡片</view>
+  <view class="progress">已收集 {{unlocked}} / {{total}}</view>
+
+  <view class="grid" wx:if="{{cards.length}}">
+    <view class="card" wx:for="{{cards}}" wx:key="spotId">
+      <view class="card-city">{{item.city}}</view>
+      <view class="card-name">{{item.name}}</view>
+      <view class="card-ori">「{{item.original}}」</view>
+      <view class="card-route">{{item.routeTitle}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{cards.length}}" class="btn-share" bindtap="generatePoster">📤 生成分享海报</view>
+
+  <view wx:else class="empty">还没解锁卡片。去「文学路线」打卡景点即可收集文学卡片 🃏</view>
+
+  <canvas type="2d" id="poster" class="poster-canvas"></canvas>
+</view>

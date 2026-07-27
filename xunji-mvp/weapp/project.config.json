@@ -1,0 +1,18 @@
+{
+  "description": "寻迹 文学文旅 MVP 小程序骨架（最短路径：选诗→看路线→打卡）",
+  "packOptions": { "ignore": [], "include": [] },
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true,
+    "bigPackageSizeSupport": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.0.0",
+  "appid": "touristappid",
+  "projectname": "xunji-weapp",
+  "condition": {}
+}
