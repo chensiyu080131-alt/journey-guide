@@ -26,6 +26,9 @@ jobs:
           # NEXT_PUBLIC_* 在 build 时写入前端包，必须在 CI 注入
           NEXT_PUBLIC_AMAP_KEY: ${{ secrets.NEXT_PUBLIC_AMAP_KEY }}
           NEXT_PUBLIC_AMAP_SECURITY: ${{ secrets.NEXT_PUBLIC_AMAP_SECURITY }}
+          # Supabase（路线数据 + 打卡入库，2026-07-27 新增）
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
 
       - name: Upload static export to ECS (staging)
         uses: appleboy/scp-action@v0.1.7

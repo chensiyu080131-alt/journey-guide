@@ -17,10 +17,12 @@ declare global {
       ): void
       resize(): void
       destroy(): void
+      setCenter(center: LngLatLike): void
     }
 
     class Marker {
       constructor(opts?: Record<string, unknown>)
+      on(event: string, handler: () => void): void
     }
 
     class Polyline {

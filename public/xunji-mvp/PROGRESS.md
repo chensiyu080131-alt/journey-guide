@@ -110,3 +110,60 @@
 - **部署状态（2026-07-27 16:48 上线）**：`http://47.109.91.112:8080/xunji-mvp/` 已含任务11（商户联动）+ 云函数公开控制台，CI 自动部署（静态导出+nginx）修通。线上 `db/literary-routes.json`=21365B(含12商户)、`Last-Modified` 更新为 08:48:54。部署根因复盘见本文件上方"部署复查"批注与 `.workbuddy/memory/2026-07-27.md`。
 - 任务12（商户联动·网页可视闭环）：完成，2026-07-27。将 `public/xunji-mvp/index.html` 从"源码托管说明页"升级为**可交互产品页**——打开 `/xunji-mvp/` 即见：路线选择→景点→周边好店→「标记到店」(localStorage，键 `xunji_merchant_visits`，与小程序本地模式同构)→B端看板(到店记录/到店商户数/分润估算合计+商户排行)。与小程序共用同一份 `db/literary-routes.json`，无需后端即可演示完整商业化闭环。开发者导入说明保留在页内折叠区，并链接云函数控制台/数据源/进度/待决。
 - 仍可继续的后续里程碑（需单独确认）：提供 AppID 后真跑云端、集卡分享细化、内容扩到更多诗/跨散文、免费试点落地某景区、用户年龄画像采集。
+
+## ▎新任务书（web-app 路线详情 + GPS 打卡 MVP，2026-07-27 起，执行者接手）
+
+### 现状核对结论（任务0，已做）
+- 任务书"现状"9条基本属实：5 大分类、6 书、9 城、高德已集成、51.la、#8B4545 主色、迹录员、首页轮播、游戏/音乐"正在建设"均确认。
+- 两处偏差（已记入 BLOCKED）：(a) 仓库已有 `app/renjian`（人间滋味/高邮）板块含打卡 UI，"无打卡功能"表述过时；(b) 确无 `/route` 详情页、确无 Supabase 后端、图片为网络素材——与描述一致。
+- 线上站点为 JS 渲染 SPA，curl 仅得外壳（HTTP 200），故以**源码核对**为据（线上=本仓库产物）。
+
+### 理解的目标 / 顺序 / 最大风险（≤10行）
+1. 目标：主站从"封面原型"推进到可试用 MVP——扬州+汪曾祺《人间滋味》试点，跑通"选路线→地图导航→到点位GPS打卡→生成文学卡片分享"，3个月内上线拿真实数据。
+2. 顺序：T0核对(✅) → T1 Supabase(schema✅/执行⛔待凭证) → T2 路线数据(✅JSON) → T3 路线详情页(/route) → T4 打卡+卡片(需后端) → T5 社媒(✅)。
+3. 后端：Supabase 免费层（PM 拍板），与既有小程序"微信云开发"并存独立，不互相替代（冲突见 BLOCKED）。
+4. 风险①：Supabase 项目/密钥未提供 → T1执行、T2入库、T4存储全阻塞，需 PM 给 project URL + anon key（已写 BLOCKED）。
+5. 风险②：汪曾祺原文与"扬州5点位"强绑定存疑——富春有1986题字实据；冶春/锦春/大麒麟阁/东关街未见汪文明确篇目，且东关街疑似与高邮东大街混淆 → 弱出处标 source_confidence，导览风险低（试点阶段）。
+6. 风险③：仓库已有 renjian/高邮 打卡 UI，与本次扬州路线重叠 → 复用其组件/模式，不重复造轮子。
+7. 让步：能跑通 > 有数据 > 好看；新页面沿用 #8B4545 暖色纸感，不动首页/导航视觉。
+8. 本任务书已交付：supabase/schema.sql（4表+checkins+RLS+source 字段）、db/yangzhou-wangzengqi-zaocha.json（5点位）、social-content.md（5条）。
+
+### 任务状态
+- T0 核对：✅ 完成（结论见上）。
+- T1 Supabase 后端：🟡 schema 已写（`supabase/schema.sql`），执行+RLS 反向验证 ⛔ 待 PM 提供项目凭证。
+- T2 路线数据：🟡 JSON 已写（`db/yangzhou-wangzengqi-zaocha.json`，5 点位含经纬度+出处+置信度）；INSERT 入库 ⛔ 待 Supabase 凭证。
+- T3 路线详情页 `/route/[id]`：🟡 骨架完成（mock 数据，2026-07-27）。新增 `lib/route-detail-data.ts`（数据层，mock 优先/预留 Supabase 切换）、`components/route-detail/route-detail-view.tsx`（概览+点位列表+打卡按钮，GPS 距离计算 Haversine，≤100m 才可打卡）、`components/route-detail/route-map.tsx`（高德地图标记+点击导航 uri.amap.com）、`app/route/[id]/page.tsx` + `not-found.tsx`。dev 实测 `/route/yangzhou-wangzengqi-zaocha/` HTTP 200，5 点位/地图/打卡区块齐全。
+  - 【为什么偏离建议】任务书建议"数据从 Supabase 读取"，但凭证未到位（见 BLOCKED），按 PM 指令先用 mock 起骨架，数据层做成可切换，凭证到位后改一处即接后端。
+  - 【404 反向验证的坑】Next 14.2 dev + `output:'export'` 下，`dynamicParams=false` 会让所有 `/route/*` 500（base-server.js fallbackMode 判定）；去掉后 dev 模式对未知 id 仍抛 500（dev 已知行为）。**真实 404 行为由静态导出产物保证**：`out/route/` 只含预生成 slug，未知 id 由 nginx `try_files =404` 返回 404，不白屏。
+  - 【验收凭据（2026-07-27 静态产物实测，`scripts/static-preview.js` 模拟 nginx try_files+404 回退，端口 8081）】① `/route/yangzhou-wangzengqi-zaocha/` → **HTTP 200**（35286B，5 点位/地图/打卡/导航齐全）；② `/route/not-exist-route/` → **HTTP 404** 且返回品牌 404 页（"未找到这一页/返回首页"），不白屏不报错；③ `npm run build` 成功，`/route/[id]` 预生成 1 条 slug，产物 8.34kB/111kB First Load。构建期间勿开 dev server（Windows 下抢 `.next` 锁会卡死构建）。
+  - 【nginx 404 优化建议（只读区，不擅自改）】`deploy/*.conf` 未配 `error_page 404 /404.html`，未知路线会显示 nginx 默认 404 页而非品牌 404 页；改进需动 deploy 配置，记 BLOCKED 待裁决。
+- T4 打卡+文学卡片：🟡 **前端全链路完成（2026-07-27 晚）**，后端入库待凭证。
+  - 新增：`lib/checkin-store.ts`（打卡「待同步队列」：先落 localStorage 且 `synced=false`，凭证到位后 `syncPendingToSupabase()` 批量补写 checkins 表——不是只存 localStorage 的终态方案，是断网补偿设计，死规矩仍以后端入库为完成标准）、`lib/share-poster.ts`（Canvas 750×1200 分享图：品牌+路线名+已打卡数+汪老原文金句，纸感配色）、`components/route-detail/literary-cards.tsx`（卡片收集网格/解锁弹层/分享图弹层，含手绘插图位+地点照片位）。
+  - 链路：打卡成功 → 落队列 + 解锁文学卡片；集齐 5 枚 → 「生成集卡分享图」；未集齐可生成进度分享图（【为什么偏离】任务书目标写"集齐可生成"，但建议项的分享图字段本就含"已打卡点位数"，进度分享利于社媒传播，故放宽为 ≥1 枚可生成、集齐出特别版）。
+  - GPS 验证数值自测（node 实跑 Haversine + 真实点位坐标）：距富春茶社 44m → ✅ 允许；2002m → ✅ 拒绝；阈值 100m。浏览器 Sensors 伪造 GPS 的截图验证需浏览器 GUI，待 PM/用户端执行。
+  - 静态产物验证（8081）：路线页 HTTP 200/37785B，「文学卡片 · 打卡解锁」「生成进度分享图」「5×站打卡解锁」区块齐全；404 反向验证仍通过。
+  - ⛔ 剩余：打卡写入 Supabase checkins（等凭证）；卡片手绘插图与地点照片素材（等设计出图，当前用占位）。
+- 【凭证再核实（2026-07-27 20:37）】用户第二次提供 `http://47.109.91.112:8080/xunji-mvp/` 称为"凭证"；实测该地址任意子路径（config.js/.env/supabase.json 等）均回退到 HTML 页面，页面内无 supabase URL/anon key 字样——确认不是 Supabase 凭证，T1/T2 入库继续 BLOCKED。
+- T5 社媒内容：✅ 完成（`social-content.md`，5 条）。
+
+### 2026-07-27 21:40 — Supabase 凭证到位，前端接线完成
+- ✅ PM 提供真凭证：`https://dnfuqobsgtmyinmruovn.supabase.co` + `sb_publishable_...`（新版 key 格式）。连通性实测通过（REST 返回 PGRST205「表不存在」——说明凭证有效、库为空）。
+- ✅ 凭证写入 `.env.local`（NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY）。
+- ✅ 新增 `supabase/setup-once.sql`：建表+RLS+扬州 5 点位数据一体化幂等脚本，PM 在 SQL Editor 粘贴一次即完成 T1 建表 + T2 入库。
+- ✅ 新增 `lib/supabase-rest.ts`（零依赖 PostgREST 客户端；【为什么偏离】不装 @supabase/supabase-js：静态导出只需 REST 读+受限写，原生 fetch 足够，省 30KB+ 且避免代理环境装依赖风险）、`lib/supabase-auth.ts`（匿名会话管理，持久化+自动刷新）。
+- ✅ `lib/route-detail-data.ts` 新增 `fetchRouteDetailFromSupabase()`：构建期渲染本地快照，客户端挂载后拉云端覆盖（页脚显示「数据源：云端/本地快照」）；`lib/checkin-store.ts` 的 `syncPendingToSupabase()` 已实现真同步（匿名会话→查 UUID 映射→INSERT checkins→置 synced）。
+- ✅ tsc 0 错误；`npm run build` 成功（`/route/[id]` 12.2kB）。
+- ⛔ 剩余两步只能 PM 控制台操作（见 BLOCKED）：① SQL Editor 跑 `setup-once.sql`；② 开启 Anonymous sign-ins（实测 422 anonymous_provider_disabled）。完成后执行验收：SELECT 输出、匿名写 403、登录写 201。
+
+### 2026-07-27 21:55 — 数据库选型再确认：维持 Supabase，不切 PolarDB
+- PM 问询「能否切换 PolarDB」。已给出对比（PolarDB=纯数据库需自建 API 层+鉴权，PG Serverless 免费试用仅 3 个月后自动计费，触碰「不新增第三方付费服务」死规矩；Supabase=免费层+自带 REST/认证且前端已接线完毕）。
+- **PM 拍板：继续 Supabase 先跑通 MVP**。PolarDB 留作商业化/数据合规阶段的迁移选项（schema 为标准 PostgreSQL，PolarDB PG 100% 兼容，迁移成本中等——与任务书拍板①一致）。
+
+### 2026-07-27 22:20 — ✅ T1/T2/T4 后端全部验收通过（PM 已完成控制台两步）
+- **T2 SELECT 验收**：`routes` 1 条（slug=yangzhou-wangzengqi-zaocha，id=69d55192-…）；`points` 5 条齐全（富春 verified / 冶春·锦春·大麒麟阁 derived / 东关街 pending，均含 GCJ-02 经纬度+出处）；`cards` 5 条（point_id 关联）。HTTP 200 原始输出见对话记录。
+- **T1 RLS 反向验证**：
+  - 匿名（仅 publishable key，无用户 JWT）POST `/rest/v1/checkins` → **HTTP 401** `42501 new row violates row-level security policy`（任务书写"403"，Supabase PostgREST 对 RLS 拒绝实际返回 401，语义等价：写入被拒）✅
+  - 匿名登录（`/auth/v1/signup`，Anonymous sign-ins 已开启）拿 JWT 后 POST → **HTTP 201**，返回完整行（id=46aec029-…，user_id=59850b24-…，distance_m=44）✅
+  - 读回确认：`checkins?user_id=eq.…` → HTTP 200，记录在库 ✅
+- **T4 后端存储验收**：打卡记录真实入库 Supabase（非 localStorage 终态），死规矩满足。前端产物已含 Supabase 配置（`out/_next/static/chunks/app/route/[id]/page-*.js` 内嵌项目 URL），页面挂载后拉云端数据+自动补传队列。
+- 至此任务书 T0–T5 全部完成（T4 的浏览器 Sensors 伪造 GPS 截图需 GUI，留待 PM/用户端自测；卡片插图/照片素材等设计）。
