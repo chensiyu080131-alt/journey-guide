@@ -1,0 +1,9 @@
+{
+  "name": "getRoutes",
+  "version": "1.0.0",
+  "description": "返回文学路线全量数据",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

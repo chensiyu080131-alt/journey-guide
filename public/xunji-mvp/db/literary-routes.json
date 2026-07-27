@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "note": "MVP 内容库：文学文本+路线+景点关联。首批古诗词+经典散文。AI 解读字段为模板/Mock 示例，上线前需人工审核。坐标 GCJ-02，取自公开地图，仅供演示。",
+    "generated_by": "AI 辅助生成 + 待人工审核",
+    "count": 10,
+    "version": "v2-10poems-20spots"
+  },
+  "poems": [
+    { "id": "poem_fengqiao", "title": "枫桥夜泊", "author": "张继", "dynasty": "唐", "body": "月落乌啼霜满天，江枫渔火对愁眠。姑苏城外寒山寺，夜半钟声到客船。", "topic_tags": ["羁旅", "江南", "夜泊"] },
+    { "id": "poem_huanghe", "title": "黄鹤楼", "author": "崔颢", "dynasty": "唐", "body": "昔人已乘黄鹤去，此地空余黄鹤楼。黄鹤一去不复返，白云千载空悠悠。", "topic_tags": ["登高", "怀古", "武汉"] },
+    { "id": "poem_tengwangge", "title": "滕王阁序（节选）", "author": "王勃", "dynasty": "唐", "body": "落霞与孤鹜齐飞，秋水共长天一色。", "topic_tags": ["名楼", "南昌", "初唐"] },
+    { "id": "poem_xihu", "title": "饮湖上初晴后雨", "author": "苏轼", "dynasty": "宋", "body": "水光潋滟晴方好，山色空蒙雨亦奇。欲把西湖比西子，淡妆浓抹总相宜。", "topic_tags": ["西湖", "杭州", "山水"] },
+    { "id": "poem_lushan", "title": "望庐山瀑布", "author": "李白", "dynasty": "唐", "body": "日照香炉生紫烟，遥看瀑布挂前川。飞流直下三千尺，疑是银河落九天。", "topic_tags": ["庐山", "九江", "山水"] },
+    { "id": "poem_qinhuai", "title": "泊秦淮", "author": "杜牧", "dynasty": "唐", "body": "烟笼寒水月笼沙，夜泊秦淮近酒家。商女不知亡国恨，隔江犹唱后庭花。", "topic_tags": ["秦淮", "南京", "怀古"] },
+    { "id": "poem_wuyi", "title": "乌衣巷", "author": "刘禹锡", "dynasty": "唐", "body": "朱雀桥边野草花，乌衣巷口夕阳斜。旧时王谢堂前燕，飞入寻常百姓家。", "topic_tags": ["乌衣巷", "南京", "沧桑"] },
+    { "id": "poem_qiantang", "title": "钱塘湖春行", "author": "白居易", "dynasty": "唐", "body": "孤山寺北贾亭西，水面初平云脚低。几处早莺争暖树，谁家新燕啄春泥。", "topic_tags": ["西湖", "杭州", "踏春"] },
+    { "id": "poem_guanque", "title": "登鹳雀楼", "author": "王之涣", "dynasty": "唐", "body": "白日依山尽，黄河入海流。欲穷千里目，更上一层楼。", "topic_tags": ["鹳雀楼", "永济", "登高"] },
+    { "id": "poem_chunjiang", "title": "春江花月夜（节选）", "author": "张若虚", "dynasty": "唐", "body": "春江潮水连海平，海上明月共潮生。滟滟随波千万里，何处春江无月明。", "topic_tags": ["扬州", "春江", "月夜"] }
+  ],
+  "spots": [
+    { "id": "spot_hanshan", "name": "寒山寺", "city": "苏州", "lng": 120.586, "lat": 31.317, "address": "江苏省苏州市姑苏区寒山寺弄24号", "desc": "因张继诗闻名，夜半钟声典故源地。" },
+    { "id": "spot_fengqiao", "name": "枫桥", "city": "苏州", "lng": 120.583, "lat": 31.319, "address": "江苏省苏州市姑苏区枫桥路", "desc": "枫桥夜泊实景地，运河古桥。" },
+    { "id": "spot_huanghelou", "name": "黄鹤楼", "city": "武汉", "lng": 114.306, "lat": 30.546, "address": "湖北省武汉市武昌区蛇山西山坡特1号", "desc": "江南三大名楼之一，崔颢题诗处。" },
+    { "id": "spot_tengwangge", "name": "滕王阁", "city": "南昌", "lng": 115.872, "lat": 28.686, "address": "江西省南昌市东湖区仿古街58号", "desc": "王勃作序地，江南名楼。" },
+    { "id": "spot_xihu", "name": "西湖", "city": "杭州", "lng": 120.149, "lat": 30.243, "address": "浙江省杭州市西湖区龙井路1号", "desc": "苏轼两任杭州，疏浚西湖、筑苏堤，西子之喻源于此。" },
+    { "id": "spot_sudi", "name": "苏堤", "city": "杭州", "lng": 120.142, "lat": 30.248, "address": "浙江省杭州市西湖区苏堤", "desc": "苏轼主持疏浚西湖时以淤泥筑成，春晓为西湖十景之一。" },
+    { "id": "spot_xianglu", "name": "庐山·香炉峰", "city": "九江", "lng": 115.970, "lat": 29.550, "address": "江西省九江市庐山市庐山风景区", "desc": "李白望瀑处，紫烟指峰间水气日照如香炉生烟。" },
+    { "id": "spot_sandie", "name": "三叠泉", "city": "九江", "lng": 116.000, "lat": 29.580, "address": "江西省九江市庐山市三叠泉景区", "desc": "庐山最壮观瀑布，三级跌水，素有“不到三叠泉，不算庐山客”。" },
+    { "id": "spot_qinhuai", "name": "秦淮河", "city": "南京", "lng": 118.790, "lat": 32.040, "address": "江苏省南京市秦淮区夫子庙秦淮河", "desc": "六朝金粉地，杜牧夜泊听商女唱后庭花处。" },
+    { "id": "spot_fuzimiao", "name": "夫子庙", "city": "南京", "lng": 118.792, "lat": 32.038, "address": "江苏省南京市秦淮区贡院街", "desc": "南京孔庙，秦淮风光带核心，科举文化地标。" },
+    { "id": "spot_wuyi", "name": "乌衣巷", "city": "南京", "lng": 118.785, "lat": 32.045, "address": "江苏省南京市秦淮区乌衣巷", "desc": "东晋王导、谢安望族聚居地，刘禹锡今昔之叹所咏。" },
+    { "id": "spot_gongyuan", "name": "江南贡院", "city": "南京", "lng": 118.788, "lat": 32.042, "address": "江苏省南京市秦淮区金陵路1号", "desc": "中国古代最大科举考场，与乌衣巷同处夫子庙片。" },
+    { "id": "spot_baidi", "name": "白堤", "city": "杭州", "lng": 120.148, "lat": 30.259, "address": "浙江省杭州市西湖区白堤", "desc": "白居易任杭州刺史时疏湖筑堤（一说已不存，后人为纪念称白堤），踏春所咏。" },
+    { "id": "spot_gushan", "name": "孤山", "city": "杭州", "lng": 120.145, "lat": 30.255, "address": "浙江省杭州市西湖区孤山", "desc": "西湖中最大天然岛，孤山寺北即白居易起句处。" },
+    { "id": "spot_guanque", "name": "鹳雀楼", "city": "永济", "lng": 110.340, "lat": 34.850, "address": "山西省运城市永济市蒲州镇", "desc": "因王之涣诗名扬天下，登楼望黄河入海。" },
+    { "id": "spot_pujin", "name": "黄河蒲津渡", "city": "永济", "lng": 110.300, "lat": 34.870, "address": "山西省运城市永济市蒲津渡遗址", "desc": "黄河古渡口，唐开元铁牛群，黄河文化实景。" },
+    { "id": "spot_shouxihu", "name": "瘦西湖", "city": "扬州", "lng": 119.410, "lat": 32.390, "address": "江苏省扬州市邗江区大虹桥路28号", "desc": "扬州湖上园林，春江花月夜意境可于此寻觅。" },
+    { "id": "spot_guazhou", "name": "瓜洲渡", "city": "扬州", "lng": 119.460, "lat": 32.300, "address": "江苏省扬州市邗江区瓜洲镇", "desc": "长江古渡，王安石“春风又绿江南岸”即此，江月意境相连。" },
+    { "id": "spot_shantang", "name": "山塘街", "city": "苏州", "lng": 120.580, "lat": 31.320, "address": "江苏省苏州市姑苏区山塘街", "desc": "白居易任苏州刺史时凿山塘河、筑街，枫桥片区水巷延展。" },
+    { "id": "spot_qingchuan", "name": "晴川阁", "city": "武汉", "lng": 114.300, "lat": 30.550, "address": "湖北省武汉市汉阳区洗马长街", "desc": "与黄鹤楼隔江相望，崔颢“晴川历历汉阳树”所咏。" }
+  ],
+  "routes": [
+    {
+      "id": "route_fengqiao", "poem_id": "poem_fengqiao", "title": "枫桥夜泊·姑苏寻愁路线",
+      "spot_ids": ["spot_hanshan", "spot_fengqiao", "spot_shantang"], "distance_km": 2.4, "duration_min": 120,
+      "route_spots": [
+        { "spot_id": "spot_hanshan", "original_text": "姑苏城外寒山寺，夜半钟声到客船。", "ai_interpret": "诗人泊船枫桥，遥听寒山寺夜钟，孤寂旅愁随声入船。今日寺仍鸣钟，可体验“夜半钟声”意境。", "history_bg": "寒山寺始建于南朝，因张继诗成文化符号，历代题咏不绝。", "checkin_task": "在寒山寺钟楼前录制3秒环境音，分享“我听到了第N声钟”。", "card_image": "card_hanshan.png" },
+        { "spot_id": "spot_fengqiao", "original_text": "月落乌啼霜满天，江枫渔火对愁眠。", "ai_interpret": "枫桥畔古运河，昔日渔火点点，今可漫步体会诗人羁旅之愁。", "history_bg": "枫桥为京杭大运河古桥，漕运要冲，漁火是真实市井图景。", "checkin_task": "找到桥畔“枫桥夜泊”碑刻并合影，解锁“江枫”卡片。", "card_image": "card_fengqiao.png" },
+        { "spot_id": "spot_shantang", "original_text": "姑苏城外寒山寺，夜半钟声到客船。", "ai_interpret": "山塘街为白居易刺苏时所开，水巷连枫桥，可顺线体会“君到姑苏见”的江南夜色。", "history_bg": "山塘街全长七里，号称“七里山塘”，是苏州水城肌理的代表。", "checkin_task": "在山塘河畔拍一张夜景灯影，解锁“山塘”卡片。", "card_image": "card_shantang.png" }
+      ]
+    },
+    {
+      "id": "route_huanghe", "poem_id": "poem_huanghe", "title": "黄鹤楼·白云千载路线",
+      "spot_ids": ["spot_huanghelou", "spot_qingchuan"], "distance_km": 1.0, "duration_min": 90,
+      "route_spots": [
+        { "spot_id": "spot_huanghelou", "original_text": "昔人已乘黄鹤去，此地空余黄鹤楼。", "ai_interpret": "仙人乘鹤的传说让楼成“仙迹”，登楼可见大江东去，体会物是人非的苍茫。", "history_bg": "黄鹤楼始建于三国，屡毁屡建，是江南文化地标与诗词宝库。", "checkin_task": "在楼上找“崔颢题诗”处，背诵前两句解锁“白云”卡片。", "card_image": "card_huanghe.png" },
+        { "spot_id": "spot_qingchuan", "original_text": "晴川历历汉阳树，芳草萋萋鹦鹉洲。", "ai_interpret": "隔江的晴川阁正是崔颢诗中“晴川历历”的实景点，与黄鹤楼对望成诗境。", "history_bg": "晴川阁建于明嘉靖，与黄鹤楼、岳阳楼、仲宣楼并称“楚天四大名楼”。", "checkin_task": "在晴川阁拍一张与黄鹤楼同框，解锁“晴川”卡片。", "card_image": "card_qingchuan.png" }
+      ]
+    },
+    {
+      "id": "route_tengwangge", "poem_id": "poem_tengwangge", "title": "滕王阁·落霞孤鹜路线",
+      "spot_ids": ["spot_tengwangge"], "distance_km": 0.4, "duration_min": 60,
+      "route_spots": [
+        { "spot_id": "spot_tengwangge", "original_text": "落霞与孤鹜齐飞，秋水共长天一色。", "ai_interpret": "王勃即席挥毫写尽滕王阁黄昏壮景，今日登阁仍可望赣江落霞。", "history_bg": "滕王阁为唐太宗之弟李元婴都督洪州时所建，因王勃一序名垂千古。", "checkin_task": "傍晚在阁前拍“落霞/秋水”同框照，解锁“孤鹜”卡片。", "card_image": "card_tengwangge.png" }
+      ]
+    },
+    {
+      "id": "route_xihu", "poem_id": "poem_xihu", "title": "饮湖上初晴后雨·西湖寻西子路线",
+      "spot_ids": ["spot_xihu", "spot_sudi"], "distance_km": 3.0, "duration_min": 150,
+      "route_spots": [
+        { "spot_id": "spot_xihu", "original_text": "欲把西湖比西子，淡妆浓抹总相宜。", "ai_interpret": "晴雨皆景的西湖如美人，苏轼这一喻让“西子湖”成了杭州的代称。", "history_bg": "苏轼两任杭州，疏六井、筑苏堤，奠定了西湖今日的湖山格局。", "checkin_task": "在湖边拍一张“晴/雨”中的西湖，解锁“西子”卡片。", "card_image": "card_xihu.png" },
+        { "spot_id": "spot_sudi", "original_text": "水光潋滟晴方好，山色空蒙雨亦奇。", "ai_interpret": "苏堤春晓为西湖十景之首，走在堤上可亲历“潋滟”“空蒙”两种湖光。", "history_bg": "苏堤为苏轼疏浚西湖时以淤泥筑成，贯通南北两山。", "checkin_task": "清晨在苏堤拍一张“春晓”照，解锁“苏堤”卡片。", "card_image": "card_sudi.png" }
+      ]
+    },
+    {
+      "id": "route_lushan", "poem_id": "poem_lushan", "title": "望庐山瀑布·香炉紫烟路线",
+      "spot_ids": ["spot_xianglu", "spot_sandie"], "distance_km": 6.0, "duration_min": 180,
+      "route_spots": [
+        { "spot_id": "spot_xianglu", "original_text": "日照香炉生紫烟，遥看瀑布挂前川。", "ai_interpret": "阳光照峰间水气如紫烟缭绕，李白以“香炉”双关，把山形与意境写活。", "history_bg": "庐山自东晋即为隐逸与诗文胜地，李白、苏轼均留题咏。", "checkin_task": "在观瀑处拍一张“紫烟/瀑布”同框，解锁“香炉”卡片。", "card_image": "card_xianglu.png" },
+        { "spot_id": "spot_sandie", "original_text": "飞流直下三千尺，疑是银河落九天。", "ai_interpret": "三级跌水的三叠泉最贴近“飞流直下”的想象，是庐山的视觉高潮。", "history_bg": "三叠泉清代才被发现，今为庐山标志性胜景。", "checkin_task": "在泉底拍一张水帘全景，解锁“三叠”卡片。", "card_image": "card_sandie.png" }
+      ]
+    },
+    {
+      "id": "route_qinhuai", "poem_id": "poem_qinhuai", "title": "泊秦淮·金陵夜泊路线",
+      "spot_ids": ["spot_qinhuai", "spot_fuzimiao"], "distance_km": 0.8, "duration_min": 90,
+      "route_spots": [
+        { "spot_id": "spot_qinhuai", "original_text": "烟笼寒水月笼沙，夜泊秦淮近酒家。", "ai_interpret": "秦淮的烟月与灯影千年未改，夜游可触到杜牧笔下的朦胧与苍凉。", "history_bg": "秦淮河为南京母亲河，六朝金粉、明清市井皆聚于此。", "checkin_task": "夜游秦淮时拍一张“烟月”灯影，解锁“秦淮”卡片。", "card_image": "card_qinhuai.png" },
+        { "spot_id": "spot_fuzimiao", "original_text": "商女不知亡国恨，隔江犹唱后庭花。", "ai_interpret": "夫子庙一带即当日歌吹之地，借《玉树后庭花》读懂杜牧的兴亡之叹。", "history_bg": "夫子庙为南京孔庙，秦淮风光带核心，科举文化中枢。", "checkin_task": "在夫子庙泮池边拍一张，解锁“夫子庙”卡片。", "card_image": "card_fuzimiao.png" }
+      ]
+    },
+    {
+      "id": "route_wuyi", "poem_id": "poem_wuyi", "title": "乌衣巷·王谢风流路线",
+      "spot_ids": ["spot_wuyi", "spot_gongyuan"], "distance_km": 0.6, "duration_min": 80,
+      "route_spots": [
+        { "spot_id": "spot_wuyi", "original_text": "旧时王谢堂前燕，飞入寻常百姓家。", "ai_interpret": "一条窄巷写尽世家兴衰，刘禹锡的“燕子”成了中国文学里最著名的隐喻之一。", "history_bg": "乌衣巷为东晋王导、谢安望族居所，南朝后渐成寻常街巷。", "checkin_task": "在巷口“乌衣巷”匾前合影，解锁“乌衣”卡片。", "card_image": "card_wuyi.png" },
+        { "spot_id": "spot_gongyuan", "original_text": "朱雀桥边野草花，乌衣巷口夕阳斜。", "ai_interpret": "相邻的江南贡院是科举制度实物，与乌衣巷的世家风流形成有趣对照。", "history_bg": "江南贡院为中国古代最大科举考场，曾出多位状元。", "checkin_task": "在贡院号舍前拍一张，解锁“贡院”卡片。", "card_image": "card_gongyuan.png" }
+      ]
+    },
+    {
+      "id": "route_qiantang", "poem_id": "poem_qiantang", "title": "钱塘湖春行·孤山早莺路线",
+      "spot_ids": ["spot_baidi", "spot_gushan"], "distance_km": 2.0, "duration_min": 100,
+      "route_spots": [
+        { "spot_id": "spot_baidi", "original_text": "孤山寺北贾亭西，水面初平云脚低。", "ai_interpret": "白堤春水初平、云脚低垂，正是白居易起句时的湖上晨景。", "history_bg": "白居易任杭州刺史疏湖筑堤（后称白堤），开启西湖人文营建传统。", "checkin_task": "春日白堤拍一张“早莺/新燕”照，解锁“白堤”卡片。", "card_image": "card_baidi.png" },
+        { "spot_id": "spot_gushan", "original_text": "几处早莺争暖树，谁家新燕啄春泥。", "ai_interpret": "孤山为西湖孤屿，春日莺燕最盛，最宜体会“争暖树”“啄春泥”的生机。", "history_bg": "孤山文脉深厚，清行宫、西泠印社皆在，是西湖人文精华。", "checkin_task": "在孤山放鹤亭边拍一张，解锁“孤山”卡片。", "card_image": "card_gushan.png" }
+      ]
+    },
+    {
+      "id": "route_guanque", "poem_id": "poem_guanque", "title": "登鹳雀楼·黄河入海路线",
+      "spot_ids": ["spot_guanque", "spot_pujin"], "distance_km": 5.0, "duration_min": 140,
+      "route_spots": [
+        { "spot_id": "spot_guanque", "original_text": "白日依山尽，黄河入海流。", "ai_interpret": "登楼西望，白日、远山、黄河尽收，方知“欲穷千里目”是站得高方能见得远。", "history_bg": "鹳雀楼因王之涣诗名扬天下，与黄鹤楼等并称黄河名楼。", "checkin_task": "登楼顶层拍一张黄河远景，解锁“鹳雀”卡片。", "card_image": "card_guanque.png" },
+        { "spot_id": "spot_pujin", "original_text": "欲穷千里目，更上一层楼。", "ai_interpret": "黄河蒲津渡的铁牛群是盛唐渡口实证，与“更上一层楼”的进取意相映。", "history_bg": "蒲津渡为黄河古渡，唐开元铁牛为现存最大黄河浮桥地锚。", "checkin_task": "在铁牛群前拍一张，解锁“蒲津”卡片。", "card_image": "card_pujin.png" }
+      ]
+    },
+    {
+      "id": "route_chunjiang", "poem_id": "poem_chunjiang", "title": "春江花月夜·扬州江月路线",
+      "spot_ids": ["spot_shouxihu", "spot_guazhou"], "distance_km": 18.0, "duration_min": 200,
+      "route_spots": [
+        { "spot_id": "spot_shouxihu", "original_text": "春江潮水连海平，海上明月共潮生。", "ai_interpret": "瘦西湖夜月最宜体会“江月年年只相似”的浩渺，是扬州慢生活的诗意注脚。", "history_bg": "瘦西湖为扬州湖上园林，清代鼎盛，与运河文化同源。", "checkin_task": "月夜在瘦西湖拍一张“江月”照，解锁“瘦西湖”卡片。", "card_image": "card_shouxihu.png" },
+        { "spot_id": "spot_guazhou", "original_text": "滟滟随波千万里，何处春江无月明。", "ai_interpret": "瓜洲渡临长江，王安石“明月何时照我还”同咏此江月，可串起唐诗宋词的江月意象。", "history_bg": "瓜洲为长江古渡，漕运咽喉，无数文人于此折柳。", "checkin_task": "在瓜洲渡口拍一张长江落日，解锁“瓜洲”卡片。", "card_image": "card_guazhou.png" }
+      ]
+    }
+  ],
+  "merchants": [
+    { "id": "m_hanshan_food", "name": "寒山寺素斋馆", "city": "苏州", "near_spot": "spot_hanshan", "category": "餐饮", "desc": "寒山寺内素斋，夜半钟声伴清淡素食。", "lng": 120.587, "lat": 31.316, "reward": 2 },
+    { "id": "m_hanshan_shop", "name": "枫桥文创铺", "city": "苏州", "near_spot": "spot_hanshan", "category": "文创", "desc": "枫桥主题文创与诗词笺纸。", "lng": 120.584, "lat": 31.318, "reward": 2 },
+    { "id": "m_xihu_food", "name": "楼外楼", "city": "杭州", "near_spot": "spot_xihu", "category": "餐饮", "desc": "西湖畔百年老字号，西湖醋鱼声名远播。", "lng": 120.150, "lat": 30.244, "reward": 3 },
+    { "id": "m_xihu_shop", "name": "西湖文创", "city": "杭州", "near_spot": "spot_xihu", "category": "文创", "desc": "西湖十景主题周边。", "lng": 120.148, "lat": 30.242, "reward": 2 },
+    { "id": "m_huanghe_shop", "name": "黄鹤楼文创", "city": "武汉", "near_spot": "spot_huanghelou", "category": "文创", "desc": "崔颢题诗楼主题文创。", "lng": 114.307, "lat": 30.547, "reward": 2 },
+    { "id": "m_huanghe_food", "name": "户部巷小吃", "city": "武汉", "near_spot": "spot_huanghelou", "category": "餐饮", "desc": "武汉名小吃集中地，离黄鹤楼不远。", "lng": 114.302, "lat": 30.549, "reward": 2 },
+    { "id": "m_qinhuai_food", "name": "夫子庙小吃", "city": "南京", "near_spot": "spot_qinhuai", "category": "餐饮", "desc": "秦淮八绝小吃，夜泊听商女处。", "lng": 118.793, "lat": 32.039, "reward": 2 },
+    { "id": "m_qinhuai_shop", "name": "秦淮文创", "city": "南京", "near_spot": "spot_qinhuai", "category": "文创", "desc": "秦淮灯彩与诗词文创。", "lng": 118.791, "lat": 32.041, "reward": 2 },
+    { "id": "m_xianglu_special", "name": "庐山云雾茶", "city": "九江", "near_spot": "spot_xianglu", "category": "特产", "desc": "庐山云雾茶，李白望瀑处伴手礼。", "lng": 115.971, "lat": 29.551, "reward": 3 },
+    { "id": "m_shouxihu_special", "name": "扬州漆器", "city": "扬州", "near_spot": "spot_shouxihu", "category": "特产", "desc": "扬州漆器非遗，瘦西湖畔可购。", "lng": 119.411, "lat": 32.391, "reward": 3 },
+    { "id": "m_guanque_special", "name": "蒲津渡特产", "city": "永济", "near_spot": "spot_guanque", "category": "特产", "desc": "黄河铁牛主题文创与特产。", "lng": 110.341, "lat": 34.851, "reward": 2 },
+    { "id": "m_guazhou_food", "name": "瓜洲渡茶歇", "city": "扬州", "near_spot": "spot_guazhou", "category": "餐饮", "desc": "长江古渡茶歇，王安石咏处。", "lng": 119.461, "lat": 32.301, "reward": 2 }
+  ]
+}

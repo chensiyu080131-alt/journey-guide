@@ -1,0 +1,9 @@
+page {
+  background: #faf7f2;
+  color: #2b2118;
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+.page { padding: 24rpx; box-sizing: border-box; }
+.empty { text-align: center; color: #9ca3af; padding: 80rpx 40rpx; font-size: 26rpx; }

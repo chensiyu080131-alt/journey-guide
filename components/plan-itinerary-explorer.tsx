@@ -1,0 +1,485 @@
+'use client'
+
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { Guide, OptionalRecommendSpot, ScheduleBlock, Spot } from '@/types'
+import { PlanAspect } from '@/lib/guide-category'
+import {
+  buildItinerary,
+  getRouteVariants,
+  getSpotsForMap,
+} from '@/lib/itinerary-planner'
+import { getOptionalSpotsForAspect } from '@/lib/optional-spots'
+import { cn } from '@/lib/utils'
+import { Card, Badge } from './ui'
+import { GuideMapExplorer } from './guide-map-explorer'
+import { SpotDetailDrawer } from './spot-detail-drawer'
+
+interface PlanItineraryExplorerProps {
+  guide: Guide
+  aspect: PlanAspect
+  /** 地图优先：首屏展示地图，行程详情折叠在下 */
+  mapFirst?: boolean
+}
+
+const blockIcons: Record<string, string> = {
+  集合: '📍',
+  上午: '🌅',
+  午饭: '🍜',
+  下午: '☀️',
+  晚饭: '🍽️',
+  晚间: '🌙',
+}
+
+export function PlanItineraryExplorer({ guide, aspect, mapFirst = false }: PlanItineraryExplorerProps) {
+  const variants = useMemo(() => getRouteVariants(guide, aspect), [guide, aspect])
+  const [variantId, setVariantId] = useState(variants[0]?.id ?? '1d')
+  const [selectedDay, setSelectedDay] = useState(1)
+  const [selectedOptionals, setSelectedOptionals] = useState<Set<string>>(new Set())
+  const [appliedOptionals, setAppliedOptionals] = useState<Set<string>>(new Set())
+  const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null)
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [checkedIn, setCheckedIn] = useState<Set<string>>(new Set())
+  const [detailsOpen, setDetailsOpen] = useState(true)
+
+  const optionalSpots = useMemo(
+    () => getOptionalSpotsForAspect(guide.id, guide, aspect, variantId),
+    [guide, aspect, variantId]
+  )
+
+  const activeVariant = variants.find(v => v.id === variantId)
+
+  const { itineraryDays, spotMap } = useMemo(
+    () => buildItinerary(guide, aspect, variantId, Array.from(appliedOptionals)),
+    [guide, aspect, variantId, appliedOptionals]
+  )
+
+  const setsEqual = (a: Set<string>, b: Set<string>) =>
+    a.size === b.size && Array.from(a).every(x => b.has(x))
+  const optionalsDirty = !setsEqual(selectedOptionals, appliedOptionals)
+
+  const activeDay = itineraryDays.find(d => d.day === selectedDay) ?? itineraryDays[0]
+  const mapSpots = useMemo(
+    () => (activeDay ? getSpotsForMap(itineraryDays, spotMap, activeDay.day) : []),
+    [itineraryDays, spotMap, activeDay]
+  )
+
+  const openSpot = useCallback((spotId: string) => {
+    const spot = spotMap.get(spotId)
+    if (!spot) return
+    const idx = activeDay?.spotIds.indexOf(spotId) ?? 0
+    setSelectedSpot(spot)
+    setSelectedIndex(idx)
+  }, [spotMap, activeDay])
+
+  const detailsRef = useRef<HTMLDivElement>(null)
+  const revealDetails = () => {
+    setDetailsOpen(true)
+    setTimeout(() => detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60)
+  }
+
+  const toggleOptional = (id: string) => {
+    setSelectedOptionals(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const confirmOptionals = () => {
+    setAppliedOptionals(new Set(selectedOptionals))
+  }
+
+  const handleVariantChange = (id: string) => {
+    setVariantId(id)
+    setSelectedDay(1)
+  }
+
+  const handleCheckIn = (spotId: string) => {
+    setCheckedIn(prev => new Set([...Array.from(prev), spotId]))
+  }
+
+  const variantToolbar = (
+    <div className="mb-2">
+      <div className="flex flex-wrap items-center gap-1.5">
+        {variants.map(v => (
+          <button
+            key={v.id}
+            type="button"
+            onClick={() => handleVariantChange(v.id)}
+            className={cn(
+              'px-3 py-1.5 rounded-full text-[11px] border transition-all',
+              variantId === v.id
+                ? 'bg-celadon-500 text-white border-celadon-500'
+                : 'bg-white/70 border-celadon-200/50 text-warm-gray-muted hover:border-celadon-300'
+            )}
+          >
+            {v.title}
+          </button>
+        ))}
+        {itineraryDays.length > 1 &&
+          itineraryDays.map(d => (
+            <button
+              key={d.day}
+              type="button"
+              onClick={() => setSelectedDay(d.day)}
+              className={cn(
+                'px-3 py-1.5 rounded-full text-[11px] border transition-all',
+                selectedDay === d.day
+                  ? 'bg-celadon-500 text-white border-celadon-500'
+                  : 'bg-white/70 border-celadon-200/50 text-warm-gray-muted hover:border-celadon-300'
+              )}
+            >
+              Day {d.day}
+            </button>
+          ))}
+      </div>
+      {activeVariant && (
+        <p className="mt-2 text-xs text-celadon-700 bg-celadon-50/70 border border-celadon-200/40 rounded-lg px-3 py-1.5">
+          <span className="font-medium">方案特点：</span>
+          {activeVariant.summary}
+          <span className="text-warm-gray-muted"> · {activeVariant.pace} · {activeVariant.budgetHint}</span>
+        </p>
+      )}
+    </div>
+  )
+
+  const mapSection = (
+    <GuideMapExplorer
+      guide={guide}
+      spots={mapSpots}
+      showChips={false}
+      layout="explorer"
+      mapTitle={mapFirst ? 'AI 识别原文景点 · 点击展开详情' : '行程点位'}
+      mapClassName={
+        mapFirst
+          ? 'min-h-[260px] h-[min(calc(100vh-440px),440px)] sm:h-[min(calc(100vh-430px),470px)]'
+          : 'h-[min(44vh,440px)] sm:h-[min(48vh,480px)]'
+      }
+      onSpotSelect={(spot, idx) => {
+        setSelectedSpot(spot)
+        setSelectedIndex(idx)
+      }}
+    />
+  )
+
+  const scheduleSection = activeDay && (
+    <Card className="p-5 border-celadon-200/40 bg-white/50 space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="font-serif font-bold text-warm-gray">
+          Day {activeDay.day} · {activeDay.title}
+        </h3>
+        {activeDay.budgetEstimate && (
+          <span className="text-xs text-warm-gray-muted">预算 {activeDay.budgetEstimate}</span>
+        )}
+      </div>
+      <ScheduleBlockView block={activeDay.meetingPoint} onSpotClick={openSpot} checkedIn={checkedIn} />
+      {activeDay.blocks.map(block => (
+        <ScheduleBlockView
+          key={block.type + block.label}
+          block={block}
+          onSpotClick={openSpot}
+          checkedIn={checkedIn}
+        />
+      ))}
+    </Card>
+  )
+
+  const optionalSection = optionalSpots.length > 0 && (
+    <section>
+      <p className="text-[10px] text-celadon-600 tracking-widest uppercase mb-2">
+        沿途推荐 · 非遗文化 / 历史文化（{optionalSpots.length} 项 · 可选加入）
+      </p>
+      <div className="space-y-2">
+        {optionalSpots.map(opt => (
+          <OptionalSpotCard
+            key={opt.id}
+            opt={opt}
+            selected={selectedOptionals.has(opt.id)}
+            applied={appliedOptionals.has(opt.id)}
+            onToggle={() => toggleOptional(opt.id)}
+          />
+        ))}
+      </div>
+      {optionalsDirty && (
+        <div className="mt-3 flex items-center gap-3 flex-wrap">
+          <button
+            type="button"
+            onClick={confirmOptionals}
+            className="px-5 py-2.5 rounded-full bg-celadon-500 text-white text-sm font-medium hover:bg-celadon-600 transition-colors"
+          >
+            {selectedOptionals.size > 0
+              ? `确认选择（${selectedOptionals.size} 项）并优化路线`
+              : '清空选择并更新路线'}
+          </button>
+          <span className="text-[11px] text-warm-gray-muted">选择有变动，需确认后更新行程</span>
+        </div>
+      )}
+      {!optionalsDirty && appliedOptionals.size > 0 && (
+        <p className="mt-2 text-xs text-celadon-600 bg-celadon-50 px-3 py-2 rounded-lg border border-celadon-200/40">
+          ✓ 路线已优化，已加入 {appliedOptionals.size} 项非遗，地图与行程表已更新
+        </p>
+      )}
+    </section>
+  )
+
+  const timelineStrip = activeDay && activeDay.spotIds.length > 0 && (
+    <div className="mt-3">
+      <div className="flex items-center justify-between gap-2 mb-1.5">
+        <p className="text-[10px] text-celadon-600 tracking-widest uppercase">
+          行程速览 · Day {activeDay.day} · 共 {activeDay.spotIds.length} 站{appliedOptionals.size > 0 ? ` · 含 ${appliedOptionals.size} 项非遗` : ''}
+        </p>
+        <button
+          type="button"
+          onClick={revealDetails}
+          className="text-[11px] text-celadon-700 font-medium hover:text-celadon-800 whitespace-nowrap"
+        >
+          完整时间表 ↓
+        </button>
+      </div>
+      <div className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-hide">
+        {activeDay.spotIds.map((id, i) => {
+          const s = spotMap.get(id)
+          if (!s) return null
+          return (
+            <div key={id} className="flex items-center flex-shrink-0">
+              {i > 0 && <span className="text-celadon-300 mx-0.5 text-xs">›</span>}
+              <button
+                type="button"
+                onClick={() => openSpot(id)}
+                className="flex items-center gap-1 pl-1 pr-2.5 py-1 rounded-full border border-celadon-200/60 bg-white/80 hover:border-celadon-400 hover:bg-celadon-50 transition-colors"
+              >
+                <span className="w-4 h-4 rounded-full bg-celadon-500 text-white text-[9px] flex items-center justify-center flex-shrink-0">{i + 1}</span>
+                <span className="text-xs">{s.emoji}</span>
+                <span className="text-xs text-warm-gray whitespace-nowrap">{s.name}</span>
+              </button>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+
+  if (mapFirst) {
+    return (
+      <div className="flex flex-col min-h-0">
+        {variantToolbar}
+        {mapSection}
+        {timelineStrip}
+        <button
+          type="button"
+          onClick={() => (detailsOpen ? setDetailsOpen(false) : revealDetails())}
+          className="mt-3 mb-1 inline-flex items-center gap-1.5 self-start px-3.5 py-1.5 rounded-lg border border-celadon-300 bg-celadon-50/80 text-sm font-serif font-semibold text-celadon-700 hover:bg-celadon-100 hover:border-celadon-400 shadow-sm transition-colors"
+        >
+          <span>{detailsOpen ? '收起行程详情' : '展开完整行程与时间表'}</span>
+          <span className={cn('text-xs leading-none', !detailsOpen && 'animate-bounce')}>
+            {detailsOpen ? '▲' : '▼'}
+          </span>
+        </button>
+        {detailsOpen && (
+          <div ref={detailsRef} className="mt-4 scroll-mt-4 grid gap-6 md:grid-cols-2 md:items-start">
+            {scheduleSection}
+            {optionalSection}
+          </div>
+        )}
+        <SpotDetailDrawer
+          spot={selectedSpot}
+          index={selectedIndex}
+          onClose={() => setSelectedSpot(null)}
+          checkedIn={selectedSpot ? checkedIn.has(selectedSpot.id) : false}
+          onCheckIn={selectedSpot ? () => handleCheckIn(selectedSpot.id) : undefined}
+        />
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <section>
+        <p className="text-[10px] text-celadon-600 tracking-widest uppercase mb-3">
+          AI 路线规划 · 选择方案
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {variants.map(v => (
+            <button
+              key={v.id}
+              type="button"
+              onClick={() => handleVariantChange(v.id)}
+              className={cn(
+                'text-left px-4 py-3 rounded-xl border transition-all min-w-[140px]',
+                variantId === v.id
+                  ? 'border-celadon-400 bg-celadon-50/80 shadow-sm'
+                  : 'border-celadon-200/50 bg-white/50 hover:border-celadon-300'
+              )}
+            >
+              <p className="text-sm font-serif font-medium text-warm-gray">{v.title}</p>
+              <p className="text-[10px] text-warm-gray-muted mt-1 line-clamp-2">{v.summary}</p>
+              <p className="text-[10px] text-celadon-600 mt-1.5">{v.pace} · {v.budgetHint}</p>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {itineraryDays.length > 1 && (
+        <div className="flex gap-2 flex-wrap">
+          {itineraryDays.map(d => (
+            <button
+              key={d.day}
+              type="button"
+              onClick={() => setSelectedDay(d.day)}
+              className={cn(
+                'px-4 py-2 rounded-full text-sm font-medium border transition-all',
+                selectedDay === d.day
+                  ? 'bg-celadon-500 text-white border-celadon-500'
+                  : 'bg-white/60 text-warm-gray border-celadon-200/50 hover:border-celadon-300'
+              )}
+            >
+              Day {d.day}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+        {scheduleSection}
+        {optionalSection}
+      </div>
+
+      <section>
+        <p className="text-[10px] text-celadon-600 tracking-widest uppercase mb-2">
+          Day {activeDay?.day} 行程地图 · 点击标记打卡
+        </p>
+        {mapSection}
+      </section>
+
+      <SpotDetailDrawer
+        spot={selectedSpot}
+        index={selectedIndex}
+        onClose={() => setSelectedSpot(null)}
+        checkedIn={selectedSpot ? checkedIn.has(selectedSpot.id) : false}
+        onCheckIn={selectedSpot ? () => handleCheckIn(selectedSpot.id) : undefined}
+      />
+    </div>
+  )
+}
+
+function ScheduleBlockView({
+  block,
+  onSpotClick,
+  checkedIn,
+}: {
+  block: ScheduleBlock
+  onSpotClick: (id: string) => void
+  checkedIn: Set<string>
+}) {
+  return (
+    <div className="border-l-2 border-celadon-200 pl-4 ml-1">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-base">{blockIcons[block.type] || '·'}</span>
+        <span className="text-sm font-medium text-warm-gray">{block.label}</span>
+        {block.timeRange && (
+          <span className="text-[10px] text-warm-gray-muted">{block.timeRange}</span>
+        )}
+      </div>
+      {block.travelTime && (
+        <p className="text-[10px] text-celadon-600 mb-2">🚶 {block.travelTime}</p>
+      )}
+      {block.activity && block.spots.length > 1 && (
+        <p className="text-xs text-warm-gray-light mb-2">{block.activity}</p>
+      )}
+      {block.highlight && (
+        <p className="text-[10px] text-warm-gray-muted mb-2">特色：{block.highlight}</p>
+      )}
+      <ul className="space-y-2">
+        {block.spots.map(ref => (
+          <li key={ref.spotId}>
+            <button
+              type="button"
+              onClick={() => onSpotClick(ref.spotId)}
+              className={cn(
+                'w-full text-left flex items-start gap-2 p-2 rounded-lg border transition-all',
+                checkedIn.has(ref.spotId)
+                  ? 'border-seal/40 bg-seal/5'
+                  : 'border-celadon-100 bg-camel-light/30 hover:border-celadon-300'
+              )}
+            >
+              <span className="text-sm">{ref.emoji}</span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-warm-gray">{ref.name}</span>
+                  {checkedIn.has(ref.spotId) && (
+                    <span className="text-[10px] text-seal bg-seal/10 px-1.5 py-0.5 rounded-full">已打卡</span>
+                  )}
+                </div>
+                <p className="text-[10px] text-warm-gray-muted mt-0.5">
+                  停留 {ref.duration}
+                  {ref.travelTime && ` · 前往 ${ref.travelTime}`}
+                </p>
+                <p className="text-[10px] text-celadon-600 mt-0.5">{ref.highlight}</p>
+              </div>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function OptionalSpotCard({
+  opt,
+  selected,
+  applied,
+  onToggle,
+}: {
+  opt: OptionalRecommendSpot
+  selected: boolean
+  applied: boolean
+  onToggle: () => void
+}) {
+  return (
+    <div
+      className={cn(
+        'flex items-start gap-3 p-3 rounded-xl border transition-all',
+        applied
+          ? 'border-celadon-400 bg-celadon-50/50'
+          : selected
+            ? 'border-camel bg-camel-light/60'
+            : 'border-celadon-200/40 bg-white/40'
+      )}
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        className={cn(
+          'flex-shrink-0 w-5 h-5 rounded border mt-0.5 flex items-center justify-center text-xs transition-colors',
+          selected
+            ? 'bg-celadon-500 border-celadon-500 text-white'
+            : 'border-celadon-300 bg-white hover:border-celadon-400'
+        )}
+        aria-label={selected ? '取消选择' : '选择'}
+        aria-pressed={selected}
+      >
+        {selected && '✓'}
+      </button>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm">{opt.emoji}</span>
+          <span className="text-sm font-medium text-warm-gray">{opt.name}</span>
+          <Badge variant="default">{opt.category}</Badge>
+          {opt.recommend && !applied && (
+            <span className="text-[10px] text-seal bg-seal/10 border border-seal/30 px-1.5 py-0.5 rounded-full">★ 推荐</span>
+          )}
+          {applied && <Badge variant="default">已加入行程</Badge>}
+        </div>
+        <p className="text-xs text-warm-gray-light mt-1">{opt.desc}</p>
+        <p className="text-[10px] text-warm-gray-muted mt-1">
+          预估停留 {opt.duration}
+          {opt.budgetHint && ` · ${opt.budgetHint}`}
+        </p>
+        {opt.heritage && (
+          <p className="text-[10px] text-celadon-600 mt-1">{opt.heritage}</p>
+        )}
+      </div>
+    </div>
+  )
+}

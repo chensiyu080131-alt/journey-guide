@@ -1,0 +1,77 @@
+.route-head {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+.route-title { font-size: 34rpx; font-weight: 700; }
+.route-poem { font-size: 26rpx; color: #6b5b4d; margin-top: 12rpx; }
+.route-progress { font-size: 24rpx; color: #7c2d12; margin-top: 12rpx; font-weight: 600; }
+
+.map {
+  width: 100%;
+  height: 360rpx;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.nav-btn {
+  background: #7c2d12;
+  color: #fff;
+  text-align: center;
+  padding: 22rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  margin-bottom: 24rpx;
+}
+
+.spot {
+  display: flex;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+.spot-no {
+  flex: 0 0 56rpx;
+  height: 56rpx;
+  line-height: 56rpx;
+  text-align: center;
+  background: #fde9d7;
+  color: #7c2d12;
+  border-radius: 50%;
+  font-weight: 700;
+  margin-right: 20rpx;
+}
+.spot-body { flex: 1; }
+.spot-name { font-size: 30rpx; font-weight: 600; }
+.spot-city { font-size: 22rpx; color: #9ca3af; margin-left: 8rpx; }
+.spot-ori { font-size: 26rpx; color: #7c2d12; margin: 10rpx 0; }
+.spot-label { font-size: 22rpx; color: #b45309; margin-top: 14rpx; font-weight: 600; }
+.spot-text { font-size: 26rpx; color: #4b3b2e; }
+
+.spot-actions { display: flex; gap: 16rpx; margin-top: 20rpx; }
+.spot-actions > view {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+}
+.btn-nav { background: #eef2ff; color: #4338ca; }
+.btn-check { background: #7c2d12; color: #fff; }
+.btn-demo { background: #f3f4f6; color: #6b7280; }
+.btn-done { background: #dcfce7; color: #15803d; flex: 2 !important; }
+
+.merchants { background: #fff; border-radius: 16rpx; padding: 24rpx; margin-top: 20rpx; box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04); }
+.merch-title { font-size: 30rpx; font-weight: 700; margin-bottom: 16rpx; }
+.merch { padding: 18rpx 0; border-top: 1rpx solid #f1f1f1; }
+.merch-name { font-size: 28rpx; font-weight: 600; }
+.merch-cat { font-size: 22rpx; color: #fff; background: #b45309; border-radius: 6rpx; padding: 2rpx 10rpx; margin-left: 10rpx; }
+.merch-desc { font-size: 24rpx; color: #6b7280; margin: 8rpx 0; }
+.merch-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 8rpx; }
+.merch-reward { font-size: 24rpx; color: #c0392b; font-weight: 600; }
+.btn-merch { background: #7c2d12; color: #fff; border-radius: 999rpx; padding: 12rpx 28rpx; font-size: 24rpx; }
+.merch-tip { font-size: 22rpx; color: #9ca3af; margin-top: 14rpx; }

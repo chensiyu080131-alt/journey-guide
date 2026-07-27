@@ -1,0 +1,82 @@
+name: Deploy to ECS (static export + nginx)
+
+on:
+  push:
+    branches: [main]
+
+# 目标目录：静态导出产物 out/ 上传到此处，由 nginx 直接托管（无需 Node 运行时）
+env:
+  DEPLOY_DIR: /opt/xuncheng
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm ci || npm install
+
+      - name: Build (static export)
+        run: npx next build
+        env:
+          # NEXT_PUBLIC_* 在 build 时写入前端包，必须在 CI 注入
+          NEXT_PUBLIC_AMAP_KEY: ${{ secrets.NEXT_PUBLIC_AMAP_KEY }}
+          NEXT_PUBLIC_AMAP_SECURITY: ${{ secrets.NEXT_PUBLIC_AMAP_SECURITY }}
+
+      - name: Upload static export to ECS (staging)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: root
+          key: ${{ secrets.ECS_SSH_KEY }}
+          source: "out"
+          target: /opt/xuncheng-upload
+          overwrite: true
+
+      - name: Upload nginx config
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: root
+          key: ${{ secrets.ECS_SSH_KEY }}
+          source: "deploy/nginx-xuncheng.conf"
+          target: "/tmp"
+          overwrite: true
+
+      - name: Publish static site + reload nginx
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: root
+          key: ${{ secrets.ECS_SSH_KEY }}
+          script: |
+            set -e
+            SRC=/opt/xuncheng-upload/out
+            REAL_ROOT=/usr/share/nginx/html/xuncheng
+            # 1) 真实 root（nginx -T 实测 8080 实际 root 即此）：原子替换
+            rm -rf "$REAL_ROOT"
+            mkdir -p "$REAL_ROOT"
+            cp -r "$SRC/." "$REAL_ROOT/"
+            # 2) 兼容：同步到 /opt/xuncheng/out（与新 conf root 一致，防以后切换）
+            rm -rf ${{ env.DEPLOY_DIR }}/out
+            mkdir -p ${{ env.DEPLOY_DIR }}/out
+            cp -r "$SRC/." ${{ env.DEPLOY_DIR }}/out/
+            # 3) 清理历史 standalone 残留（旧部署方式遗留，已不再需要）
+            rm -rf ${{ env.DEPLOY_DIR }}/.next ${{ env.DEPLOY_DIR }}/public ${{ env.DEPLOY_DIR }}/server.js /opt/xuncheng-upload 2>/dev/null || true
+            # 4) 写配置并强制重载（reload 失效时整体重启 nginx，确保新 conf 生效）
+            if command -v nginx >/dev/null 2>&1; then
+              cp /tmp/deploy/nginx-xuncheng.conf /etc/nginx/conf.d/xuncheng.conf
+              nginx -t
+              nginx -s reload 2>/dev/null || systemctl reload nginx 2>/dev/null || (pkill -9 nginx 2>/dev/null; nginx)
+            fi
+            sleep 1
+            echo "--- effective nginx root ---"
+            nginx -T 2>/dev/null | grep -E "root|listen|server_name" | head -20 || true
+            echo "--- 真实 root db 大小（应为 21365 含商户）---"
+            ls -l "$REAL_ROOT/xunji-mvp/db/literary-routes.json" 2>/dev/null || true
+            echo "--- health check ---"
+            curl -sf "http://127.0.0.1:8080/xunji-mvp/db/literary-routes.json" -o /tmp/db_check.json && echo "served db bytes: $(wc -c < /tmp/db_check.json)" || echo "WARN: /xunji-mvp/ 不可达"
