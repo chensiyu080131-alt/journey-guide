@@ -64,3 +64,14 @@
 .btn-check { background: #7c2d12; color: #fff; }
 .btn-demo { background: #f3f4f6; color: #6b7280; }
 .btn-done { background: #dcfce7; color: #15803d; flex: 2 !important; }
+
+.merchants { background: #fff; border-radius: 16rpx; padding: 24rpx; margin-top: 20rpx; box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04); }
+.merch-title { font-size: 30rpx; font-weight: 700; margin-bottom: 16rpx; }
+.merch { padding: 18rpx 0; border-top: 1rpx solid #f1f1f1; }
+.merch-name { font-size: 28rpx; font-weight: 600; }
+.merch-cat { font-size: 22rpx; color: #fff; background: #b45309; border-radius: 6rpx; padding: 2rpx 10rpx; margin-left: 10rpx; }
+.merch-desc { font-size: 24rpx; color: #6b7280; margin: 8rpx 0; }
+.merch-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 8rpx; }
+.merch-reward { font-size: 24rpx; color: #c0392b; font-weight: 600; }
+.btn-merch { background: #7c2d12; color: #fff; border-radius: 999rpx; padding: 12rpx 28rpx; font-size: 24rpx; }
+.merch-tip { font-size: 22rpx; color: #9ca3af; margin-top: 14rpx; }

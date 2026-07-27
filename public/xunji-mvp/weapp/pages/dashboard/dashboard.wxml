@@ -26,6 +26,23 @@
   </view>
 
   <view class="block">
+    <view class="block-title">商户联动 · 到访与分润估算{{isReal ? '（真实）' : '（演示）'}}</view>
+    <view class="stat-row" style="margin-bottom:16rpx;">
+      <view class="stat"><view class="stat-num">{{merchantVisits}}</view><view class="stat-label">商户到店</view></view>
+      <view class="stat"><view class="stat-num">{{merchantReward}}元</view><view class="stat-label">分润估算</view></view>
+    </view>
+    <view class="heat-item" wx:for="{{merchantRank}}" wx:key="name">
+      <view class="heat-rank">{{index+1}}</view>
+      <view class="heat-name">{{item.name}}</view>
+      <view class="heat-bar-wrap">
+        <view class="heat-bar" style="width:{{item.count / (merchantRank[0].count || 1) * 100}}%;"></view>
+      </view>
+      <view class="heat-count">{{item.count}}次/{{item.reward}}元</view>
+    </view>
+    <view class="heat-tip">分润按「到店数×示例分润(元/到店)」估算，非真实合同；商户数据待景区合作核实。</view>
+  </view>
+
+  <view class="block">
     <view class="block-title">用户画像 · 来源城市{{isReal ? '' : '（模拟）'}}</view>
     <view class="bar-item" wx:for="{{city}}" wx:key="city">
       <view class="bar-label">{{item.city}}</view>

@@ -1,17 +1,46 @@
-// 云函数 checkin：记录一次 GPS 打卡，并更新用户收集进度，返回最新已解锁列表。
+// 云函数 checkin：记录打卡 / 商户到店，更新用户收集进度，返回最新已解锁列表。
 // 部署：微信开发者工具右键本目录 → 上传并部署（云端安装依赖）
-// 数据库：需集合 checkins（打卡记录）、collections（用户收集进度）
+// 数据库：需集合 checkins（打卡）、collections（用户收集进度）、merchantVisits（商户到店）
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
 
-exports.main = async (event) => {
-  const { routeId, spotId, city } = event
-  const openid = cloud.getWXContext().OPENID
-  if (!openid || !spotId) return { ok: false, msg: 'missing openid or spotId' }
+async function getUnlocked(openid) {
+  const col = await db.collection('collections').where({ openid: openid }).get()
+  return (col.data[0] && col.data[0].unlockedSpotIds) || []
+}
 
-  // 去重：同一用户同一景点只记一次
+exports.main = async (event) => {
+  const { routeId, spotId, city, merchantId, merchantCity } = event
+  const openid = cloud.getWXContext().OPENID
+  if (!openid) return { ok: false, msg: 'missing openid' }
+
+  // —— 商户联动：记录「到店」到 merchantVisits 集合（按 openid+merchantId 去重）——
+  let merchantVisits = 0
+  if (merchantId) {
+    const mc = await db.collection('merchantVisits').where({ openid: openid, merchantId: merchantId }).count()
+    if (mc.total === 0) {
+      await db.collection('merchantVisits').add({
+        data: {
+          openid: openid,
+          merchantId: merchantId,
+          merchantCity: merchantCity || '',
+          spotId: spotId || '',
+          createdAt: db.serverDate()
+        }
+      })
+    }
+    const mv = await db.collection('merchantVisits').where({ openid: openid }).get()
+    merchantVisits = mv.data.length
+  }
+
+  // 纯商户到店（未带景点）也能返回当前进度
+  if (!spotId) {
+    return { ok: true, merchantVisits: merchantVisits, unlockedSpotIds: await getUnlocked(openid) }
+  }
+
+  // —— 景点打卡：去重 + 更新 collections ——
   const cnt = await db.collection('checkins').where({ openid: openid, spotId: spotId }).count()
   if (cnt.total === 0) {
     await db.collection('checkins').add({
@@ -26,7 +55,6 @@ exports.main = async (event) => {
     })
   }
 
-  // 更新收集进度
   const col = await db.collection('collections').where({ openid: openid }).get()
   if (col.data.length === 0) {
     await db.collection('collections').add({
@@ -41,8 +69,6 @@ exports.main = async (event) => {
     }
   }
 
-  // 返回最新已解锁列表，前端据此刷新卡片/进度
-  const fresh = await db.collection('collections').where({ openid: openid }).get()
-  const unlockedSpotIds = (fresh.data[0] && fresh.data[0].unlockedSpotIds) || []
-  return { ok: true, unlockedSpotIds: unlockedSpotIds }
+  const unlockedSpotIds = await getUnlocked(openid)
+  return { ok: true, merchantVisits: merchantVisits, unlockedSpotIds: unlockedSpotIds }
 }

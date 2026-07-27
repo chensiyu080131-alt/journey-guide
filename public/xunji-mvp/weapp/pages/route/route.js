@@ -1,5 +1,6 @@
 const service = require('../../utils/service.js')
 const geo = require('../../utils/geo.js')
+const store = require('../../utils/store.js')
 
 const CHECKIN_RADIUS = 200 // 米：进入景点 200m 内允许 GPS 打卡（可调）
 
@@ -83,6 +84,20 @@ Page({
     const total = spots.length
     const unlockedCount = spots.filter(function (s) { return s.unlocked }).length
 
+    // 周边好店：取该路线景点对应的商户（商户 near_spot 命中本路线 spot）
+    const routeSpotIds = new Set(route.route_spots.map(function (rs) { return rs.spot_id }))
+    const visitedMap = {}
+    ;(store.getMerchantVisits && store.getMerchantVisits() || []).forEach(function (v) { visitedMap[v.merchantId] = true })
+    const merchants = (d.merchants || [])
+      .filter(function (m) { return routeSpotIds.has(m.near_spot) })
+      .map(function (m) {
+        return {
+          merchantId: m.id, name: m.name, city: m.city, category: m.category,
+          desc: m.desc, reward: m.reward || 0, nearSpot: m.near_spot,
+          visited: !!visitedMap[m.id]
+        }
+      })
+
     this.setData({
       routeId: id,
       routeTitle: route.title,
@@ -92,7 +107,8 @@ Page({
       markers: markers,
       spots: spots,
       total: total,
-      unlockedCount: unlockedCount
+      unlockedCount: unlockedCount,
+      merchants: merchants
     })
   },
 
@@ -147,6 +163,22 @@ Page({
 
   demoCheckin(e) {
     this.doCheckin(Number(e.currentTarget.dataset.idx))
+  },
+
+  // 商户联动：标记「到店」，写入本地/云端，刷新本页好店状态
+  visitMerchant(e) {
+    const mid = e.currentTarget.dataset.mid
+    const m = (this.data.merchants || []).find(function (x) { return x.merchantId === mid })
+    if (!m) return
+    const self = this
+    service.visitMerchant(mid, m.nearSpot, m.city).then(function (res) {
+      if (!res || res.ok === false) { wx.showToast({ title: '到店记录失败', icon: 'none' }); return }
+      const merchants = self.data.merchants.slice()
+      const i = merchants.findIndex(function (x) { return x.merchantId === mid })
+      if (i >= 0) merchants[i] = Object.assign({}, merchants[i], { visited: true })
+      self.setData({ merchants: merchants })
+      wx.showToast({ title: '已记录到店 · 分润估算 +' + (m.reward || 0) + '元', icon: 'success' })
+    })
   },
 
   // 统一解锁入口：本地写 Storage / 云端走 checkin 云函数，回调里刷新本页状态

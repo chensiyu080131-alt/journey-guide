@@ -92,8 +92,19 @@
 - 好处：Canvas 2D 为新版官方推荐接口，旧 `createCanvasContext` 已废弃；导出清晰度更高、性能更好。
 - 校验：`selftest.js` 本地/云端两模式均触发 `previewImage`（Canvas 2D 绘制→导出路径通过）；全部 JS/JSON 合法。
 
+## ▎任务11：商户联动闭环（2026-07-27，已完成）
+- 用户指示（leader 任务书）：按商业化方案开发"商户联动闭环"——路线页露出周边好店、用户标记"到店"、B 端聚合到访与分润估算；云端 schema 一并备好。
+- **数据**：`db/literary-routes.json` + `data/routes.js` 新增 `merchants`（12 条：id/name/city/near_spot/category/desc/lng/lat/reward）；`routes.js` 导出 `getMerchants()/getMerchant(id)`。
+- **本地写入**：`utils/store.js` 新增 `getMerchantVisits()/recordMerchantVisit(merchantId, spotId, city)`（key `xunji_merchant_visits`）。
+- **服务层**：`utils/service.js` 的 `fetchData()` 返回 `merchants`；新增 `visitMerchant(merchantId, spotId, city)`——本地写 Storage，云端走 `checkin` 云函数带 `merchantId`。
+- **路线页**：`pages/route` 按本路线 spot 过滤出周边好店（标记 `visited`），"标记到店"按钮调用 `visitMerchant` 并即时刷新状态。
+- **B 端面板**：`pages/dashboard` 聚合本地商户到访 → 到店数 + 分润估算（reward×到访，标"估算/演示"）；远端 `stats.merchantHeat/totalMerchantVisits` 真实填充。
+- **云函数**：`checkin` 现接受 `merchantId/merchantCity`，写 `merchantVisits` 集合（openid+merchantId 去重）返回到访计数；`stats` 现聚合 `merchantVisits` → `merchantHeat/totalMerchantVisits`；`README.md` 同步更新。
+- **校验（leader 明卷 + 暗卷）**：`selftest.js` 本地 **36/36**、云端 **42/42**（基线 28/34，各 +8 商户断言）；反向验证——删一条商户坐标后数据完整性用例转红、恢复即绿，确认真实生效而非 mock。
+- 边界遵守：默认仍本地模式、无付费第三方、未碰 journey-guide 代码；分润为估算演示、未接真实结算。
+
 ## ▎总状态
 - 任务0–4（文档，5轮）：全部完成。
-- 任务5（小程序骨架）+ 任务6（四项扩展）+ 任务7（本地试用修复）+ 任务8（云端接入）+ 任务9（B端真实统计云函数）+ 任务10（海报 Canvas 2D）：全部完成，2026-07-27。
+- 任务5（小程序骨架）+ 任务6（四项扩展）+ 任务7（本地试用修复）+ 任务8（云端接入）+ 任务9（B端真实统计云函数）+ 任务10（海报 Canvas 2D）+ 任务11（商户联动闭环）：全部完成，2026-07-27。
 - 交付物见 xunji-mvp/ 目录；小程序运行/接云说明见 weapp/README.md 与 cloudfunctions/README.md；待提供项见 BLOCKED.md。
 - 仍可继续的后续里程碑（需单独确认）：提供 AppID 后真跑云端、集卡分享细化、内容扩到更多诗/跨散文、免费试点落地某景区、用户年龄画像采集。

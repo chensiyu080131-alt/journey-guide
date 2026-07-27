@@ -15,13 +15,14 @@ function cloudEnabled() {
 
 let _cache = null // 云端模式缓存最近一次 getRoutes 结果（含 unlockedSpotIds）
 
-// 拉取全量数据：{ poems, spots, routes, unlockedSpotIds }
+// 拉取全量数据：{ poems, spots, routes, merchants, unlockedSpotIds }
 function fetchData() {
   if (!cloudEnabled()) {
     return Promise.resolve({
       poems: localData.DATA.poems,
       spots: localData.DATA.spots,
       routes: localData.getRoutes(),
+      merchants: localData.DATA.merchants || [],
       unlockedSpotIds: store.getUnlocked()
     })
   }
@@ -48,8 +49,24 @@ function checkin(routeId, spotId, city) {
   })
 }
 
-// B 端真实统计：云端走 stats 云函数（参与人数/总打卡/各景点热力/各城市分布）；
-// 本地模式无后端，返回 null，由页面用模拟数据兜底。
+// 商户联动：标记「到店」。本地写 Storage（merchantVisits）；云端走 checkin 云函数并带 merchantId。
+// 返回 { ok, local, count }（count=截至当前的到店记录数），供页面/看板刷新。
+function visitMerchant(merchantId, spotId, city) {
+  if (!cloudEnabled()) {
+    const list = store.recordMerchantVisit(merchantId, spotId, city)
+    return Promise.resolve({ ok: true, local: true, count: list.length })
+  }
+  return wx.cloud.callFunction({
+    name: 'checkin',
+    data: { merchantId: merchantId, merchantCity: city || '', spotId: spotId || '', city: city || '' }
+  }).then(function (res) {
+    const r = res.result || {}
+    return { ok: r.ok !== false, count: (r.merchantVisits) || 0 }
+  })
+}
+
+// B 端真实统计：云端走 stats 云函数（参与人数/总打卡/各景点热力/各城市分布/商户到访）；
+// 本地模式无后端，返回 null，由页面用模拟数据 + 本地商户到店记录兜底。
 function fetchStats() {
   if (!cloudEnabled()) return Promise.resolve(null)
   return wx.cloud.callFunction({ name: 'stats' }).then(function (res) {
@@ -60,6 +77,7 @@ function fetchStats() {
 module.exports = {
   fetchData: fetchData,
   checkin: checkin,
+  visitMerchant: visitMerchant,
   fetchStats: fetchStats,
   cloudEnabled: cloudEnabled
 }

@@ -120,5 +120,19 @@
         { "spot_id": "spot_guazhou", "original_text": "滟滟随波千万里，何处春江无月明。", "ai_interpret": "瓜洲渡临长江，王安石“明月何时照我还”同咏此江月，可串起唐诗宋词的江月意象。", "history_bg": "瓜洲为长江古渡，漕运咽喉，无数文人于此折柳。", "checkin_task": "在瓜洲渡口拍一张长江落日，解锁“瓜洲”卡片。", "card_image": "card_guazhou.png" }
       ]
     }
+  ],
+  "merchants": [
+    { "id": "m_hanshan_food", "name": "寒山寺素斋馆", "city": "苏州", "near_spot": "spot_hanshan", "category": "餐饮", "desc": "寒山寺内素斋，夜半钟声伴清淡素食。", "lng": 120.587, "lat": 31.316, "reward": 2 },
+    { "id": "m_hanshan_shop", "name": "枫桥文创铺", "city": "苏州", "near_spot": "spot_hanshan", "category": "文创", "desc": "枫桥主题文创与诗词笺纸。", "lng": 120.584, "lat": 31.318, "reward": 2 },
+    { "id": "m_xihu_food", "name": "楼外楼", "city": "杭州", "near_spot": "spot_xihu", "category": "餐饮", "desc": "西湖畔百年老字号，西湖醋鱼声名远播。", "lng": 120.150, "lat": 30.244, "reward": 3 },
+    { "id": "m_xihu_shop", "name": "西湖文创", "city": "杭州", "near_spot": "spot_xihu", "category": "文创", "desc": "西湖十景主题周边。", "lng": 120.148, "lat": 30.242, "reward": 2 },
+    { "id": "m_huanghe_shop", "name": "黄鹤楼文创", "city": "武汉", "near_spot": "spot_huanghelou", "category": "文创", "desc": "崔颢题诗楼主题文创。", "lng": 114.307, "lat": 30.547, "reward": 2 },
+    { "id": "m_huanghe_food", "name": "户部巷小吃", "city": "武汉", "near_spot": "spot_huanghelou", "category": "餐饮", "desc": "武汉名小吃集中地，离黄鹤楼不远。", "lng": 114.302, "lat": 30.549, "reward": 2 },
+    { "id": "m_qinhuai_food", "name": "夫子庙小吃", "city": "南京", "near_spot": "spot_qinhuai", "category": "餐饮", "desc": "秦淮八绝小吃，夜泊听商女处。", "lng": 118.793, "lat": 32.039, "reward": 2 },
+    { "id": "m_qinhuai_shop", "name": "秦淮文创", "city": "南京", "near_spot": "spot_qinhuai", "category": "文创", "desc": "秦淮灯彩与诗词文创。", "lng": 118.791, "lat": 32.041, "reward": 2 },
+    { "id": "m_xianglu_special", "name": "庐山云雾茶", "city": "九江", "near_spot": "spot_xianglu", "category": "特产", "desc": "庐山云雾茶，李白望瀑处伴手礼。", "lng": 115.971, "lat": 29.551, "reward": 3 },
+    { "id": "m_shouxihu_special", "name": "扬州漆器", "city": "扬州", "near_spot": "spot_shouxihu", "category": "特产", "desc": "扬州漆器非遗，瘦西湖畔可购。", "lng": 119.411, "lat": 32.391, "reward": 3 },
+    { "id": "m_guanque_special", "name": "蒲津渡特产", "city": "永济", "near_spot": "spot_guanque", "category": "特产", "desc": "黄河铁牛主题文创与特产。", "lng": 110.341, "lat": 34.851, "reward": 2 },
+    { "id": "m_guazhou_food", "name": "瓜洲渡茶歇", "city": "扬州", "near_spot": "spot_guazhou", "category": "餐饮", "desc": "长江古渡茶歇，王安石咏处。", "lng": 119.461, "lat": 32.301, "reward": 2 }
   ]
 }

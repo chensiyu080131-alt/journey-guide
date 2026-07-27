@@ -55,6 +55,7 @@ function makeWx(cloudMode) {
               poems: data.DATA.poems,
               spots: data.DATA.spots,
               routes: data.getRoutes(),
+              merchants: data.DATA.merchants,
               unlockedSpotIds: ['spot_hanshan', 'spot_fengqiao']
             }
           })
@@ -66,7 +67,9 @@ function makeWx(cloudMode) {
           return Promise.resolve({ result: {
             participants: 5, totalCheckins: 12,
             heat: { spot_xihu: 8, spot_hanshan: 3 },
-            city: { 杭州: 8, 苏州: 4 }
+            city: { 杭州: 8, 苏州: 4 },
+            merchantHeat: { m_hanshan_food: 3, m_xihu_food: 2 },
+            totalMerchantVisits: 5
           } })
         }
         return Promise.resolve({ result: {} })
@@ -128,6 +131,18 @@ async function main() {
   ok(noCoord === 0, '所有被引用景点都有数值坐标（缺坐标=' + noCoord + '）')
   ok(dupSpot === 0, '同一路线内无重复景点（重复=' + dupSpot + '）')
 
+  // 商户联动：merchants 数据完整性
+  const merchants = D.merchants || []
+  ok(merchants.length >= 8, 'merchants ≥ 8（期望≥8）实际 ' + merchants.length)
+  let badMerchant = 0
+  merchants.forEach(function (m) {
+    if (!spotIds.has(m.near_spot)) badMerchant++
+    if (typeof m.reward !== 'number') badMerchant++
+    if (typeof m.lat !== 'number' || typeof m.lng !== 'number') badMerchant++
+    if (!m.city) badMerchant++
+  })
+  ok(badMerchant === 0, '所有 merchant 的 near_spot 能解析、有数值坐标/reward/city（坏=' + badMerchant + '）')
+
   // ---------- 2. geo ----------
   section('2. 地理距离计算')
   const geo = require('./weapp/utils/geo.js')
@@ -174,6 +189,27 @@ async function main() {
   ok(rt2.data.unlockedCount === before + 1, '打卡后 unlockedCount +1（' + before + '→' + rt2.data.unlockedCount + '）')
   ok(rt2.data.spots[targetIdx].unlocked === true, '该景点标记已解锁')
 
+  // 商户联动：route 页带出周边好店 + 标记到店
+  const rtM = freshCtx(routeObj)
+  rtM.onLoad({ id: 'route_fengqiao' })
+  await flush()
+  ok(rtM.data.merchants.length >= 1, 'route_fengqiao 带出周边好店（' + rtM.data.merchants.length + ' 家）')
+  const mid = rtM.data.merchants[0].merchantId
+  if (cloudMode) {
+    const beforeCloud = calls.cloud.filter(function (c) { return c.name === 'checkin' && c.data && c.data.merchantId }).length
+    rtM.visitMerchant({ currentTarget: { dataset: { mid: mid } } })
+    await flush()
+    const afterCloud = calls.cloud.filter(function (c) { return c.name === 'checkin' && c.data && c.data.merchantId }).length
+    ok(afterCloud === beforeCloud + 1, '云端：标记到店触发带 merchantId 的 checkin 调用')
+  } else {
+    const beforeVisits = (storage['xunji_merchant_visits'] || []).length
+    rtM.visitMerchant({ currentTarget: { dataset: { mid: mid } } })
+    await flush()
+    const afterVisits = (storage['xunji_merchant_visits'] || []).length
+    ok(afterVisits === beforeVisits + 1, '本地：标记到店后商户到店记录 +1（' + beforeVisits + '→' + afterVisits + '）')
+  }
+  ok(rtM.data.merchants[0].visited === true, '该商户标记已到店（前端状态）')
+
   // ---------- 5. 我的卡片 ----------
   section('5. 我的卡片墙（service）')
   const cardsObj = loadPage('./weapp/pages/cards/cards.js')
@@ -204,6 +240,16 @@ async function main() {
   }
   ok(ds.data.heat[0].rank === 1, '热点榜按 count 降序，榜首 rank=1')
   ok(ds.data.maxHeat >= 1, 'maxHeat 已计算（' + ds.data.maxHeat + '）用于相对比例')
+
+  // 商户联动看板
+  if (cloudMode) {
+    ok(ds.data.merchantVisits === 5, '云端真实商户到店=5（来自 stats.merchantHeat）')
+    ok(ds.data.merchantReward > 0, '云端分润估算>0（' + ds.data.merchantReward + '元）')
+  } else {
+    ok(ds.data.merchantVisits >= 1, '本地商户到店≥1（本地记录，' + ds.data.merchantVisits + '）')
+    ok(ds.data.merchantReward > 0, '本地分润估算>0（' + ds.data.merchantReward + '元）')
+  }
+  ok(ds.data.merchantRank.length >= 1, '面板商户排行≥1 条')
 
   // ---------- 7. 云端模式切换验证 ----------
   section('7. 云端模式调用校验')

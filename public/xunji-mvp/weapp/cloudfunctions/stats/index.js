@@ -1,10 +1,12 @@
-// 云函数 stats：B 端真实统计。聚合 checkins 集合，输出：
+// 云函数 stats：B 端真实统计。聚合 checkins 与 merchantVisits 集合，输出：
 //   participants   累计参与人数（按 openid 去重）
 //   totalCheckins  累计打卡次数
 //   heat           { spotId: 打卡次数 } 各景点打卡热力
 //   city           { 城市: 打卡次数 }   按打卡景点所在城市累计
+//   merchantHeat    { merchantId: 到店次数 } 商户到访热力
+//   totalMerchantVisits  累计商户到店次数
 // 部署：微信开发者工具右键本目录 → 上传并部署（云端安装依赖）
-// 数据库：依赖 checkins 集合（由 checkin 云函数写入，含 openid/spotId/city 字段）
+// 数据库：依赖 checkins / merchantVisits 集合（由 checkin 云函数写入）
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
@@ -21,10 +23,21 @@ exports.main = async () => {
     if (r.spotId) heat[r.spotId] = (heat[r.spotId] || 0) + 1
     if (r.city) city[r.city] = (city[r.city] || 0) + 1
   })
+
+  // 商户到店聚合
+  const mvRes = await db.collection('merchantVisits').limit(PAGE).get()
+  const mvRecords = mvRes.data || []
+  const merchantHeat = {}
+  mvRecords.forEach(function (r) {
+    if (r.merchantId) merchantHeat[r.merchantId] = (merchantHeat[r.merchantId] || 0) + 1
+  })
+
   return {
     participants: users.size,
     totalCheckins: records.length,
     heat: heat,
-    city: city
+    city: city,
+    merchantHeat: merchantHeat,
+    totalMerchantVisits: mvRecords.length
   }
 }

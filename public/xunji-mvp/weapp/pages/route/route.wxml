@@ -41,5 +41,19 @@
       </view>
     </view>
   </view>
+
+  <view class="merchants" wx:if="{{merchants.length}}">
+    <view class="merch-title">周边好店 · 商户联动</view>
+    <view class="merch" wx:for="{{merchants}}" wx:key="merchantId">
+      <view class="merch-name">{{item.name}} <text class="merch-cat">{{item.category}}</text></view>
+      <view class="merch-desc">{{item.desc}}</view>
+      <view class="merch-foot">
+        <text class="merch-reward">到店分润估算 {{item.reward}}元</text>
+        <view wx:if="{{item.visited}}" class="btn-done">✓ 已到店</view>
+        <view wx:else class="btn-merch" bindtap="visitMerchant" data-mid="{{item.merchantId}}">标记到店</view>
+      </view>
+    </view>
+    <view class="merch-tip">到店即计入 B 端「商户到访」统计与分润估算（演示数据，待景区合作核实）。</view>
+  </view>
 </view>
 <view wx:else class="empty">路线加载中…</view>

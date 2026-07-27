@@ -18,8 +18,8 @@
 
 ## 四、新增阻塞项（待你提供）
 - **微信云开发真后端需小程序 AppID + 已开通云环境**：`weapp/cloudfunctions/` 已写好 `getRoutes`、`checkin`、`stats` 三个云函数与部署说明（`cloudfunctions/README.md`），页面已通过 `utils/service.js` 接入，但需你提供 AppID 并在开发者工具开通云环境、建集合、导入数据后才能实跑。当前小程序默认 `USE_CLOUD=false`（本地模式即跑），启用云端需改 `app.js` 的 `USE_CLOUD=true` 并提供 `CLOUD_ENV` 环境 ID。属任务书「必须加的写 BLOCKED.md」项。
-- **云数据库需建 4 个集合**（递进依赖）：`poems` / `spots` / `routes`（导入 `db/literary-routes.json` 对应数组）+ `collections`（用户收集进度，结构 `{ openid, unlockedSpotIds:[], sharedAt }`）。`getRoutes` 与 `checkin` 均读写 `collections`，`stats` 只读 `checkins`，缺 `checkins` 集合则统计返回空（首次打卡由 `checkin` 自动写入）。导入数据步骤见 `cloudfunctions/README.md`。
+- **云数据库需建 5 个集合**（递进依赖）：`poems` / `spots` / `routes`（导入 `db/literary-routes.json` 对应数组）+ `collections`（用户收集进度，结构 `{ openid, unlockedSpotIds:[], sharedAt }`）+ `merchantVisits`（商户联动到访，结构 `{ openid, merchantId, merchantCity, spotId, city, createdAt }`，`checkin` 云函数按 openid+merchantId 去重写入）。`getRoutes` 与 `checkin` 均读写 `collections`，`stats` 只读 `checkins` 与 `merchantVisits`，缺集合则对应统计返回空（首次打卡/到店由 `checkin` 自动写入）。导入数据步骤见 `cloudfunctions/README.md`。
 - **用户年龄画像未采集**：B 端面板"年龄分布"目前为示例数据，`stats` 云函数未聚合年龄（checkin 未采集）。如需真实年龄画像，需在打卡流程让用户授权填写——属产品决策，待你裁决，未擅自采集隐私。
 
 ## 五、本文件状态
-2 项待提供（云开发 AppID/环境；云数据库 4 集合）+ 1 项产品决策（年龄画像采集），其余为任务书既定边界，非新阻塞。
+2 项待提供（云开发 AppID/环境；云数据库 5 集合）+ 1 项产品决策（年龄画像采集），其余为任务书既定边界，非新阻塞。

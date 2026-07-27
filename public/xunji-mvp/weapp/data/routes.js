@@ -6,11 +6,15 @@ function getRoutes() { return DATA.routes }
 function getRoute(id) { return DATA.routes.find(function (r) { return r.id === id }) }
 function getSpot(id) { return DATA.spots.find(function (s) { return s.id === id }) }
 function getPoem(id) { return DATA.poems.find(function (p) { return p.id === id }) }
+function getMerchants() { return DATA.merchants || [] }
+function getMerchant(id) { return (DATA.merchants || []).find(function (m) { return m.id === id }) }
 
 module.exports = {
   DATA: DATA,
   getRoutes: getRoutes,
   getRoute: getRoute,
   getSpot: getSpot,
-  getPoem: getPoem
+  getPoem: getPoem,
+  getMerchants: getMerchants,
+  getMerchant: getMerchant
 }
