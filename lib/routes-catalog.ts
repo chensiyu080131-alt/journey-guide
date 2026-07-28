@@ -26,6 +26,72 @@ export const routesCatalog: RouteCatalogItem[] = [
       '跟着汪老的笔触，用一顿早茶走完扬州：富春 · 冶春 · 锦春 · 大麒麟阁 · 东关街。GPS 打卡解锁 5 枚文学卡片。',
   },
   {
+    slug: 'suzhou-hanshansi-fengqiao',
+    title: '枫桥夜泊 · 寒山寺钟声',
+    book: '全唐诗·张继《枫桥夜泊》',
+    city: '苏州',
+    emoji: '🔔',
+    status: 'live',
+    pointsCount: 5,
+    blurb:
+      '一首二十八字的小诗，让城外的寺院响了千年。从枫桥到寒山寺，沿张继那夜的愁眠与钟声走一段姑苏水路。',
+  },
+  {
+    slug: 'suzhou-zhuozhengyuan-wenzhengming',
+    title: '拙政园 · 文徵明的园林诗画',
+    book: '文徵明《拙政园三十一景图咏》',
+    city: '苏州',
+    emoji: '🌿',
+    status: 'live',
+    pointsCount: 5,
+    blurb:
+      '园名来自一句自嘲，画家为它画了三十一景。循文徵明笔意走拙政园，看明代文人如何把山水搬进院墙。',
+  },
+  {
+    slug: 'hangzhou-sudi-sushi',
+    title: '苏堤春晓 · 苏轼的西湖',
+    book: '苏轼《饮湖上初晴后雨》',
+    city: '杭州',
+    emoji: '🌊',
+    status: 'live',
+    pointsCount: 5,
+    blurb:
+      '他疏浚西湖筑起长堤，又把西湖写成了西子。沿苏东坡的堤与诗，走一遍晴雨皆宜的湖山。',
+  },
+  {
+    slug: 'hangzhou-baidi-baijiuyi',
+    title: '白沙堤上 · 白居易的忆江南',
+    book: '白居易《忆江南》',
+    city: '杭州',
+    emoji: '🌉',
+    status: 'live',
+    pointsCount: 5,
+    blurb:
+      '他说"江南好"，便让千年的人都跟着忆。从断桥到孤山，走一段白乐天走过的白沙堤。',
+  },
+  {
+    slug: 'nanjing-qinhuaihe-zhuziqing',
+    title: '桨声灯影里的秦淮河',
+    book: '朱自清《桨声灯影里的秦淮河》',
+    city: '南京',
+    emoji: '🏮',
+    status: 'live',
+    pointsCount: 5,
+    blurb:
+      '1923 年夏夜，朱自清与俞平伯同泛秦淮。循那夜的桨声灯影，从夫子庙到桃叶渡，走一段民国文人的河。',
+  },
+  {
+    slug: 'nanjing-fuzimiao-shishuoxinyu',
+    title: '六朝烟水 · 《世说新语》里的建康',
+    book: '刘义庆《世说新语》',
+    city: '南京',
+    emoji: '🏛️',
+    status: 'live',
+    pointsCount: 5,
+    blurb:
+      '魏晋的建康，住着一群最会说话的人。从新亭对泣到乌衣巷口，走一段六朝旧都的清言与风骨。',
+  },
+  {
     slug: 'biancheng-fenghuang',
     title: '沈从文的边城',
     book: '边城',
