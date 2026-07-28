@@ -16,6 +16,8 @@ import {
 import { loadCheckins, saveCheckin, syncPendingToSupabase } from '@/lib/checkin-store'
 import { RouteMap, amapNavUrl } from './route-map'
 import { LiteraryCards } from './literary-cards'
+import { ReviewPanel } from './review-panel'
+import { fetchReviewsForPoint, syncPendingReviews, type PointReviews } from '@/lib/reviews-store'
 
 type GeoState =
   | { kind: 'idle' }
@@ -44,6 +46,19 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
     !!navigator.geolocation &&
     (typeof window === 'undefined' || window.isSecureContext !== false)
 
+  // 反馈回路 Step1：已打卡点位的评价展示 + 写评价面板
+  const [reviewOpenSeq, setReviewOpenSeq] = useState<number | null>(null)
+  const [reviewsBySeq, setReviewsBySeq] = useState<Record<number, PointReviews>>({})
+
+  const loadPointReviews = useCallback(
+    (seq: number) => {
+      void fetchReviewsForPoint(route.slug, seq, 3).then(pr => {
+        setReviewsBySeq(prev => ({ ...prev, [seq]: pr }))
+      })
+    },
+    [route.slug]
+  )
+
   // T4：加载本地暂存的打卡记录 + 补偿同步后端（断网时留队列，下次进页再试）
   useEffect(() => {
     const saved = loadCheckins(route.slug)
@@ -51,9 +66,11 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
       setCheckedIn(
         Object.fromEntries(saved.map(r => [r.pointSeq, r.checkedAt]))
       )
+      saved.forEach(r => loadPointReviews(r.pointSeq))
     }
     void syncPendingToSupabase()
-  }, [route.slug])
+    void syncPendingReviews()
+  }, [route.slug, loadPointReviews])
 
   // T1/T3：挂载后从 Supabase 拉最新路线数据（构建期渲染的是本地快照，此处覆盖）
   useEffect(() => {
@@ -305,10 +322,55 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
                       rel="noreferrer"
                       className="xc-pill border-2 border-ink-200 bg-white text-sm text-ink-700 hover:bg-ink-50"
                     >
-                      🧭 导航到这里
-                    </a>
-                  </div>
-                </article>
+                        🧭 导航到这里
+                      </a>
+                    </div>
+
+                    {/* 反馈回路 Step1：已打卡点位显示评分 + 写评价 */}
+                    {done && (
+                      <div className="mt-4 rounded-2xl border border-ink-100 bg-white p-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="font-semibold text-[#E0A800]">★ {reviewsBySeq[p.seq]?.avg ?? '—'}</span>
+                            <span className="text-ink-400">{reviewsBySeq[p.seq]?.count ?? 0} 条评价</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setReviewOpenSeq(reviewOpenSeq === p.seq ? null : p.seq)}
+                            className="text-sm font-semibold text-vermilion hover:opacity-80"
+                          >
+                            {reviewOpenSeq === p.seq ? '收起' : '✍️ 写评价'}
+                          </button>
+                        </div>
+
+                        {reviewsBySeq[p.seq]?.items?.length > 0 && (
+                          <ul className="mt-3 space-y-2">
+                            {reviewsBySeq[p.seq]?.items?.map(r => (
+                              <li key={r.id} className="rounded-xl bg-paper px-3 py-2 text-sm">
+                                <div className="flex items-center gap-1 text-[#E0A800]">
+                                  {'★'.repeat(r.rating)}
+                                  <span className="ml-1 text-xs text-ink-400">{r.rating} 星</span>
+                                </div>
+                                {r.text && <p className="mt-1 text-ink-600">{r.text}</p>}
+                                {r.photoUrl && (
+                                  <img src={r.photoUrl} alt="实拍" className="mt-2 h-20 w-20 rounded-lg object-cover" />
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+
+                        {reviewOpenSeq === p.seq && (
+                          <ReviewPanel
+                            routeSlug={route.slug}
+                            pointSeq={p.seq}
+                            pointName={p.name}
+                            onSubmitted={() => loadPointReviews(p.seq)}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </article>
               )
             })}
           </div>
@@ -316,6 +378,8 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
           <p className="mt-8 text-center text-xs text-ink-400">
             GPS 验证已生效；打卡记录经待同步队列写入后端（断网时本地保留，联网自动补传）。
             {dataSource === 'supabase' ? ' 数据源：云端。' : ' 数据源：本地快照。'}
+            {' '}
+            <Link href="/reviews" className="text-vermilion hover:opacity-80">查看全站评价 →</Link>
           </p>
         </div>
       </section>

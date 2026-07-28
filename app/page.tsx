@@ -121,6 +121,9 @@ export default function HomePage() {
           <Link href="/routes" className="font-serif text-literary-wine hover:opacity-80">
             所有路线
           </Link>
+          <Link href="/reviews" className="font-serif text-literary-wine hover:opacity-80">
+            用户评价
+          </Link>
           <Link href="/favorites" className="font-serif text-literary-wine hover:opacity-80">
             我的收藏
           </Link>
