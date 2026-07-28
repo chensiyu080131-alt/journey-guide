@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>寻迹 · 有迹可循，寻迹而至</title>
+<style>
+/* ============ 基础与纸面 ============ */
+:root{
+  --paper:#f7f2e8;
+  --paper-deep:#f1eadb;
+  --ink:#3a3630;
+  --ink-soft:#6d675d;
+  --ink-faint:#9a938666;
+  --cinnabar:#9c4a33;
+  --cinnabar-soft:#9c4a3322;
+  --line:#c9c0af;
+  --dur-enter:2.8s;
+  font-size:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  font-family:"Source Han Serif SC","Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  background:var(--paper);
+  color:var(--ink);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* 纸张肌理：SVG 噪点 + 纤维感 */
+.paper-grain{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.41 0 0 0 0 0.34 0 0 0 0.055 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* 纸页四角淡淡的旧色 */
+.paper-vignette{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(120% 90% at 50% 40%, transparent 55%, #d8ccb43d 100%),
+    radial-gradient(60% 45% at 100% 0%, #cbbfa62e, transparent 70%);
+}
+/* 入场晨光：一道柔光掠过纸面 */
+.morning-light{
+  position:fixed;inset:-20%;pointer-events:none;z-index:1;
+  background:linear-gradient(105deg,
+    transparent 38%,
+    #fffdf3cc 47%, #fff9e8e6 50%, #fffdf3cc 53%,
+    transparent 62%);
+  filter:blur(14px);
+  transform:translateX(-90%) rotate(0.001deg);
+  animation:light-sweep 3s cubic-bezier(.33,.12,.22,1) .15s forwards;
+  opacity:0;
+}
+@keyframes light-sweep{
+  0%{opacity:0;transform:translateX(-90%);}
+  18%{opacity:.9;}
+  82%{opacity:.55;}
+  100%{opacity:0;transform:translateX(90%);}
+}
+/* 之后的低频环境光呼吸 */
+.ambient-light{
+  position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(55% 42% at 68% 22%, #fffbee80, transparent 70%);
+  opacity:0;
+  animation:ambient-breathe 22s ease-in-out 3.4s infinite;
+}
+@keyframes ambient-breathe{
+  0%,100%{opacity:.25;}
+  50%{opacity:.6;}
+}
+
+/* ============ 布局 ============ */
+.hero{
+  position:relative;z-index:2;
+  min-height:100vh;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  max-width:1280px;
+  margin:0 auto;
+  padding:0 56px;
+}
+
+/* 顶栏 */
+.nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:30px 4px 0;
+  opacity:0;animation:soft-in 1.4s ease .5s forwards;
+}
+.nav .brand{
+  font-size:1.15rem;letter-spacing:.35em;color:var(--ink);
+  display:flex;align-items:center;gap:.6em;
+}
+.brand-dot{width:7px;height:7px;border-radius:50%;background:var(--cinnabar);display:inline-block;}
+.nav ul{display:flex;gap:44px;list-style:none;}
+.nav a{
+  color:var(--ink-soft);text-decoration:none;font-size:.9rem;letter-spacing:.18em;
+  position:relative;padding-bottom:6px;transition:color .5s;
+}
+.nav a::after{
+  content:"";position:absolute;left:50%;bottom:0;height:1px;width:0;
+  background:var(--cinnabar);transition:width .6s cubic-bezier(.25,.8,.3,1),left .6s cubic-bezier(.25,.8,.3,1);
+}
+.nav a:hover{color:var(--cinnabar);}
+.nav a:hover::after{width:100%;left:0;}
+
+/* 主区：左文右卡 */
+.stage{
+  display:grid;
+  grid-template-columns:minmax(420px,46%) 1fr;
+  align-items:center;
+  gap:48px;
+  padding:24px 0 8px;
+}
+
+/* ============ 左侧：标题区 ============ */
+.headline{position:relative;}
+.motto-vertical{
+  position:absolute;left:-46px;top:8px;
+  writing-mode:vertical-rl;
+  font-size:.8rem;letter-spacing:.55em;color:var(--ink-faint);
+  opacity:0;animation:soft-in 1.6s ease 2.9s forwards;
+}
+.title-svg{width:min(360px,86%);display:block;overflow:visible;}
+.title-svg text{
+  font-family:"Kaiti SC","STKaiti","KaiTi","DFKai-SB","Source Han Serif SC",serif;
+  font-size:150px;fill:var(--ink);
+}
+/* 印章 */
+.seal{
+  position:absolute;
+  transform:scale(.7) rotate(-8deg);opacity:0;
+  animation:seal-press 1s cubic-bezier(.2,1.4,.4,1) 2.5s forwards;
+}
+@keyframes seal-press{
+  0%{opacity:0;transform:scale(.7) rotate(-8deg);}
+  55%{opacity:1;transform:scale(1.06) rotate(-3.5deg);}
+  100%{opacity:.92;transform:scale(1) rotate(-4deg);}
+}
+
+/* 副标题逐字 */
+.subtitle{
+  margin-top:26px;font-size:1.06rem;color:var(--ink-soft);
+  letter-spacing:.14em;line-height:2;
+}
+.subtitle .ch{
+  display:inline-block;opacity:0;transform:translateY(8px);
+  animation:char-rise .9s cubic-bezier(.2,.7,.3,1) forwards;
+  animation-delay:calc(1.9s + var(--i) * 0.055s);
+}
+@keyframes char-rise{to{opacity:1;transform:translateY(0);}}
+.subtitle .dot-sep{color:var(--cinnabar);}
+
+/* 一句引文 + 线延展为路径 */
+.quote-line{
+  margin-top:44px;position:relative;
+  opacity:0;animation:soft-in 1.6s ease 3s forwards;
+}
+.quote-text{
+  font-size:.88rem;color:var(--ink-soft);letter-spacing:.1em;font-style:normal;
+}
+.quote-text em{font-style:normal;border-bottom:1px solid var(--cinnabar-soft);padding-bottom:2px;color:var(--ink);}
+.path-svg{display:block;margin-top:6px;overflow:visible;width:340px;height:64px;}
+.path-svg .trail{
+  fill:none;stroke:var(--cinnabar);stroke-width:1.1;opacity:.7;
+  stroke-dasharray:420;stroke-dashoffset:420;
+  animation:trail-draw 3.2s cubic-bezier(.3,.2,.2,1) 3.3s forwards;
+}
+@keyframes trail-draw{to{stroke-dashoffset:0;}}
+.path-svg .walker{fill:var(--cinnabar);opacity:0;}
+.path-svg .pin{opacity:0;animation:soft-in 1s ease 6.4s forwards;}
+
+/* 按钮组 */
+.actions{
+  margin-top:40px;display:flex;gap:22px;align-items:center;
+  opacity:0;animation:soft-in 1.4s ease 3.2s forwards;
+}
+.btn{
+  position:relative;overflow:hidden;
+  font-family:inherit;font-size:.95rem;letter-spacing:.24em;
+  padding:14px 34px 14px 38px;cursor:pointer;
+  border:1px solid var(--ink-soft);background:transparent;color:var(--ink);
+  transition:color .6s,border-color .6s;
+  display:inline-flex;align-items:center;gap:12px;
+}
+.btn .ink-blot{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 18% 55%, #3a363014 0%, #3a363009 42%, transparent 68%);
+  transform:scale(0);transform-origin:18% 55%;
+  transition:transform 1.1s cubic-bezier(.22,.7,.3,1);
+  border-radius:50%;
+}
+.btn:hover .ink-blot{transform:scale(3.2);border-radius:0;}
+.btn .arrow{
+  display:inline-block;transition:transform .7s cubic-bezier(.25,.8,.3,1);
+  font-family:serif;
+}
+.btn:hover .arrow{transform:translateX(7px);}
+.btn.primary{border-color:var(--cinnabar);color:var(--cinnabar);}
+.btn.primary .ink-blot{
+  background:radial-gradient(circle at 18% 55%, #9c4a3318 0%, #9c4a330d 42%, transparent 68%);
+}
+.btn-underline{
+  position:absolute;left:38px;bottom:9px;height:1px;width:0;background:currentColor;opacity:.55;
+  transition:width .7s cubic-bezier(.25,.8,.3,1);
+}
+.btn:hover .btn-underline{width:calc(100% - 76px);}
+
+/* 数据模块 */
+.stats{
+  margin-top:46px;display:flex;gap:56px;
+}
+.stat{
+  opacity:0;transform:translateY(10px);
+  animation:char-rise 1.2s cubic-bezier(.2,.7,.3,1) forwards;
+}
+.stat:nth-child(1){animation-delay:3.4s;}
+.stat:nth-child(2){animation-delay:3.6s;}
+.stat:nth-child(3){animation-delay:3.8s;}
+.stat .num{
+  font-size:1.9rem;color:var(--ink);letter-spacing:.05em;
+  font-family:"Kaiti SC","STKaiti","KaiTi",serif;
+}
+.stat .num sup{font-size:.9rem;color:var(--cinnabar);margin-left:2px;}
+.stat .label{margin-top:4px;font-size:.8rem;color:var(--ink-faint);letter-spacing:.3em;}
+.stat .rule{width:22px;height:1px;background:var(--line);margin-top:10px;}
+
+/* ============ 右侧：路线卡片 ============ */
+.deck-wrap{position:relative;height:560px;display:flex;align-items:center;}
+/* 城市意象层（卡片后方，随切换渐变） */
+.motif-layer{
+  position:absolute;inset:-30px -10px;z-index:0;pointer-events:none;
+}
+.motif{
+  position:absolute;inset:0;opacity:0;transition:opacity 2.4s ease;
+  display:flex;align-items:center;justify-content:center;
+}
+.motif.active{opacity:1;}
+.motif svg{width:88%;height:88%;overflow:visible;}
+
+/* 茶汽 */
+.steam path{
+  fill:none;stroke:#8a8274;stroke-width:1.6;stroke-linecap:round;opacity:.0;
+}
+.motif.active .steam path{
+  animation:steam-rise 9s ease-in-out infinite;
+}
+.motif.active .steam path:nth-child(2){animation-delay:3s;}
+.motif.active .steam path:nth-child(3){animation-delay:6s;}
+@keyframes steam-rise{
+  0%{opacity:0;transform:translateY(14px);}
+  25%{opacity:.35;}
+  70%{opacity:.15;}
+  100%{opacity:0;transform:translateY(-26px);}
+}
+/* 窗影 */
+.lattice{opacity:.5;}
+.motif.active .lattice{animation:lattice-drift 26s ease-in-out infinite alternate;}
+@keyframes lattice-drift{
+  from{transform:translateX(-8px) skewX(-1deg);opacity:.35;}
+  to{transform:translateX(8px) skewX(1deg);opacity:.55;}
+}
+/* 街巷光 */
+.alley-beam{
+  animation:none;opacity:.4;
+}
+.motif.active .alley-beam{animation:beam-sway 18s ease-in-out infinite alternate;}
+@keyframes beam-sway{
+  from{opacity:.28;transform:translateX(-6px);}
+  to{opacity:.5;transform:translateX(6px);}
+}
+/* 地图轨迹 */
+.miniroute{fill:none;stroke:#9c4a33;stroke-width:1.2;opacity:.45;stroke-dasharray:6 7;}
+.motif.active .miniroute{animation:route-flow 30s linear infinite;}
+@keyframes route-flow{to{stroke-dashoffset:-260;}}
+
+/* 卡组 */
+.deck{
+  position:relative;z-index:1;width:100%;height:480px;
+  perspective:1200px;
+}
+.card{
+  position:absolute;top:50%;left:50%;
+  width:330px;height:440px;
+  margin:-220px 0 0 -165px;
+  background:linear-gradient(168deg,#fbf7ee, #f3ecdd);
+  border:1px solid #dcd2bd;
+  box-shadow:0 18px 50px -22px #5c503a3d, 0 2px 8px #5c503a14;
+  padding:34px 30px;
+  display:flex;flex-direction:column;
+  transition:transform 1.5s cubic-bezier(.3,.1,.18,1),opacity 1.5s ease,box-shadow 1.5s ease;
+  will-change:transform;
+  cursor:pointer;
+}
+/* 入场：从书页中被轻轻抽出 */
+.card.enter{
+  opacity:0;
+  transform:translateX(140px) translateY(24px) rotate(5deg) scale(.94);
+}
+/* 三个景深位 */
+.card.pos-0{
+  transform:translateX(0) translateZ(0) rotate(0deg) scale(1);
+  opacity:1;z-index:30;
+  animation:card-breathe 7s ease-in-out 4.5s infinite;
+}
+@keyframes card-breathe{
+  0%,100%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-7px) scale(1.004);}
+}
+.card.pos-1{
+  transform:translateX(150px) translateZ(-120px) rotate(2.2deg) scale(.9);
+  opacity:.72;z-index:20;
+}
+.card.pos-2{
+  transform:translateX(272px) translateZ(-240px) rotate(4deg) scale(.8);
+  opacity:.38;z-index:10;
+}
+.card.pos-3{
+  transform:translateX(360px) translateZ(-360px) rotate(5deg) scale(.72);
+  opacity:0;z-index:5;pointer-events:none;
+}
+/* 向左移出（被翻过去的一页） */
+.card.pos-out{
+  transform:translateX(-190px) translateZ(-80px) rotate(-4deg) scale(.9);
+  opacity:0;z-index:8;pointer-events:none;
+}
+
+.card .cat{
+  font-size:.75rem;letter-spacing:.4em;color:var(--cinnabar);
+  display:flex;align-items:center;gap:10px;
+}
+.card .cat::after{content:"";flex:1;height:1px;background:var(--cinnabar-soft);}
+.card h3{
+  margin-top:22px;font-size:1.7rem;font-weight:500;letter-spacing:.08em;
+  font-family:"Kaiti SC","STKaiti","KaiTi",serif;line-height:1.4;
+}
+.card .city{
+  margin-top:8px;font-size:.9rem;color:var(--ink-soft);letter-spacing:.28em;
+}
+.card .desc{
+  margin-top:22px;font-size:.88rem;line-height:2.1;color:var(--ink-soft);
+  letter-spacing:.06em;flex:1;
+}
+.card .foot{
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid #e4dcc9;padding-top:18px;
+}
+.card .spots{font-size:.78rem;color:var(--ink-faint);letter-spacing:.15em;}
+.card .go{
+  font-size:.82rem;color:var(--cinnabar);letter-spacing:.2em;text-decoration:none;
+  display:inline-flex;align-items:center;gap:6px;position:relative;padding-bottom:3px;
+}
+.card .go::after{
+  content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--cinnabar);
+  transition:width .6s cubic-bezier(.25,.8,.3,1);
+}
+.card:hover .go::after{width:100%;}
+.card .go .arrow{transition:transform .6s cubic-bezier(.25,.8,.3,1);}
+.card:hover .go .arrow{transform:translateX(5px);}
+
+/* 切换控制：细点 */
+.deck-nav{
+  position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+  display:flex;gap:16px;align-items:center;z-index:40;
+  opacity:0;animation:soft-in 1.4s ease 4s forwards;
+}
+.deck-nav button{
+  width:26px;height:2px;border:none;background:var(--line);cursor:pointer;
+  transition:background .6s,width .6s;padding:0;
+}
+.deck-nav button.on{background:var(--cinnabar);width:38px;}
+
+/* ============ 底部功能入口 ============ */
+.entries{
+  display:flex;gap:0;justify-content:space-between;align-items:stretch;
+  border-top:1px solid #ddd3bf;
+  margin-bottom:34px;
+  opacity:0;animation:soft-in 1.6s ease 3.9s forwards;
+}
+.entry{
+  flex:1;padding:24px 8px 6px;text-decoration:none;color:var(--ink);
+  display:flex;align-items:baseline;gap:14px;position:relative;
+}
+.entry + .entry{border-left:1px solid #e4dbc8;padding-left:36px;}
+.entry .no{font-size:.72rem;color:var(--ink-faint);letter-spacing:.1em;}
+.entry .name{font-size:1rem;letter-spacing:.3em;}
+.entry .hint{font-size:.75rem;color:var(--ink-faint);letter-spacing:.12em;margin-left:auto;transition:color .6s;}
+.entry::before{
+  content:"";position:absolute;top:-1px;left:0;height:1px;width:0;background:var(--cinnabar);
+  transition:width .8s cubic-bezier(.25,.8,.3,1);
+}
+.entry:hover::before{width:100%;}
+.entry:hover .hint{color:var(--cinnabar);}
+
+/* ============ 通用 ============ */
+@keyframes soft-in{from{opacity:0;}to{opacity:1;}}
+
+/* 降低动效偏好 */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-delay:0s !important;transition-duration:.2s !important;}
+  .morning-light,.ambient-light{display:none;}
+  .card.enter{opacity:1;transform:none;}
+}
+@media (max-width:1024px){
+  .stage{grid-template-columns:1fr;gap:36px;}
+  .deck-wrap{height:520px;}
+  .motto-vertical{display:none;}
+  .hero{padding:0 28px;}
+  .entries{flex-direction:column;}
+  .entry + .entry{border-left:none;border-top:1px solid #e4dbc8;padding-left:8px;}
+}
+</style>
+</head>
+<body>
+
+<div class="paper-grain"></div>
+<div class="paper-vignette"></div>
+<div class="morning-light"></div>
+<div class="ambient-light"></div>
+
+<main class="hero">
+
+  <!-- 顶栏 -->
+  <nav class="nav">
+    <div class="brand"><span class="brand-dot"></span>寻迹 XUNJI</div>
+    <ul>
+      <li><a href="#">文学地图</a></li>
+      <li><a href="#">主题路线</a></li>
+      <li><a href="#">寻迹打卡</a></li>
+      <li><a href="#">关于</a></li>
+    </ul>
+  </nav>
+
+  <!-- 主区 -->
+  <section class="stage">
+
+    <!-- 左：标题 -->
+    <div class="headline">
+      <div class="motto-vertical">有迹可循 · 寻迹而至</div>
+
+      <!-- 书法标题：墨迹铺开 -->
+      <svg class="title-svg" viewBox="0 0 420 190" aria-label="寻迹">
+        <defs>
+          <filter id="inkEdge" x="-30%" y="-30%" width="160%" height="160%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="3" seed="11" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="22"/>
+          </filter>
+          <filter id="inkBleed" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="4" result="t"/>
+            <feDisplacementMap in="SourceGraphic" in2="t" scale="2.2"/>
+          </filter>
+          <mask id="mChar1">
+            <circle cx="105" cy="98" r="0" fill="#fff" filter="url(#inkEdge)">
+              <animate attributeName="r" from="0" to="118" begin="0.9s" dur="1.15s"
+                       calcMode="spline" keySplines="0.25 0.6 0.3 1" fill="freeze"/>
+            </circle>
+          </mask>
+          <mask id="mChar2">
+            <circle cx="290" cy="98" r="0" fill="#fff" filter="url(#inkEdge)">
+              <animate attributeName="r" from="0" to="118" begin="1.55s" dur="1.15s"
+                       calcMode="spline" keySplines="0.25 0.6 0.3 1" fill="freeze"/>
+            </circle>
+          </mask>
+        </defs>
+        <g filter="url(#inkBleed)">
+          <text x="30" y="150" mask="url(#mChar1)">寻</text>
+          <text x="215" y="150" mask="url(#mChar2)">迹</text>
+        </g>
+        <!-- 印章 -->
+        <g class="seal" style="transform-origin:388px 156px;" transform="translate(360,124)">
+          <rect x="0" y="0" width="52" height="52" rx="7" fill="var(--cinnabar)" opacity=".9"/>
+          <text x="26" y="23" text-anchor="middle" font-size="19" fill="#f7f2e8"
+                font-family="'Kaiti SC','STKaiti','KaiTi',serif">寻</text>
+          <text x="26" y="44" text-anchor="middle" font-size="19" fill="#f7f2e8"
+                font-family="'Kaiti SC','STKaiti','KaiTi',serif">迹</text>
+        </g>
+      </svg>
+
+      <!-- 副标题：逐字浮现（JS 拆字） -->
+      <p class="subtitle" id="subtitle">书籍 · 游戏 · 音乐 —— 跟着文化载体去旅行</p>
+
+      <!-- 从文字到现实：细线延展成路径 -->
+      <div class="quote-line">
+        <p class="quote-text">「他沿着河沿走过三座桥，<em>在城门下停了一会儿</em>。」—— 而你，可以真的走到那里。</p>
+        <svg class="path-svg" viewBox="0 0 340 64">
+          <path class="trail" id="trailPath"
+                d="M2,10 C60,10 70,44 128,44 S 210,18 258,26 S 320,50 330,50"/>
+          <circle class="walker" id="walker" r="3.2"/>
+          <g class="pin" transform="translate(330,50)">
+            <circle r="4.5" fill="none" stroke="var(--cinnabar)" stroke-width="1"/>
+            <circle r="1.6" fill="var(--cinnabar)"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- 按钮 -->
+      <div class="actions">
+        <button class="btn primary">
+          <span class="ink-blot"></span>
+          开始寻迹 <span class="arrow">→</span>
+          <span class="btn-underline"></span>
+        </button>
+        <button class="btn">
+          <span class="ink-blot"></span>
+          进入路线 <span class="arrow">→</span>
+          <span class="btn-underline"></span>
+        </button>
+      </div>
+
+      <!-- 数据 -->
+      <div class="stats">
+        <div class="stat">
+          <div class="num"><span data-count="6">0</span></div>
+          <div class="label">座城市</div><div class="rule"></div>
+        </div>
+        <div class="stat">
+          <div class="num"><span data-count="10">0</span></div>
+          <div class="label">条文学路线</div><div class="rule"></div>
+        </div>
+        <div class="stat">
+          <div class="num"><span data-count="50">0</span><sup>+</sup></div>
+          <div class="label">文化点位</div><div class="rule"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右：路线卡组 -->
+    <div class="deck-wrap">
+
+      <!-- 城市意象层 -->
+      <div class="motif-layer" id="motifLayer">
+        <!-- 0 茶汽 -->
+        <div class="motif" data-motif="0">
+          <svg viewBox="0 0 400 400">
+            <g class="steam" transform="translate(70,120)">
+              <path d="M0,180 C 14,150 -12,128 4,100 C 18,76 -6,58 6,34"/>
+              <path d="M40,190 C 52,162 30,140 46,112 C 60,88 38,68 50,44" transform="translate(140,-10)"/>
+              <path d="M20,185 C 32,158 12,136 26,110 C 40,86 20,66 32,40" transform="translate(255,15)"/>
+            </g>
+          </svg>
+        </div>
+        <!-- 1 园林窗影 -->
+        <div class="motif" data-motif="1">
+          <svg viewBox="0 0 400 400">
+            <g class="lattice" stroke="#8a8274" stroke-width="1" fill="none" opacity=".45">
+              <circle cx="200" cy="190" r="130"/>
+              <path d="M200,60 V320 M70,190 H330 M112,98 L288,282 M288,98 L112,282"/>
+              <circle cx="200" cy="190" r="62"/>
+            </g>
+          </svg>
+        </div>
+        <!-- 2 街巷光影 -->
+        <div class="motif" data-motif="2">
+          <svg viewBox="0 0 400 400">
+            <g class="alley-beam">
+              <polygon points="120,30 190,30 260,370 110,370" fill="#c8b98f" opacity=".18"/>
+              <polygon points="220,30 258,30 330,370 250,370" fill="#c8b98f" opacity=".12"/>
+            </g>
+          </svg>
+        </div>
+        <!-- 3 地图轨迹 -->
+        <div class="motif" data-motif="3">
+          <svg viewBox="0 0 400 400">
+            <path class="miniroute" d="M40,320 C 110,300 90,220 160,210 S 250,250 290,190 S 330,90 360,70"/>
+            <circle cx="40" cy="320" r="3" fill="#9c4a33" opacity=".5"/>
+            <circle cx="360" cy="70" r="3" fill="#9c4a33" opacity=".5"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 卡片 -->
+      <div class="deck" id="deck"></div>
+
+      <div class="deck-nav" id="deckNav"></div>
+    </div>
+  </section>
+
+  <!-- 底部入口 -->
+  <footer class="entries">
+    <a class="entry" href="#">
+      <span class="no">01</span><span class="name">文学地图</span>
+      <span class="hint">从句子走进城市 →</span>
+    </a>
+    <a class="entry" href="#">
+      <span class="no">02</span><span class="name">主题路线</span>
+      <span class="hint">按载体规划行程 →</span>
+    </a>
+    <a class="entry" href="#">
+      <span class="no">03</span><span class="name">寻迹打卡</span>
+      <span class="hint">留下你的足迹 →</span>
+    </a>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- 副标题逐字 ---------- */
+  var sub = document.getElementById('subtitle');
+  var text = sub.textContent;
+  sub.textContent = '';
+  Array.prototype.forEach.call(text, function(ch, i){
+    var s = document.createElement('span');
+    s.className = 'ch' + (ch === '·' ? ' dot-sep' : '');
+    s.textContent = ch === ' ' ? '\u00A0' : ch;
+    s.style.setProperty('--i', i);
+    sub.appendChild(s);
+  });
+
+  /* ---------- 数字渐显 ---------- */
+  function countUp(el, target, delay, dur){
+    if (reduced){ el.textContent = target; return; }
+    setTimeout(function(){
+      var t0 = null;
+      function step(t){
+        if(!t0) t0 = t;
+        var p = Math.min((t - t0) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(eased * target);
+        if(p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }, delay);
+  }
+  var nums = document.querySelectorAll('[data-count]');
+  Array.prototype.forEach.call(nums, function(el, i){
+    countUp(el, +el.getAttribute('data-count'), 3400 + i * 200, 1600);
+  });
+
+  /* ---------- 小圆点沿路径缓行（低频循环） ---------- */
+  var trail = document.getElementById('trailPath');
+  var walker = document.getElementById('walker');
+  if (trail && walker && !reduced){
+    var L = trail.getTotalLength();
+    var start = null, DUR = 9000, DELAY = 6600;
+    setTimeout(function loopStart(){
+      walker.style.opacity = '.85';
+      function tick(t){
+        if(!start) start = t;
+        var p = ((t - start) % (DUR + 3000)) / DUR; /* 走完停 3 秒再走 */
+        if (p > 1){ walker.style.opacity = '0'; }
+        else {
+          walker.style.opacity = p < .05 ? String(p * 17) : '.85';
+          var pt = trail.getPointAtLength(Math.min(p,1) * L);
+          walker.setAttribute('cx', pt.x);
+          walker.setAttribute('cy', pt.y);
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }, DELAY);
+  }
+
+  /* ---------- 路线卡组 ---------- */
+  var ROUTES = [
+    { cat:'书籍 · 老舍《茶馆》', title:'茶汽升腾的人间', city:'北京 · 前门一带',
+      desc:'从裕泰茶馆的原型出发，沿前门大街走过老字号与胡同口。一盏盖碗茶的时间，看一个时代在字里行间起落。',
+      spots:'8 个点位 · 约半日' },
+    { cat:'游戏 ·《江南百景图》', title:'园林窗影入画来', city:'苏州 · 平江路',
+      desc:'游戏里的白墙黛瓦，皆有出处。循着画中坐标，穿过平江路的桥与巷，在真实的园林窗影里对照一张古画。',
+      spots:'10 个点位 · 约一日' },
+    { cat:'音乐 · 赵雷《成都》', title:'街巷光影慢慢走', city:'成都 · 玉林路',
+      desc:'和这座城市有关的歌不止一首。从玉林路的尽头出发，路过小酒馆与梧桐树影，把一首歌走成一条路线。',
+      spots:'6 个点位 · 约半日' },
+    { cat:'书籍 ·《长安的荔枝》', title:'循驿道再入长安', city:'西安 · 明城墙',
+      desc:'荔枝转运的驿道早已隐入尘烟，但城门与坊市的方位仍在。沿城墙根走一段，替书里的小吏看看今日长安。',
+      spots:'9 个点位 · 约一日' }
+  ];
+
+  var deck = document.getElementById('deck');
+  var nav = document.getElementById('deckNav');
+  var motifs = document.querySelectorAll('.motif');
+  var cards = [], dots = [], current = 0, N = ROUTES.length;
+
+  ROUTES.forEach(function(r, i){
+    var c = document.createElement('article');
+    c.className = 'card enter';
+    c.innerHTML =
+      '<div class="cat">' + r.cat + '</div>' +
+      '<h3>' + r.title + '</h3>' +
+      '<div class="city">' + r.city + '</div>' +
+      '<p class="desc">' + r.desc + '</p>' +
+      '<div class="foot"><span class="spots">' + r.spots + '</span>' +
+      '<a class="go" href="#">进入路线 <span class="arrow">→</span></a></div>';
+    deck.appendChild(c);
+    cards.push(c);
+
+    var d = document.createElement('button');
+    d.setAttribute('aria-label', '第' + (i+1) + '条路线');
+    d.addEventListener('click', function(){ goTo(i); resetTimer(); });
+    nav.appendChild(d);
+    dots.push(d);
+  });
+
+  function layout(){
+    cards.forEach(function(c, i){
+      var rel = (i - current + N) % N;
+      c.classList.remove('pos-0','pos-1','pos-2','pos-3','pos-out');
+      if (rel === 0) c.classList.add('pos-0');
+      else if (rel === 1) c.classList.add('pos-1');
+      else if (rel === 2) c.classList.add('pos-2');
+      else if (rel === N - 1) c.classList.add('pos-out');
+      else c.classList.add('pos-3');
+    });
+    dots.forEach(function(d, i){ d.classList.toggle('on', i === current); });
+    motifs.forEach(function(m, i){ m.classList.toggle('active', i === current); });
+  }
+
+  function goTo(i){ current = (i + N) % N; layout(); }
+
+  /* 入场：像从书页中被依次抽出 */
+  var enterDelay = reduced ? 0 : 2600;
+  setTimeout(function(){
+    cards.forEach(function(c, i){
+      setTimeout(function(){ c.classList.remove('enter'); }, i * 260);
+    });
+    layout();
+  }, enterDelay);
+
+  /* 点击后排卡片切换 */
+  cards.forEach(function(c, i){
+    c.addEventListener('click', function(){
+      if (i !== current){ goTo(i); resetTimer(); }
+    });
+  });
+
+  /* 低频自动游移 */
+  var timer = null;
+  function resetTimer(){
+    if (timer) clearInterval(timer);
+    if (reduced) return;
+    timer = setInterval(function(){ goTo(current + 1); }, 8000);
+  }
+  setTimeout(resetTimer, enterDelay + 1400);
+})();
+</script>
+</body>
+</html>
