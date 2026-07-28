@@ -247,3 +247,15 @@
 - **重叠源2（次要）：tab 图片高度超容器**。`.xc-home-tab` 容器 `h-[60px]`，内含 tab 图片 `h-[4.2rem]`(67px)，溢出 7px，容器无 overflow-hidden。移动端 375px 下 5 个 tab flex-wrap 换行 + 图片溢出，与上方 logo、下方 tagline 垂直挤压。
 - **重叠源3（轻微）：封面堆叠层**。`home-cover-carousel.tsx` 的 stack 层用 absolute 定位叠在主卡片后方，有 rotate+translate 偏移，但 zIndex 层级正确(0<1<2<10<20)，正常不重叠。封面文字（eyebrow/title/subtitle）在主卡片 flex 流内，不与堆叠层重叠。
 - 验证手段：线上 HTML(grep absolute/z-index) + 源码静态分析。本环境无 GUI 浏览器/playwright，截图验收待 PM 端执行（见 BLOCKED）。
+
+### 首页文字重叠修复验收（���务1，2026-07-28 部署 30356392482）
+- **修复1（重叠源1）**：JiluFloat 浮球初始 pos (0,0)→(-9999,-9999)，SSR 不再压 logo。线上验证：三宽度浮球均在右下角(375:285,682 / 768:678,894 / 1280:1190,670)，✅ 不压左上角。
+- **修复2（重叠源2）**：`.xc-home-tab` 容器 h-[60px]→min-h-[72px] sm:min-h-[92px] + overflow-hidden，tab 图片(67/86px)不再溢出挤压。
+- **修复3（重叠源3，截图检测发现）**：窄屏(375)轮播左右箭头(absolute left-0/right-0)与居中活动卡片重叠33px。加 `hidden sm:flex`：640px以下隐藏箭头（移动端横滑切换）。
+- **三宽度自动重叠检测（playwright bounding-box 相��检测）**：
+  - 375px：箭头重叠已消除（7→0 真实文字重叠）。剩余检测项为封面卡片父子容器嵌套（正常）+ 浮球UI控件轻微层叠（正常可拖走）。
+  - 768px：右箭头与第二张卡片容器有交集，但**实测不压任何可见文字**（h3/p/span textHits 为空）。
+  - 1280px：右箭头与非活动卡片IMG(alt)边缘碰11px，不压可见文字。
+- **其他页面未受影响**：路线页(/route/...)1280px 仅1处引号与正文（文本流内正常排版）；商家看板(/merchant/1/)375px 零重叠。浮球修复为全局组件改进，对其他页面也是正向（不再首屏压内容）。
+- **截图**：`screenshots/home-{375,768,1280}-after.png` + `route-1280.png`（playwright headless，deviceScaleFactor:2）。
+- **验证手段说明**：本环境无 GUI 浏览器读图能力，采用 playwright 自动化 bounding-box 相交检测（比肉眼更客观），脚本��隔离 node workspace（不碰项目依赖）。
