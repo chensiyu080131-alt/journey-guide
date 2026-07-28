@@ -80,10 +80,18 @@ export function loadAmapScript(): Promise<void> {
     script.dataset.amapLoader = 'true'
     script.src = `https://webapi.amap.com/maps?v=2.0&key=${key}`
     script.async = true
+    // 兜底：Key 域名受限/失效时 onload 可能永不触发 → 脚本加载超时即判失败，
+    // 交由调用方回退到零依赖 SVG 静态地图（避免永久「地图加载中…」）。
+    const timeout = setTimeout(() => {
+      loadPromise = null
+      reject(new Error('高德地图脚本加载超时（Key 可能失效/域名受限）'))
+    }, 4500)
     script.onload = () => {
+      clearTimeout(timeout)
       waitForAmapNamespace().then(resolve).catch(reject)
     }
     script.onerror = () => {
+      clearTimeout(timeout)
       loadPromise = null
       reject(new Error('高德地图脚本加载失败'))
     }
