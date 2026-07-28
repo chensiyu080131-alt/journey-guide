@@ -370,7 +370,7 @@ export function HomeCoverCarousel({ covers, onExploreCover }: HomeCoverCarouselP
         <button
           type="button"
           onClick={() => scrollTo((activeIndex - 1 + covers.length) % covers.length)}
-          className="xc-cover-arrow absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 z-10"
+          className="xc-cover-arrow absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 z-10 hidden sm:flex"
           aria-label="上一个"
         >
           ‹
@@ -400,7 +400,7 @@ export function HomeCoverCarousel({ covers, onExploreCover }: HomeCoverCarouselP
         <button
           type="button"
           onClick={() => scrollTo((activeIndex + 1) % covers.length)}
-          className="xc-cover-arrow absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 z-10"
+          className="xc-cover-arrow absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 z-10 hidden sm:flex"
           aria-label="下一个"
         >
           ›
