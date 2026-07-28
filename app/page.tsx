@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { HomeNav } from '@/components/home-nav'
 import { HomeCoverCarousel } from '@/components/home-cover-carousel'
+import { HeroAnimation } from '@/app/components/hero-animation'
 import { HomeTab, getCoversForTab, underDevelopmentTabs } from '@/lib/home-covers'
 
 const taglineImages: Record<HomeTab, string> = {
@@ -41,50 +42,49 @@ export default function HomePage() {
         <HomeNav active={activeTab} onChange={setActiveTab} />
       </header>
 
-      <div className="text-center px-6 flex-shrink-0">
-        {activeTab === '首页' && (
-          <p className="text-[10px] sm:text-[11px] text-literary-wine tracking-[0.25em] font-serif uppercase">
-            Tracking
-          </p>
-        )}
-        <h1 className="mt-1">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={taglineImages[activeTab]}
-            alt={taglineAlts[activeTab]}
-            className="h-12 sm:h-16 w-auto mx-auto object-contain"
-          />
-        </h1>
-        <p className="mt-1 text-[11px] text-literary-muted tracking-wide font-serif max-w-md mx-auto leading-relaxed">
-          {activeTab === '首页'
-            ? '书籍·游戏·音乐——跟着文化载体去旅行'
-            : '滑动或点击箭头选择封面，点击进入探索'}
-        </p>
-      </div>
-
-      <section className="flex-1 flex items-center justify-center py-4 sm:py-6 min-h-[50vh]">
-        {isUnderDevelopment ? (
-          <div className="text-center px-6">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/under-development.png"
-              alt="待开发"
-              className="h-28 sm:h-36 w-auto mx-auto object-contain"
-            />
-            <p className="mt-3 text-xs sm:text-sm text-literary-muted tracking-wide font-serif">
-              该功能正在建设中，敬请期待
+      {activeTab === '首页' ? (
+        <HeroAnimation />
+      ) : (
+        <>
+          <div className="text-center px-6 flex-shrink-0">
+            <h1 className="mt-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={taglineImages[activeTab]}
+                alt={taglineAlts[activeTab]}
+                className="h-12 sm:h-16 w-auto mx-auto object-contain"
+              />
+            </h1>
+            <p className="mt-1 text-[11px] text-literary-muted tracking-wide font-serif max-w-md mx-auto leading-relaxed">
+              滑动或点击箭头选择封面，点击进入探索
             </p>
           </div>
-        ) : (
-          <HomeCoverCarousel
-            key={activeTab}
-            covers={covers}
-            onExploreCover={(cover) => {
-              if (cover.targetTab) setActiveTab(cover.targetTab)
-            }}
-          />
-        )}
-      </section>
+
+          <section className="flex-1 flex items-center justify-center py-4 sm:py-6 min-h-[50vh]">
+            {isUnderDevelopment ? (
+              <div className="text-center px-6">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/under-development.png"
+                  alt="待开发"
+                  className="h-28 sm:h-36 w-auto mx-auto object-contain"
+                />
+                <p className="mt-3 text-xs sm:text-sm text-literary-muted tracking-wide font-serif">
+                  该功能正在建设中，敬请期待
+                </p>
+              </div>
+            ) : (
+              <HomeCoverCarousel
+                key={activeTab}
+                covers={covers}
+                onExploreCover={(cover) => {
+                  if (cover.targetTab) setActiveTab(cover.targetTab)
+                }}
+              />
+            )}
+          </section>
+        </>
+      )}
 
       {/* 精选文学路线 · 已上线入口 */}
       <section className="px-4 sm:px-6 pb-2 flex-shrink-0">
