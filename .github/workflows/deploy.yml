@@ -3,6 +3,7 @@ name: Deploy to ECS (static export + nginx)
 on:
   push:
     branches: [main]
+  workflow_dispatch: {}
 
 # 目标目录：静态导出产物 out/ 上传到此处，由 nginx 直接托管（无需 Node 运行时）
 env:
@@ -76,9 +77,44 @@ jobs:
               nginx -t
               nginx -s reload 2>/dev/null || systemctl reload nginx 2>/dev/null || (pkill -9 nginx 2>/dev/null; nginx)
             fi
+            # 5) 品牌404修复：8080 实际由别的 server 块服务（server_name _ + /index.html 回退），
+            #    仓库 conf 未被命中。对含 xuncheng root 的真实配置文件做幂等修补：
+            #    a. try_files 的 /index.html 回退改为 =404（未知路径不再假装成首页）
+            #    b. server 块内注入 error_page 404 /404.html（品牌 404 页）
+            #    安全约束：与其他项目共用的文件（含 careerlens 等其他 root）只诊断不改，防误伤。
+            echo "--- 诊断：xuncheng root 出现在哪些配置文件 ---"
+            grep -rn "html/xuncheng" /etc/nginx/ 2>/dev/null || true
+            for f in $(grep -rl "html/xuncheng" /etc/nginx/ 2>/dev/null); do
+              if grep -q "careerlens" "$f"; then
+                echo "SKIP(共用文件，需人工处理): $f"
+                continue
+              fi
+              cp "$f" "$f.bak-404fix" 2>/dev/null || true
+              echo "patching $f"
+              # a) 去掉 SPA 式回退：try_files ... /index.html; -> ... =404;
+              sed -i -E 's#(try_files[^;]*) /index\.html;#\1 =404;#g' "$f"
+              # b) 注入 error_page（幂等：文件内没有才加，插在 root xuncheng 行后）
+              if ! grep -q "error_page 404" "$f"; then
+                sed -i -E 's#^([[:space:]]*)(root[[:space:]]+/usr/share/nginx/html/xuncheng;)#\1\2\n\1error_page 404 /404.html;#' "$f"
+              fi
+            done
+            if nginx -t; then
+              nginx -s reload 2>/dev/null || systemctl reload nginx 2>/dev/null || (pkill -9 nginx 2>/dev/null; nginx)
+            else
+              echo "nginx -t 失败，回滚本次 404 修补"
+              for f in $(ls /etc/nginx/**/*.bak-404fix /etc/nginx/*.bak-404fix 2>/dev/null); do
+                mv "$f" "${f%.bak-404fix}"
+              done
+              nginx -t && (nginx -s reload 2>/dev/null || systemctl reload nginx 2>/dev/null) || true
+            fi
             sleep 1
-            echo "--- effective nginx root ---"
-            nginx -T 2>/dev/null | grep -E "root|listen|server_name" | head -20 || true
+            echo "--- effective nginx 8080 配置 ---"
+            nginx -T 2>/dev/null | grep -E "root|listen|server_name|error_page|try_files" | head -40 || true
+            echo "--- 品牌404验收（应为 404） ---"
+            curl -s -o /tmp/nf.html -w "unknown route => HTTP %{http_code}\n" "http://127.0.0.1:8080/route/not-exist-route/" || true
+            grep -c "未找到" /tmp/nf.html 2>/dev/null || true
+            curl -s -o /dev/null -w "known route => HTTP %{http_code}\n" "http://127.0.0.1:8080/route/yangzhou-wangzengqi-zaocha/" || true
+            curl -s -o /dev/null -w "homepage => HTTP %{http_code}\n" "http://127.0.0.1:8080/" || true
             echo "--- 真实 root db 大小（应为 21365 含商户）---"
             ls -l "$REAL_ROOT/xunji-mvp/db/literary-routes.json" 2>/dev/null || true
             echo "--- health check ---"
