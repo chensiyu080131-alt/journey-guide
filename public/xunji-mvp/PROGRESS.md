@@ -184,3 +184,19 @@
 - **修复（deploy.yml 第5步，幂等+可回滚）**：awk 按大括号深度做 **server 块级修补**——仅对含 `root .../xuncheng` 的块 ① `try_files` 的 `/index.html` 回退改 `=404`；② 注入 `error_page 404 /404.html;`。同文件其他项目的块不动；`nginx -t` 失败自动回滚 `.bak-404fix` 备份。awk 逻辑先在本地过了正确性+幂等双验证。
 - **公网验收（2026-07-28 14:37）**：`/route/not-exist-route/` → **HTTP 404 + 品牌404页**（10098B，含"未找到这一页"）✅；正常路线页 200 ✅；首页 200 ✅；xunji-mvp 200 ✅；careerlens(80端口) 200 未受影响 ✅。
 - 至此本任务书全部可执行项完成。剩余两项均需外部输入：① 卡片手绘插图/地点照片（等设计出图）；② 浏览器 Sensors 伪造 GPS 打卡截图（需 GUI 浏览器，PM 端自测）。
+
+### 2026-07-28 下午 — /route 页"未集成公网"修复（PM /goal）
+- PM 反馈 `http://47.109.91.112:8080/route/yangzhou-wangzengqi-zaocha/` "还是未集成到公网部署"。实测：页面**能访问(200/38KB)**，但作为"集成功能"不可用，三类问题：
+  1. **地图卡死**：`NEXT_PUBLIC_AMAP_KEY` Secret 存在于 GitHub 但域名受限/失效 → 高德脚本 `onload` 永不触发 → 永久"地图加载中…"。根因：amap-loader 仅在 `script.onload` 后才启动 `waitForAmapNamespace` 超时，脚本本身挂起则 Promise 永不 settle。
+  2. **首页无入口**：`app/page.tsx` 是封面轮播，零 `/route/...` 链接，路线页不可达。
+  3. **卡片全锁 + GPS 需 HTTPS**：文学卡片 🔒/🍵 占位；GPS 打卡需安全上下文，站点为 HTTP，移动端(含夸克) `navigator.geolocation` 被禁 → 卡片永远无法解锁。
+- **修复（4 个提交，最新 a42882e）**：
+  - `route-map.tsx`：新增 `StaticRouteMap`（零依赖 SVG 路线图：5 点位+连线+标签+导航链接）；`useEffect` 中加 6s 兜底强制回退，地图**永不卡死**。
+  - `amap-loader.ts`：脚本加载加 4.5s 超时 reject（Key 失效时快速失败→回退），根因层面修复。
+  - `deploy.yml`：**暂停注入失效高德 Key**（注释两行），构建无 Key → 组件即时走 SVG，零等待；Secret 保留，待配好授权域名后取消注释即可恢复交互地图。
+  - `literary-cards.tsx`：**自动生成**——每站按序号确定性生成 SVG 水墨 motif 作插图位；未打卡也展示摘录预览(标注"未打卡")，点击任意卡片看全文；满足"文学卡片自动生成适配"。
+  - `app/page.tsx`：新增"精选文学路线 · 汪曾祺扬州早茶"板块，链接到路线页（可发现性）。
+  - `route-detail-view.tsx` + `checkin-store.ts`：新增**体验模式**——HTTP/无 GPS 时勾选即模拟到点位打卡(同坐标、distanceM=0、simulated 标记)，解锁卡片+分享图可演示截图；演示数据只留本地不同步后端。
+- **公网验收（2026-07-28 15:05 部署后）**：`/` 200、`/route/...` 200、`/route/not-exist-route/` 404(品牌页)✅；首页"精选文学路线"入口=1；route 页"体验模式"=1；SVG 回退代码已入 `app/route/[id]/page-*.js` chunk ✅。
+- **结论**：路线页现已真正"集成"——可达(首页入口)、可用(零依赖地图+自动生成卡片+体验模式打卡解锁)、可分享(Canvas 分享图)。GPS 真实打卡仍待 HTTPS（见迭代方案）。
+- 注：因误用 `[skip ci]` 跳过自动部署，已用 `gh workflow run deploy.yml` 手动触发补齐。
