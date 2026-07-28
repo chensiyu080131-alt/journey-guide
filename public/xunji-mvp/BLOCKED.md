@@ -40,7 +40,12 @@
 - 仓库已有 `app/renjian`（人间滋味/高邮）含打卡 UI 与 `lib/renjian-data.ts` 等，与本次「扬州汪曾祺路线」主题重叠。建议 T3/T4 复用其地图/打卡组件而非新建，待 PM 确认是否并入同一条产品线。
 
 ### 部署配置改进（只读区，待裁决）
-- `deploy/*.conf`（nginx）用 `try_files ... =404` 但未配 `error_page 404 /404.html`：访问不存在的路线 id 会显示 **nginx 默认 404 页**而非仓库里已有的品牌 404 页（`app/not-found.tsx` → `out/404.html`）。满足"不白屏不报错"的验收下限，但体验欠佳。修复只需在 server 块加一行 `error_page 404 /404.html;`——deploy 目录属只读区，待 PM 确认后再改。
+- ~~`deploy/*.conf`（nginx）未配 `error_page 404 /404.html`~~ ✅ **2026-07-28 已解除**：PM 指示"继续完成未完成的任务"视为放行，已在 `deploy/nginx-xuncheng.conf` server 块加 `error_page 404 /404.html;`，经 CI 自动上传+reload 生效。未知路线 id 现返回品牌 404 页。
+
+### GitHub 仓库元信息待 admin 更新
+- 代码内用户可见的「寻城」已全部改为「寻迹」（2026-07-27 2e47fc9）。
+- **GitHub 仓库 description / topics 需 admin 权限**：当前执行账号 `wanglin1111111` 只有 WRITE 权限，`gh repo edit --description` 返回 404。需仓库 owner（`chensiyu080131-alt`）登录 GitHub → 仓库 About（右上角齿轮）填入：`寻迹 · 有迹可循，寻迹而至 — 跟着书本去旅行`。
+- 仓库名仍为 `journey-guide`（改名影响部署 URL/Actions/Secrets/本地 remote，风险高，暂不动；如需改为 `xunji` 需单独评估）。
 
 ### 反向验证待执行
 - T1 的 RLS「匿名写打卡→403 / 登录写→201」需在 Supabase 凭证到位后实跑，本环境目前只能给出 schema 与预期，无法产出真实 curl/SDK 输出。
