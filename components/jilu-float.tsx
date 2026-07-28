@@ -103,8 +103,9 @@ export function JiluFloat() {
   const pathname = usePathname()
   const router = useRouter()
 
-  // 拖拽状态
-  const [pos, setPos] = useState({ x: 0, y: 0 })
+  // 拖拽状态 — 初始置于屏幕外，避免 SSR 静态导出时浮球固定在 (0,0) 压住首页左上角 logo；
+  // mount 后 useEffect 立即定位到右下角。
+  const [pos, setPos] = useState({ x: -9999, y: -9999 })
   const [dragging, setDragging] = useState(false)
   const dragStart = useRef({ x: 0, y: 0, posX: 0, posY: 0 })
   const hasMoved = useRef(false)

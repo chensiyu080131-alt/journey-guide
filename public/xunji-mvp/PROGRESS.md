@@ -241,3 +241,9 @@
 - **依赖新增**：`bcryptjs`（+@types），仅用于浏览器端密码比对与种子哈希生成，无服务依赖、免费。
 - **构建**：`npm run build` 通过，`/merchant/1`–`/merchant/5` 预生成（4.77kB）。修复 2 处：① `generateStaticParams` 不能在 `'use client'` 文件 → 拆服务端壳+客户端组件；② 字符串 spread 需 es2015 → 改 `split('')`/`Array.from`。
 - **待 PM**：跑 `supabase/merchant-dashboard-schema.sql`（含 merchant_auth 种子 + merchant_stats RPC + reviews 表兜底创建）。未跑前看板显示 0/0/0 与空评价（页面本身可访问、密码校验不可用→显示「尚未开通」）。
+
+### 首页文字重叠 bug 排查（任务0，2026-07-28）
+- **重叠源1（首屏主因）：JiluFloat 浮球 SSR 初始位置 (0,0)**。`components/jilu-float.tsx` 第107行 `useState({x:0,y:0})`，静态导出 SSR 输出的 HTML 里浮球 `position:fixed;left:0;top:0;z-index:9999`，在 JS hydration 前压住左上角「寻迹」logo。客户端 mount 后 useEffect 才移到右下角(window.innerWidth-90, innerHeight-130)。→ 禁用 JS / 慢 hydration / 爬虫截图时必然重叠；正常用户首屏也可能闪现重叠。
+- **重叠源2（次要）：tab 图片高度超容器**。`.xc-home-tab` 容器 `h-[60px]`，内含 tab 图片 `h-[4.2rem]`(67px)，溢出 7px，容器无 overflow-hidden。移动端 375px 下 5 个 tab flex-wrap 换行 + 图片溢出，与上方 logo、下方 tagline 垂直挤压。
+- **重叠源3（轻微）：封面堆叠层**。`home-cover-carousel.tsx` 的 stack 层用 absolute 定位叠在主卡片后方，有 rotate+translate 偏移，但 zIndex 层级正确(0<1<2<10<20)，正常不重叠。封面文字（eyebrow/title/subtitle）在主卡片 flex 流内，不与堆叠层重叠。
+- 验证手段：线上 HTML(grep absolute/z-index) + 源码静态分析。本环境无 GUI 浏览器/playwright，截图验收待 PM 端执行（见 BLOCKED）。
