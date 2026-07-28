@@ -54,3 +54,18 @@
 
 ### 凭证澄清（两次核实，2026-07-27）
 - 用户两次提供 `http://47.109.91.112:8080/xunji-mvp/` 作为「Supabase 凭证」。已实测：该地址是线上静态站点，任意子路径（`config.js`/`.env`/`supabase.json` 等）均回退返回 HTML 页面，页面源码中无 supabase URL / anon key。**Supabase 凭证格式应为：项目 URL `https://xxxx.supabase.co` + `anon` key（JWT，形如 `eyJhbGciOi...`）**，在 Supabase 控制台 → Project Settings → API 页面获取。拿到这两串字符串后 T1/T2/T4 后端部分即可当日完成。
+
+### 高德 Key 根因确认（2026-07-28 产物层反向验证）
+- **确认：`NEXT_PUBLIC_AMAP_KEY` 这个 GitHub Secret 本身无可用值。** 重新启用 `deploy.yml` 注入后，线上 route 页 chunk 实测：`securityJsCode`(7c83…) 已成功内联（证明 Secrets 注入机制正常），但 `key=` 后字符数为 **0**、bundle 仍残留 `NEXT_PUBLIC_AMAP_KEY` 字面量（Next 未替换 ⇒ 构建期该环境变量为空）。这正是 Turn B「地图永久加载中」的原始根因——Key 不是「域名受限」，而是**值为空/失效**。
+- 当前组件侧 4.5s 超时 + 6s 兜底保证地图自动回退零依赖 SVG 静态图（永不卡死），站点可用。
+- **待 PM 提供**：一个有效的「高德地图 JS API」Key（在 高德开放平台 控制台申请，Key 类型=Web端(JS API)，并在「域名白名单」加入 `47.109.91.112:8080` 或正式域名）。配好后取消 `deploy.yml` 中对应该 Key 的注释（现已取消）即自动生效，无需改代码。
+
+### 反馈回路 Step1 待 PM 控制台操作（2026-07-28）
+- **必须跑 `supabase/feedback-schema.sql`**：在 Supabase 控制台 → SQL Editor 粘贴运行一次，建 `reviews` / `merchant_replies` 表 + RLS + `review-photos` 公共存储桶。**未跑前**：评价功能仅落 localStorage（演示可用、刷新不丢、联网后 `syncPendingReviews` 自动补传），但 `/reviews` 时间线与其他用户评价看不到；跑后即有全站真实评价流。
+- 存储桶 `review-photos` 若当前 publishable key 无 `storage.buckets` 写入权限，脚本会 `on conflict` 忽略建表、但桶需手动在控制台 Storage → New bucket 建名为 `review-photos` 的 Public 桶（策略脚本仍会尝试创建）。
+- 商家看板（Step2 `/merchant/[id]`）与分享图叠加评分/照片（Step3）为后续里程碑，schema 已预留（`merchant_replies`），暂不阻塞。
+
+### 反向验证待执行（浏览器 GUI，留 PM/用户端）
+- T3 真实 GPS 打卡：>100m 禁用打卡按钮的逻辑已用 node + 真实坐标数值自测通过（44m→允许 / 2002m→拒绝），但浏览器端（Chrome DevTools → Sensors 伪造 GPS）实操截图待 GUI 浏览器验证。
+- T4 集齐 5/5 后 html2canvas 生成 1080×1920 分享海报：代码已就位，真机/浏览器截图验证待 PM 端执行。
+- 反馈回路 Step1 评价提交→Supabase 真实落库：需先跑 `feedback-schema.sql`，再于浏览器打卡后提交评价、刷新确认评分仍在、并能在 `/reviews` 看到。

@@ -207,3 +207,23 @@
 - 任务书所述"三个问题"上一轮(Turn B)已缓解：地图→SVG 回退、首页→"精选文学路线"入口、卡片→自动生成 motif+体验模式可解锁。
 - 本轮把"缓解"升级为任务书既定方案：真实高德地图(T1)、图书卡片轮播直达路线(T2)、真实 GPS 打卡(T3)、html2canvas 分享图(T4)、/routes 与 /favorites 新页(T5/T6)。
 - AMap Key 为 GitHub Secret，本地不可读明文；故 T1 走「重新启用 deploy.yml Secrets 注入」等价于「用现有 key」，验证在部署产物层做。
+
+### T1–T6 完成状态（2026-07-28 部署 30342527323 验收）
+- **T1 真实高德地图**：`deploy.yml` 已重新注入 `NEXT_PUBLIC_AMAP_KEY`/`NEXT_PUBLIC_AMAP_SECURITY`。**产物层反向验证揭示根因**：线上 route 页 chunk 实测——`securityJsCode`(7c83…) 已成功内联（证明注入机制正常），但 `key=` 后字符数为 **0**、且 bundle 仍残留 `NEXT_PUBLIC_AMAP_KEY` 字面量 ⇒ **该 Key Secret 本身为空/不可用**。这正是 Turn B 地图卡死的原始根因。组件侧 4.5s 超时 + 6s 兜底保证：Key 失效时自动回退零依赖 SVG 静态图，**永不卡死**。→ 真实交互地图待 PM 提供有效且已授权 `47.109.91.112:8080` 域名的高德 JS Key（见 BLOCKED）。
+- **T2 图书卡片直达**：`lib/home-covers.ts` 人间滋味卡片 `route:'/route/yangzhou-wangzengqi-zaocha/'`；`home-cover-carousel.tsx` 仅 `route` 以 `/route/` 开头的卡片「开始探索」直达路线页，其余（非路线书卡 + 游戏/音乐 tab）落「正在建设中」占位（不再 404）。
+- **T3 真实 GPS 打卡门禁**：`route-detail-view.tsx` 真实 GPS 模式下，`tooFarFor(p)` = `realMode && 距点位 > 100m` 时禁用该点打卡按钮并提示「距 X 过远 · 需 100m 内」；demo/HTTP 模式保留「体验打卡（免定位）」。
+- **T4 html2canvas 分享**：`literary-cards.tsx` 分享按钮 `disabled={!allCollected}`（集齐 5/5 才可），未集齐显示「还需解锁 N 个点位」；生成 1080×1920 海报（html2canvas 动态 import，失败回退 Canvas 750×1200）。
+- **T5 /routes**：`routes-catalog.ts`(5 路线：1 live/4 soon) + `app/routes/page.tsx`（live 链接直达 + 收藏★ + 实时打卡进度；soon 虚线「即将上线」）。
+- **T6 /favorites**：`favorites-store.ts`(localStorage `xunji.favorites.v1`) + `app/favorites/page.tsx`（收藏列表 + 移除 + 开始寻迹；空态引导 /routes）。
+- **验证**：`/` `/route/...` `/reviews/` `/routes/` `/favorites/` 均 200；未知 route 仍 404(品牌页)。`npm run build` 通过（新增 /reviews 4.74kB、/route/[id] 17.1kB）。
+
+### 反馈回路（用户评价 + 商家看板）Step 1 — 用户评价（2026-07-28 起，已部署）
+- 设计来源：PM 5 张 slide（问题/用户通道/商家通道/3步实施/数据反哺）。整体分 3 步（每步约 1 周，可独立上线）：Step1 用户评价 → Step2 商家看板 → Step3 社交传播闭环。本轮完成 **Step 1**。
+- **Schema**：新增 `supabase/feedback-schema.sql`（PM 需在 Supabase 控制台 SQL Editor 跑一次）：`reviews`(route_id, point_id, user_id, rating 1-5, text, photo_url, created_at) + 索引 + RLS（匿名可读全部、写需 `auth.uid()=user_id`，同 checkins 模式）；`merchant_replies`(Step2 用)；`review-photos` Storage 公共桶 + 读写策略。
+- **数据层** `lib/reviews-store.ts`：`submitReview`（优先 Supabase，失败落 localStorage 待同步队列兜底 `syncPendingReviews`）、`fetchReviewsForPoint`（avg+最新3条）、`fetchAllReviews`（嵌入 route/city/point，供 /reviews 时间线，支持路线筛选）、`uploadReviewPhoto`（Supabase Storage，失败降级无图）。全部 try/catch 防御。
+- **评价面板** `components/route-detail/review-panel.tsx`：1-5 星点选(必填) + ≤50 字文本框(计数) + 1 张照片上传(预览) + 提交。
+- **接入** `route-detail-view.tsx`：已打卡点位卡片内显示 `★ 平均评分 · N 条评价` + 「✍️ 写评价」展开面板 + 最新 3 条评价（含文字/缩略图）；提交后即时刷新。`syncPendingReviews()` 随页面挂载补偿同步。
+- **/reviews 时间线** `app/reviews/page.tsx`：全站评价流（按路线下拉筛选、覆盖城市提示、空态引导打卡）；`app/page.tsx` 页脚新增「用户评价」入口。
+- **部署**：commit `0e5b638` → push → 部署 `30342527323` 全绿。`/reviews` 200（规范地址 `/reviews/`，无斜杠会 301 跳转，应用内 Link 正常）。
+- **待 PM**：① 跑 `feedback-schema.sql`（否则评价仅存本地、不进后端、/reviews 显示空态）；② 提供有效 AMap Key（见上 T1）。
+- **Step 2（商家看板 /merchant/[id]，密码保护只读聚合 + 回复表单）与 Step 3（分享图叠加评分/照片、社媒背书）为后续里程碑，已预留 schema（merchant_replies）与数据通道。**
