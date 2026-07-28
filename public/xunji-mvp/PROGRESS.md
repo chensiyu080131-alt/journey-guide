@@ -227,3 +227,17 @@
 - **部署**：commit `0e5b638` → push → 部署 `30342527323` 全绿。`/reviews` 200（规范地址 `/reviews/`，无斜杠会 301 跳转，应用内 Link 正常）。
 - **待 PM**：① 跑 `feedback-schema.sql`（否则评价仅存本地、不进后端、/reviews 显示空态）；② 提供有效 AMap Key（见上 T1）。
 - **Step 2（商家看板 /merchant/[id]，密码保护只读聚合 + 回复表单）与 Step 3（分享图叠加评分/照片、社媒背书）为后续里程碑，已预留 schema（merchant_replies）与数据通道。**
+
+### 反馈回路 Step 2 — 商家数据看板（2026-07-28，任务书 Task 0–4 完成）
+- **任务0 现状确认**：静态导出 (`output:'export'`) 架构下 **Next API routes 无法运行**（无 Node 运行时）。任务书要求的"API routes"以等价方案实现（见架构偏差说明）；`reviews`/`merchant_auth`/`merchant_replies` 线上均 404 → PM 尚未跑 SQL（见 BLOCKED）。
+- **架构偏差说明（保任务书精神，不保字面）**：
+  - 「聚合必须在后端」→ Postgres RPC `merchant_stats(p_point_id)`（`security definer`），周打卡/累计打卡/平均评分全部在数据库端 count/avg，前端只拿 3 个数字。
+  - 「密码不得硬编码前端」→ 密码只存 Supabase `merchant_auth.password_hash`（bcrypt cost=10，PM 手动 INSERT）；前端 bcryptjs `compare`，代码/bundle 中无任何明文或哈希。
+  - 「token 服务端校验」→ 无服务端会话可用，等价为：登录态仅存 sessionStorage（关标签页即失效，领导拍板#2），且**每次数据请求都按 point_id 过滤**——A 商家会话对 B 商家页面无效（重新要密码），跨商家数据天然隔离（无 403 状态码，但达成同等隔离效果，已记录 BLOCKED）。
+- **任务1 看板页**：`app/merchant/[pointId]/page.tsx`（服务端壳，`generateStaticParams` 预生成 seq 1–5）+ `merchant-dashboard.tsx`（客户端）。3 张数字卡：本周打卡 / 累计打卡 / 平均评分（RPC 聚合）。无效 id（0、99、abc）→「商家不存在或尚未开通看板」。
+- **任务2 密码保护**：`supabase/merchant-dashboard-schema.sql` 建 `merchant_auth` 并种子富春(`fuchun2026`)/冶春(`yechun2026`) bcrypt 哈希；`lib/merchant-store.ts` `verifyMerchantPassword`；错误密码→「密码错误」留在输入页。
+- **任务3 评价列表+高频词**：最新 5 条（星级/文字/缩略图/日期）；高频词前端分词（2-4 字中文 n-gram + 停用词表，领导拍板#3），Top10 按词频缩放字号 14–32px。
+- **任务4 商家回复**：看板内每条评价可回复（≤100 字，空拒/超长拒），写入 `merchant_replies`；路线详情页评价下方同步显示「商家回复：xxx」（`fetchRepliesForReviews` 批量拉取）。
+- **依赖新增**：`bcryptjs`（+@types），仅用于浏览器端密码比对与种子哈希生成，无服务依赖、免费。
+- **构建**：`npm run build` 通过，`/merchant/1`–`/merchant/5` 预生成（4.77kB）。修复 2 处：① `generateStaticParams` 不能在 `'use client'` 文件 → 拆服务端壳+客户端组件；② 字符串 spread 需 es2015 → 改 `split('')`/`Array.from`。
+- **待 PM**：跑 `supabase/merchant-dashboard-schema.sql`（含 merchant_auth 种子 + merchant_stats RPC + reviews 表兜底创建）。未跑前看板显示 0/0/0 与空评价（页面本身可访问、密码校验不可用→显示「尚未开通」）。

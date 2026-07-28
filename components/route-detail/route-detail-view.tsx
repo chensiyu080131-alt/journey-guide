@@ -18,6 +18,7 @@ import { RouteMap, amapNavUrl } from './route-map'
 import { LiteraryCards } from './literary-cards'
 import { ReviewPanel } from './review-panel'
 import { fetchReviewsForPoint, syncPendingReviews, type PointReviews } from '@/lib/reviews-store'
+import { fetchRepliesForReviews } from '@/lib/merchant-store'
 
 type GeoState =
   | { kind: 'idle' }
@@ -49,11 +50,19 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
   // 反馈回路 Step1：已打卡点位的评价展示 + 写评价面板
   const [reviewOpenSeq, setReviewOpenSeq] = useState<number | null>(null)
   const [reviewsBySeq, setReviewsBySeq] = useState<Record<number, PointReviews>>({})
+  // 反馈回路 Step2：评价对应的商家回复（reviewId -> 回复文本）
+  const [merchantReplies, setMerchantReplies] = useState<Record<string, string>>({})
 
   const loadPointReviews = useCallback(
     (seq: number) => {
       void fetchReviewsForPoint(route.slug, seq, 3).then(pr => {
         setReviewsBySeq(prev => ({ ...prev, [seq]: pr }))
+        const ids = pr.items.map(r => r.id).filter(id => !id.startsWith('local-'))
+        if (ids.length) {
+          void fetchRepliesForReviews(ids).then(replies => {
+            setMerchantReplies(prev => ({ ...prev, ...replies }))
+          })
+        }
       })
     },
     [route.slug]
@@ -354,6 +363,11 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
                                 {r.text && <p className="mt-1 text-ink-600">{r.text}</p>}
                                 {r.photoUrl && (
                                   <img src={r.photoUrl} alt="实拍" className="mt-2 h-20 w-20 rounded-lg object-cover" />
+                                )}
+                                {merchantReplies[r.id] && (
+                                  <div className="mt-2 rounded-lg bg-[#F5EFE0] px-3 py-1.5 text-xs text-[#8A6D2F]">
+                                    商家回复：{merchantReplies[r.id]}
+                                  </div>
                                 )}
                               </li>
                             ))}

@@ -69,3 +69,9 @@
 - T3 真实 GPS 打卡：>100m 禁用打卡按钮的逻辑已用 node + 真实坐标数值自测通过（44m→允许 / 2002m→拒绝），但浏览器端（Chrome DevTools → Sensors 伪造 GPS）实操截图待 GUI 浏览器验证。
 - T4 集齐 5/5 后 html2canvas 生成 1080×1920 分享海报：代码已就位，真机/浏览器截图验证待 PM 端执行。
 - 反馈回路 Step1 评价提交→Supabase 真实落库：需先跑 `feedback-schema.sql`，再于浏览器打卡后提交评价、刷新确认评分仍在、并能在 `/reviews` 看到。
+
+### 商家看板 Step2 待 PM 控制台操作（2026-07-28）
+- **必须跑 `supabase/merchant-dashboard-schema.sql`**（Supabase 控制台 → SQL Editor 运行一次，幂等可重跑）：建 `merchant_auth`（含富春/冶春 bcrypt 种子）、`merchant_replies`、兜底建 `reviews`、创建聚合 RPC `merchant_stats`。未跑前 `/merchant/1`、`/merchant/2` 显示「商家不存在或尚未开通看板」（因为 merchant_auth 查不到）。
+- **试点商家密码（交接给 PM 线下发给商家，勿写入任何前端代码）**：富春茶社（/merchant/1）= `fuchun2026`；冶春茶社（/merchant/2）= `yechun2026`。改密码：bcryptjs 生成新哈希后 UPDATE `merchant_auth.password_hash` 即可，前端无需改动。
+- **架构偏差备案（需 PM 知悉）**：本项目为静态导出（无 Node 服务端），任务书「API routes + 服务端 token 校验 + 403」按等价方案实现——聚合走 Postgres RPC（真后端聚合）、密码走 bcrypt 哈希比对（无明文/无硬编码）、跨商家隔离走「会话绑定 point_id + 每次查询按 point_id 过滤」（A 商家打开 B 看板会重新要密码，效果等同 403，但无 403 状态码）。若未来迁移到有服务端的部署（Vercel/自建 Node），可平移为真 API routes + httpOnly cookie。
+- **验收留证限制**：本环境无 GUI 浏览器，「密码错误被拒 / 空回复被拒 / 跨商家被拒」的截图需 PM 在浏览器执行（逻辑已在代码层实现并经构建验证）；命令行可验证的部分（页面 200、构建产物、SQL 内容）已在 PROGRESS.md 留输出。
