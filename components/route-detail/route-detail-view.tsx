@@ -36,6 +36,13 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
   const [activeSeq, setActiveSeq] = useState<number | undefined>(undefined)
   const [checkedIn, setCheckedIn] = useState<Record<number, string>>({}) // seq -> ISO time
   const [toast, setToast] = useState<string | null>(null)
+  // GPS 打卡需 HTTPS 安全上下文；站点为 HTTP 时移动端（含夸克）geolocation 被禁。
+  // 体验模式：不依赖真实 GPS，直接模拟到点位打卡，便于演示解锁 + 分享图。
+  const [demoMode, setDemoMode] = useState(false)
+  const geoAvailable =
+    typeof navigator !== 'undefined' &&
+    !!navigator.geolocation &&
+    (typeof window === 'undefined' || window.isSecureContext !== false)
 
   // T4：加载本地暂存的打卡记录 + 补偿同步后端（断网时留队列，下次进页再试）
   useEffect(() => {
@@ -94,6 +101,23 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
 
   const handleCheckin = useCallback(
     (point: RoutePoint) => {
+      // 体验模式 或 无 GPS 环境：直接模拟到点位打卡（同坐标、距离 0）
+      if (demoMode || !geoAvailable) {
+        const now = new Date().toISOString()
+        setCheckedIn(prev => ({ ...prev, [point.seq]: now }))
+        saveCheckin({
+          routeSlug: route.slug,
+          pointSeq: point.seq,
+          pointName: point.name,
+          checkedAt: now,
+          lat: point.lat,
+          lng: point.lng,
+          distanceM: 0,
+          simulated: true,
+        })
+        showToast(`✅ 体验打卡：${point.name} · 文学卡片已解锁（演示数据，未用真实 GPS）`)
+        return
+      }
       locate(userPos => {
         const d = distanceMeters(userPos, point)
         if (d <= CHECKIN_RADIUS_METERS) {
@@ -118,7 +142,7 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
         }
       })
     },
-    [locate, showToast, route.slug]
+    [locate, showToast, route.slug, demoMode, geoAvailable]
   )
 
   const userPos = geo.kind === 'ok' ? { lat: geo.lat, lng: geo.lng } : null
@@ -160,16 +184,33 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
             <button
               onClick={() => locate()}
               className="xc-pill bg-charcoal text-white hover:bg-charcoal-50"
-              disabled={geo.kind === 'locating'}
+              disabled={geo.kind === 'locating' || !geoAvailable}
             >
               {geo.kind === 'locating' ? '定位中…' : '📍 获取我的位置'}
             </button>
             <span className="font-serif text-sm text-ink-400">
               {geo.kind === 'ok' && `已定位（精度受浏览器限制）· 已打卡 ${checkedCount}/${route.points.length}`}
               {geo.kind === 'error' && <span className="text-vermilion">{geo.message}</span>}
-              {geo.kind === 'idle' && `打卡需在点位 ${CHECKIN_RADIUS_METERS} 米内`}
+              {geo.kind === 'idle' && (geoAvailable ? `打卡需在点位 ${CHECKIN_RADIUS_METERS} 米内` : 'GPS 需 HTTPS，可开启下方体验模式')}
             </span>
           </div>
+
+          {!geoAvailable && (
+            <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-dashed border-ink-200 bg-paper px-4 py-3">
+              <span className="text-sm text-ink-500">
+                📡 当前站点为 HTTP，移动端（含夸克）GPS 被禁用。开启体验模式可免定位演示打卡解锁。
+              </span>
+              <label className="flex cursor-pointer items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={demoMode}
+                  onChange={e => setDemoMode(e.target.checked)}
+                  className="h-4 w-4 accent-vermilion"
+                />
+                <span className="font-semibold text-vermilion">体验模式</span>
+              </label>
+            </div>
+          )}
         </div>
       </section>
 
@@ -242,7 +283,7 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
                           : 'bg-vermilion text-white hover:opacity-90'
                       }`}
                     >
-                      {done ? '✓ 已打卡' : `到点位打卡（${CHECKIN_RADIUS_METERS}m 内）`}
+                      {done ? '✓ 已打卡' : demoMode || !geoAvailable ? '⚡ 体验打卡（免定位）' : `到点位打卡（${CHECKIN_RADIUS_METERS}m 内）`}
                     </button>
                     <a
                       href={amapNavUrl(p)}

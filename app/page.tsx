@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { HomeNav } from '@/components/home-nav'
 import { HomeCoverCarousel } from '@/components/home-cover-carousel'
 import { HomeTab, getCoversForTab, underDevelopmentTabs } from '@/lib/home-covers'
@@ -83,6 +84,36 @@ export default function HomePage() {
             }}
           />
         )}
+      </section>
+
+      {/* 精选文学路线 · 已上线入口 */}
+      <section className="px-4 sm:px-6 pb-2 flex-shrink-0">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex items-end justify-between">
+            <h2 className="font-serif text-lg font-bold text-literary-ink">精选文学路线</h2>
+            <span className="text-[11px] tracking-[0.2em] text-literary-wine uppercase">Live</span>
+          </div>
+          <Link
+            href="/route/yangzhou-wangzengqi-zaocha/"
+            className="group mt-3 flex flex-col gap-3 rounded-2xl border border-literary-wine/30 bg-white/70 p-5 transition-all hover:border-literary-wine hover:shadow-md sm:flex-row sm:items-center"
+          >
+            <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-literary-wine/10 text-2xl">
+              🍵
+            </div>
+            <div className="flex-1">
+              <p className="text-[11px] tracking-[0.25em] text-literary-wine uppercase">人间滋味 · 扬州</p>
+              <h3 className="mt-0.5 font-serif text-xl font-bold text-literary-ink">
+                汪曾祺的扬州早茶地图
+              </h3>
+              <p className="mt-1 text-xs text-literary-muted leading-relaxed">
+                跟着汪老的笔触，用一顿早茶走完扬州：富春 · 冶春 · 锦春 · 大麒麟阁 · 东关街。GPS 打卡解锁 5 枚文学卡片。
+              </p>
+            </div>
+            <span className="xc-pill shrink-0 bg-literary-wine text-sm text-white group-hover:opacity-90">
+              开始寻迹 →
+            </span>
+          </Link>
+        </div>
       </section>
 
       <footer className="px-4 sm:px-6 pb-8 sm:pb-10 flex-shrink-0">

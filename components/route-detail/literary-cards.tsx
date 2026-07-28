@@ -1,11 +1,42 @@
 'use client'
 
-// T4 文学卡片收集区：打卡解锁卡片（原文 + 手绘插图位 + 地点照片位），
+// T4 文学卡片收集区：打卡解锁卡片（自动生成 SVG 水墨 motif + 摘录预览），
 // 支持生成 Canvas 分享图（已打卡进度 / 集齐特别版）。
+// 「自动生成适配」：每站卡片视觉由点位序号确定性生成，无需设计师出图；
+// 未打卡即展示摘录预览（标注「未打卡」），打卡后解锁全文 + 分享图。
 
 import { useCallback, useState } from 'react'
 import type { RouteDetail, RoutePoint } from '@/lib/route-detail-data'
 import { generateSharePoster } from '@/lib/share-poster'
+
+// 5 站配色（茶/墨/朱砂等中式色），按 seq 取
+const PALETTE = ['#8B4545', '#3E6B3E', '#8A6D2F', '#9C4A42', '#5A6B8C']
+
+/** 确定性水墨 motif：随序号变化的笔触圆 + 印章方块 */
+function CardMotif({ seq, size = 56 }: { seq: number; size?: number }) {
+  const color = PALETTE[(seq - 1) % PALETTE.length]
+  const seed = seq * 37
+  const r1 = 18 + (seed % 5)
+  const r2 = 11 + ((seed >> 2) % 4)
+  return (
+    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden className="opacity-90">
+      <circle cx="32" cy="32" r={r1} fill="none" stroke={color} strokeWidth="2.5" opacity="0.55" />
+      <circle cx="32" cy="32" r={r2} fill={color} opacity="0.12" />
+      <path
+        d={`M${14 + (seed % 6)} 44 Q32 ${20 + (seed % 8)} ${50 - (seed % 6)} 40`}
+        fill="none"
+        stroke={color}
+        strokeWidth="3"
+        strokeLinecap="round"
+        opacity="0.7"
+      />
+      <rect x="42" y="10" width="14" height="14" rx="3" fill={color} opacity="0.85" />
+      <text x="49" y="20.5" textAnchor="middle" fontSize="9" fill="#fff" fontWeight="700">
+        {seq}
+      </text>
+    </svg>
+  )
+}
 
 export function LiteraryCards({
   route,
@@ -69,45 +100,48 @@ export function LiteraryCards({
             return (
               <button
                 key={p.seq}
-                onClick={() => unlocked && setViewCard(p)}
-                className={`group relative aspect-[3/4] overflow-hidden rounded-xl border text-left transition-all ${
+                onClick={() => setViewCard(p)}
+                className={`group relative flex aspect-[3/4] flex-col overflow-hidden rounded-xl border text-left transition-all ${
                   unlocked
                     ? 'border-vermilion/50 bg-paper shadow-sm hover:shadow-md'
-                    : 'cursor-default border-ink-100 bg-ink-50'
+                    : 'border-ink-100 bg-ink-50 hover:border-ink-200'
                 }`}
               >
-                {unlocked ? (
-                  <div className="flex h-full flex-col p-3">
-                    {/* 手绘插图位 */}
-                    <div className="grid flex-1 place-items-center rounded-lg bg-[#F0E6D2] text-3xl">
-                      🍵
-                    </div>
-                    <div className="mt-2">
-                      <div className="font-serif text-sm font-bold text-charcoal leading-tight">
-                        {p.name}
-                      </div>
-                      <div className="mt-1 line-clamp-2 text-[11px] leading-snug text-ink-400">
-                        「{p.excerpt.slice(0, 24)}…」
-                      </div>
-                    </div>
-                    <div className="absolute right-2 top-2 rounded-full bg-vermilion px-2 py-0.5 text-[10px] text-white">
-                      已解锁
-                    </div>
+                {/* 自动生成的水墨 motif 插图位 */}
+                <div className="aspect-[4/3] w-full place-items-center bg-gradient-to-b from-[#F0E6D2] to-[#E8Dcc0] grid">
+                  <CardMotif seq={p.seq} size={64} />
+                </div>
+                <div className="flex flex-1 flex-col p-2.5">
+                  <div className="font-serif text-[13px] font-bold leading-tight text-charcoal">
+                    {p.name.replace(/（.*?）/g, '')}
                   </div>
-                ) : (
-                  <div className="grid h-full place-items-center">
-                    <div className="text-center">
-                      <div className="text-2xl opacity-40">🔒</div>
-                      <div className="mt-2 px-2 font-serif text-xs text-ink-400">
+                  {/* 摘录预览：未打卡也展示，标注「未打卡」 */}
+                  <div
+                    className={`mt-1 line-clamp-3 text-[10.5px] leading-snug ${
+                      unlocked ? 'text-ink-500' : 'text-ink-400'
+                    }`}
+                  >
+                    「{p.excerpt}」
+                  </div>
+                  <div className="mt-auto">
+                    {unlocked ? (
+                      <span className="rounded-full bg-vermilion px-2 py-0.5 text-[10px] text-white">
+                        已解锁
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-ink-100 px-2 py-0.5 text-[10px] text-ink-400">
                         第 {p.seq} 站打卡解锁
-                      </div>
-                    </div>
+                      </span>
+                    )}
                   </div>
-                )}
+                </div>
               </button>
             )
           })}
         </div>
+        <p className="mt-3 text-center text-[11px] text-ink-400">
+          卡片视觉由点位序号自动生成 · 点击任意卡片查看原文与出处
+        </p>
       </div>
 
       {/* 卡片详情弹层 */}
@@ -120,12 +154,21 @@ export function LiteraryCards({
             className="w-full max-w-sm rounded-2xl bg-paper p-6 shadow-2xl"
             onClick={e => e.stopPropagation()}
           >
-            <div className="text-center text-xs tracking-[0.3em] text-vermilion">
-              寻迹 · 文学卡片
+            <div className="flex items-center justify-between">
+              <div className="text-center text-xs tracking-[0.3em] text-vermilion">寻迹 · 文学卡片</div>
+              <span
+                className={`rounded-full px-2 py-0.5 text-[10px] ${
+                  checkedSeqs.includes(viewCard.seq)
+                    ? 'bg-vermilion text-white'
+                    : 'bg-ink-100 text-ink-400'
+                }`}
+              >
+                {checkedSeqs.includes(viewCard.seq) ? '已解锁' : '未打卡'}
+              </span>
             </div>
-            {/* 手绘插图位 */}
-            <div className="mt-4 grid aspect-video place-items-center rounded-xl bg-[#F0E6D2] text-5xl">
-              🍵
+            {/* 自动生成水墨 motif */}
+            <div className="mt-4 grid aspect-video place-items-center rounded-xl bg-gradient-to-b from-[#F0E6D2] to-[#E8Dcc0]">
+              <CardMotif seq={viewCard.seq} size={96} />
             </div>
             <h3 className="mt-4 text-center font-serif text-xl font-bold text-charcoal">
               {viewCard.name}
@@ -134,7 +177,6 @@ export function LiteraryCards({
               「{viewCard.excerpt}」
               <footer className="mt-1 text-xs text-ink-400">—— {viewCard.excerptSource}</footer>
             </blockquote>
-            {/* 地点照片位 */}
             <div className="mt-3 grid h-20 place-items-center rounded-xl border border-dashed border-ink-200 text-xs text-ink-400">
               📷 地点照片位（打卡照片，后端上线后展示）
             </div>
