@@ -1,11 +1,12 @@
 'use client'
 
 // T4 文学卡片收集区：打卡解锁卡片（自动生成 SVG 水墨 motif + 摘录预览），
-// 支持生成 Canvas 分享图（已打卡进度 / 集齐特别版）。
+// 集齐 5 枚后可用 html2canvas 生成 1080×1920 分享图（含寻迹品牌 + 路线名），
+// html2canvas 不可用时回退既有零依赖 Canvas 生成器。
 // 「自动生成适配」：每站卡片视觉由点位序号确定性生成，无需设计师出图；
 // 未打卡即展示摘录预览（标注「未打卡」），打卡后解锁全文 + 分享图。
 
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import type { RouteDetail, RoutePoint } from '@/lib/route-detail-data'
 import { generateSharePoster } from '@/lib/share-poster'
 
@@ -47,26 +48,46 @@ export function LiteraryCards({
 }) {
   const [poster, setPoster] = useState<string | null>(null)
   const [viewCard, setViewCard] = useState<RoutePoint | null>(null)
+  const posterRef = useRef<HTMLDivElement>(null)
 
   const checkedCount = checkedSeqs.length
   const total = route.points.length
   const allCollected = checkedCount >= total
+  // 分享图引用的原文：取第一张已解锁卡片，没有则取路线首站
+  const posterSrc = route.points.find(p => checkedSeqs.includes(p.seq)) ?? route.points[0]
 
-  const makePoster = useCallback(() => {
-    // 引用取第一张已解锁卡片的原文；没有则取路线第一个点位
-    const src =
-      route.points.find(p => checkedSeqs.includes(p.seq)) ?? route.points[0]
+  const makePoster = useCallback(async () => {
+    // 优先 html2canvas 捕获真实 DOM 海报（1080×1920，含品牌 + 路线名）
+    try {
+      if (posterRef.current) {
+        const { default: html2canvas } = await import('html2canvas')
+        const canvas = await html2canvas(posterRef.current, {
+          width: 1080,
+          height: 1920,
+          scale: 1,
+          backgroundColor: '#F7F1E5',
+          logging: false,
+        })
+        const url = canvas.toDataURL('image/png')
+        if (url) {
+          setPoster(url)
+          return
+        }
+      }
+    } catch {
+      // html2canvas 不可用 → 回退零依赖 Canvas 生成器
+    }
     const url = generateSharePoster({
       routeTitle: route.title,
       author: route.author,
       city: route.city,
       checkedCount,
       totalCount: total,
-      quote: src.excerpt.length > 80 ? src.excerpt.slice(0, 80) + '…' : src.excerpt,
-      quoteSource: src.excerptSource,
+      quote: posterSrc.excerpt.length > 80 ? posterSrc.excerpt.slice(0, 80) + '…' : posterSrc.excerpt,
+      quoteSource: posterSrc.excerptSource,
     })
     if (url) setPoster(url)
-  }, [route, checkedSeqs, checkedCount, total])
+  }, [route, posterSrc, checkedCount, total])
 
   return (
     <section className="bg-white">
@@ -81,15 +102,15 @@ export function LiteraryCards({
           </div>
           <button
             onClick={makePoster}
-            disabled={checkedCount === 0}
+            disabled={!allCollected}
             className={`xc-pill text-sm ${
-              checkedCount === 0
+              !allCollected
                 ? 'cursor-not-allowed bg-ink-100 text-ink-400'
                 : 'bg-vermilion text-white hover:opacity-90'
             }`}
-            title={checkedCount === 0 ? '至少打卡 1 个点位后可生成' : ''}
+            title={!allCollected ? `还需解锁 ${total - checkedCount} 个点位` : ''}
           >
-            {allCollected ? '🖼 生成集卡分享图' : '🖼 生成进度分享图'}
+            {allCollected ? '🖼 生成集卡分享图' : `还需解锁 ${total - checkedCount} 个点位`}
           </button>
         </div>
 
@@ -142,6 +163,90 @@ export function LiteraryCards({
         <p className="mt-3 text-center text-[11px] text-ink-400">
           卡片视觉由点位序号自动生成 · 点击任意卡片查看原文与出处
         </p>
+      </div>
+
+      {/* 隐藏的分享图海报 DOM（1080×1920，html2canvas 捕获源） */}
+      <div
+        ref={posterRef}
+        aria-hidden
+        style={{
+          position: 'fixed',
+          left: -10000,
+          top: 0,
+          width: 1080,
+          height: 1920,
+          background: '#F7F1E5',
+          fontFamily: '"Noto Serif SC", "Songti SC", "STSong", serif',
+          color: '#2F2A26',
+          boxSizing: 'border-box',
+          padding: 80,
+        }}
+      >
+        <div style={{ position: 'absolute', inset: 40, border: '3px solid #8B4545', borderRadius: 8 }} />
+        <div style={{ position: 'absolute', inset: 52, border: '1px solid rgba(139,69,69,0.4)', borderRadius: 6 }} />
+        <div style={{ textAlign: 'center', paddingTop: 56 }}>
+          <div style={{ fontSize: 84, fontWeight: 700, color: '#8B4545', letterSpacing: 12 }}>寻 迹</div>
+          <div style={{ fontSize: 30, color: '#6B5D52', marginTop: 16, letterSpacing: 4 }}>有迹可循 · 寻迹而至</div>
+        </div>
+        <div style={{ height: 2, background: 'rgba(139,69,69,0.35)', margin: '56px 60px' }} />
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 60, fontWeight: 700, color: '#2F2A26', lineHeight: 1.3 }}>{route.title}</div>
+          <div style={{ fontSize: 34, color: '#6B5D52', marginTop: 24 }}>{route.author} · {route.city}</div>
+        </div>
+        <div style={{ textAlign: 'center', marginTop: 52 }}>
+          <span
+            style={{
+              display: 'inline-block',
+              background: '#8B4545',
+              color: '#F7F1E5',
+              fontSize: 38,
+              fontWeight: 700,
+              padding: '20px 48px',
+              borderRadius: 999,
+            }}
+          >
+            已集齐 {total} 枚文学印记
+          </span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: 60 }}>
+          {route.points.map(p => (
+            <div key={p.seq} style={{ width: 150, textAlign: 'center' }}>
+              <div
+                style={{
+                  width: 150,
+                  height: 200,
+                  borderRadius: 12,
+                  background: 'linear-gradient(180deg,#F0E6D2,#E8DCC0)',
+                  border: '2px solid #8B4545',
+                  display: 'grid',
+                  placeItems: 'center',
+                  fontSize: 56,
+                  color: PALETTE[(p.seq - 1) % PALETTE.length],
+                  fontWeight: 700,
+                }}
+              >
+                {p.seq}
+              </div>
+              <div style={{ fontSize: 24, marginTop: 12, color: '#5A4632' }}>
+                {p.name.replace(/（.*?）/g, '').slice(0, 5)}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: 64, padding: '0 80px' }}>
+          <div style={{ fontSize: 110, color: '#8B4545', lineHeight: 1 }}>「</div>
+          <div style={{ fontSize: 40, color: '#2F2A26', lineHeight: 1.6, marginTop: -28 }}>
+            {posterSrc.excerpt.length > 60 ? posterSrc.excerpt.slice(0, 60) + '…' : posterSrc.excerpt}
+          </div>
+          <div style={{ fontSize: 30, color: '#6B5D52', marginTop: 24 }}>—— {posterSrc.excerptSource}</div>
+        </div>
+        <div style={{ position: 'absolute', bottom: 96, left: 0, right: 0, textAlign: 'center' }}>
+          <div style={{ height: 2, background: 'rgba(139,69,69,0.35)', margin: '0 60px 36px' }} />
+          <div style={{ fontSize: 30, color: '#6B5D52' }}>跟着文学去旅行 · 到点位打卡解锁文学卡片</div>
+          <div style={{ fontSize: 34, fontWeight: 700, color: '#8B4545', marginTop: 14, letterSpacing: 4 }}>
+            寻迹 XUNJI
+          </div>
+        </div>
       </div>
 
       {/* 卡片详情弹层 */}

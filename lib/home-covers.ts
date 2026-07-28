@@ -35,7 +35,7 @@ const bookCovers: HomeCover[] = [
     category: '书籍',
     title: '人间滋味',
     subtitle: '汪曾祺 · 高邮烟火',
-    route: '/guide/renjianziwei',
+    route: '/route/yangzhou-wangzengqi-zaocha/',
     image: '/images/cover-renjianziwei.png',
     style: {
       bg: 'linear-gradient(165deg, #FDF8F2 0%, #E8D8CC 100%)',

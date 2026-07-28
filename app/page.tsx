@@ -117,6 +117,14 @@ export default function HomePage() {
       </section>
 
       <footer className="px-4 sm:px-6 pb-8 sm:pb-10 flex-shrink-0">
+        <div className="mb-6 flex items-center justify-center gap-6 text-sm">
+          <Link href="/routes" className="font-serif text-literary-wine hover:opacity-80">
+            所有路线
+          </Link>
+          <Link href="/favorites" className="font-serif text-literary-wine hover:opacity-80">
+            我的收藏
+          </Link>
+        </div>
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-10 text-center sm:text-left max-w-6xl mx-auto">
           <div>
             <p className="text-sm font-serif font-medium text-literary-ink">寻迹 · 有迹可循</p>

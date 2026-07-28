@@ -157,6 +157,12 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
     [route.points, userPos]
   )
 
+  // T3：真实定位模式下，距点位超过打卡半径则禁用该点打卡按钮
+  // （反向验证：1km 外禁用 / 回到 100m 内重新定位后启用）
+  const realMode = geoAvailable && !demoMode
+  const tooFarFor = (p: { distance: number | null }) =>
+    realMode && geo.kind === 'ok' && p.distance !== null && p.distance > CHECKIN_RADIUS_METERS
+
   return (
     <div className="bg-paper min-h-screen">
       {/* ① 路线概览 */}
@@ -276,14 +282,22 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
                   <div className="mt-4 flex flex-wrap gap-3">
                     <button
                       onClick={() => handleCheckin(p)}
-                      disabled={done}
+                      disabled={done || tooFarFor(p)}
                       className={`xc-pill text-sm ${
                         done
                           ? 'cursor-default bg-[#EAF3EA] text-[#3E6B3E]'
+                          : tooFarFor(p)
+                          ? 'cursor-not-allowed bg-ink-100 text-ink-400'
                           : 'bg-vermilion text-white hover:opacity-90'
                       }`}
                     >
-                      {done ? '✓ 已打卡' : demoMode || !geoAvailable ? '⚡ 体验打卡（免定位）' : `到点位打卡（${CHECKIN_RADIUS_METERS}m 内）`}
+                      {done
+                        ? '✓ 已打卡'
+                        : tooFarFor(p)
+                        ? `距「${p.name}」过远 · 需 ${CHECKIN_RADIUS_METERS}m 内`
+                        : demoMode || !geoAvailable
+                        ? '⚡ 体验打卡（免定位）'
+                        : `到点位打卡（${CHECKIN_RADIUS_METERS}m 内）`}
                     </button>
                     <a
                       href={amapNavUrl(p)}

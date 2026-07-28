@@ -283,7 +283,7 @@ function CoverCard({
                   <span className="opacity-80">→</span>
                 </span>
               </button>
-            ) : cover.category === '书籍' ? (
+            ) : cover.route?.startsWith('/route/') ? (
               <Link
                 href={href}
                 onClick={(e) => e.stopPropagation()}
