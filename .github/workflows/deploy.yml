@@ -81,22 +81,37 @@ jobs:
             #    仓库 conf 未被命中。对含 xuncheng root 的真实配置文件做幂等修补：
             #    a. try_files 的 /index.html 回退改为 =404（未知路径不再假装成首页）
             #    b. server 块内注入 error_page 404 /404.html（品牌 404 页）
-            #    安全约束：与其他项目共用的文件（含 careerlens 等其他 root）只诊断不改，防误伤。
+            #    安全约束：按 server 块级修补（awk 计大括号深度），同文件内其他项目（careerlens 等）的块不动。
             echo "--- 诊断：xuncheng root 出现在哪些配置文件 ---"
             grep -rn "html/xuncheng" /etc/nginx/ 2>/dev/null || true
-            for f in $(grep -rl "html/xuncheng" /etc/nginx/ 2>/dev/null); do
-              if grep -q "careerlens" "$f"; then
-                echo "SKIP(共用文件，需人工处理): $f"
-                continue
-              fi
-              cp "$f" "$f.bak-404fix" 2>/dev/null || true
-              echo "patching $f"
-              # a) 去掉 SPA 式回退：try_files ... /index.html; -> ... =404;
-              sed -i -E 's#(try_files[^;]*) /index\.html;#\1 =404;#g' "$f"
-              # b) 注入 error_page（幂等：文件内没有才加，插在 root xuncheng 行后）
-              if ! grep -q "error_page 404" "$f"; then
-                sed -i -E 's#^([[:space:]]*)(root[[:space:]]+/usr/share/nginx/html/xuncheng;)#\1\2\n\1error_page 404 /404.html;#' "$f"
-              fi
+            cat > /tmp/patch-xuncheng-404.awk <<'AWKEOF'
+            function flush(  i, line, isx, hasep){
+              isx=0; hasep=0
+              for(i=1;i<=n;i++){ if(buf[i] ~ /root[ \t]+\/usr\/share\/nginx\/html\/xuncheng;/) isx=1; if(buf[i] ~ /error_page[ \t]+404/) hasep=1 }
+              for(i=1;i<=n;i++){
+                line=buf[i]
+                if(isx && line ~ /try_files/){ gsub(/ \/index\.html;/, " =404;", line) }
+                print line
+                if(isx && !hasep && line ~ /root[ \t]+\/usr\/share\/nginx\/html\/xuncheng;/){ print "        error_page 404 /404.html;"; hasep=1 }
+              }
+              n=0
+            }
+            {
+              if(!ins && $0 ~ /^[ \t]*server[ \t]*\{[ \t]*$/){ ins=1; depth=1; n=0; buf[++n]=$0; next }
+              if(ins){
+                t=$0; o=gsub(/\{/,"{",t); c=gsub(/\}/,"}",t); depth+=o-c; buf[++n]=$0
+                if(depth<=0){ flush(); ins=0 }
+                next
+              }
+              print
+            }
+            END{ if(ins) flush() }
+            AWKEOF
+            for f in $(grep -rl "html/xuncheng" /etc/nginx/ 2>/dev/null | grep -v "\.bak"); do
+              cp "$f" "$f.bak-404fix"
+              echo "patching(server块级) $f"
+              awk -f /tmp/patch-xuncheng-404.awk "$f" > "$f.new" && mv "$f.new" "$f"
+              diff "$f.bak-404fix" "$f" || true
             done
             if nginx -t; then
               nginx -s reload 2>/dev/null || systemctl reload nginx 2>/dev/null || (pkill -9 nginx 2>/dev/null; nginx)
