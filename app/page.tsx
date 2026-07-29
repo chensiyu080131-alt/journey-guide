@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { HomeNav } from '@/components/home-nav'
 import { HomeCoverCarousel } from '@/components/home-cover-carousel'
 import { HeroAnimation } from '@/app/components/hero-animation'
+import { SectionHome } from '@/app/components/section-home'
 import { HomeTab, getCoversForTab, underDevelopmentTabs } from '@/lib/home-covers'
 
 const taglineImages: Record<HomeTab, string> = {
@@ -44,6 +45,8 @@ export default function HomePage() {
 
       {activeTab === '首页' ? (
         <HeroAnimation />
+      ) : (activeTab === '🎮 游戏' || activeTab === '🎵 音乐') ? (
+        <SectionHome tab={activeTab} />
       ) : (
         <>
           <div className="text-center px-6 flex-shrink-0">
