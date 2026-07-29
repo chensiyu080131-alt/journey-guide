@@ -33,6 +33,10 @@ export interface RouteDetail {
   city: string
   book: string
   summary: string
+  /** 一句白话解释（Task4）：区别于 summary 的文学化表达，直接告诉用户"这是干什么的" */
+  plainExplain?: string
+  /** 为什么值得去（Task4）：给用户一个行动理由 */
+  whyWorth?: string
   points: RoutePoint[]
 }
 
@@ -44,6 +48,8 @@ interface RawRouteFile {
     city: string
     book: string
     summary: string
+    plain_explain?: string
+    why_worth?: string
   }
   points: Array<{
     seq: number
@@ -67,6 +73,8 @@ function normalize(raw: RawRouteFile): RouteDetail {
     city: raw.route.city,
     book: raw.route.book,
     summary: raw.route.summary,
+    plainExplain: raw.route.plain_explain,
+    whyWorth: raw.route.why_worth,
     points: raw.points
       .slice()
       .sort((a, b) => a.seq - b.seq)
