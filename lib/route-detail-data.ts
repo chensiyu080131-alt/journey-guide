@@ -8,7 +8,7 @@ import rawHangzhouSudi from '@/public/xunji-mvp/db/hangzhou-sudi-sushi.json'
 import rawHangzhouBaidi from '@/public/xunji-mvp/db/hangzhou-baidi-baijiuyi.json'
 import rawNanjingQinhuai from '@/public/xunji-mvp/db/nanjing-qinhuaihe-zhuziqing.json'
 import rawNanjingFuzimiao from '@/public/xunji-mvp/db/nanjing-fuzimiao-shishuoxinyu.json'
-import rawYuanshen from '@/public/xunji-mvp/db/yuanshen-liyue-zhangjiajie.json'
+import rawYuanshen from '@/public/xunji-mvp/db/zhangjiajie-qifeng-ruhua.json'
 import rawYangzhouMan from '@/public/xunji-mvp/db/yangzhou-man-jiangkui.json'
 
 export type ExcerptConfidence = 'verified' | 'derived' | 'pending'
