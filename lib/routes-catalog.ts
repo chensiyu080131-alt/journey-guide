@@ -81,15 +81,15 @@ export const routesCatalog: RouteCatalogItem[] = [
       '1923 年夏夜，朱自清与俞平伯同泛秦淮。循那夜的桨声灯影，从夫子庙到桃叶渡，走一段民国文人的河。',
   },
   {
-    slug: 'yuanshen-liyue-zhangjiajie',
-    title: '璃月巡礼 · 原神里的张家界',
-    book: '游戏·原神（璃月地区）',
+    slug: 'zhangjiajie-qifeng-ruhua',
+    title: '奇峰入画来 · 张家界的山水长卷',
+    book: '吴冠中写生 · 沈从文《湘行散记》',
     city: '张家界',
-    emoji: '🎮',
+    emoji: '⛰️',
     status: 'live',
     pointsCount: 5,
     blurb:
-      '层岩巨渊的云海、绝云间石峰——原神的璃月从张家界的奇峰里走来。循取景地走一段现实与虚构互文的山水。',
+      '三千奇峰拔地而起，是画家吴冠中笔下"养在深闺人未识"的秘境，也是电影《阿凡达》悬浮山的灵感之地。走进峰林，看真实山水如何变成画里的世界。',
   },
   {
     slug: 'yangzhou-man-jiangkui',
