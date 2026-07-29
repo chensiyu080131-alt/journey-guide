@@ -220,8 +220,8 @@ const gameCovers: HomeCover[] = [
   {
     id: 'yuanshen',
     category: '🎮 游戏',
-    title: '原神',
-    subtitle: '璃月取景 · 张家界巡礼',
+    title: '原神 · 璃月原型地',
+    subtitle: '原神璃月原型地 · 去张家界找',
     route: '/route/yuanshen-liyue-zhangjiajie/',
     image: '/images/cover-yuanshen.jpg',
     style: {
@@ -283,8 +283,8 @@ const musicCovers: HomeCover[] = [
   {
     id: 'yangzhou-song',
     category: '🎵 音乐',
-    title: '扬州慢',
-    subtitle: '姜夔 · 淮左名都',
+    title: '扬州慢 · 一首词里的扬州',
+    subtitle: '跟着《扬州慢》逛扬州 · 词里地名巡礼',
     route: '/route/yangzhou-man-jiangkui/',
     style: {
       bg: 'linear-gradient(165deg, #D4E8E0 0%, #B8D4C8 100%)',
