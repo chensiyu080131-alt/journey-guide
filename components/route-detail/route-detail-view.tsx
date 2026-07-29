@@ -42,10 +42,22 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
   // GPS 打卡需 HTTPS 安全上下文；站点为 HTTP 时移动端（含夸克）geolocation 被禁。
   // 体验模式：不依赖真实 GPS，直接模拟到点位打卡，便于演示解锁 + 分享图。
   const [demoMode, setDemoMode] = useState(false)
+  // 首次进入路线页 + HTTP 环境：弹一次轻提示，引导用户开体验模式（P0 修复）
+  const [showDemoHint, setShowDemoHint] = useState(false)
   const geoAvailable =
     typeof navigator !== 'undefined' &&
     !!navigator.geolocation &&
     (typeof window === 'undefined' || window.isSecureContext !== false)
+
+  useEffect(() => {
+    if (!geoAvailable && typeof window !== 'undefined') {
+      const seen = window.sessionStorage.getItem('xunji.demoHintShown')
+      if (!seen) {
+        setShowDemoHint(true)
+        window.sessionStorage.setItem('xunji.demoHintShown', '1')
+      }
+    }
+  }, [geoAvailable])
 
   // 反馈回路 Step1：已打卡点位的评价展示 + 写评价面板
   const [reviewOpenSeq, setReviewOpenSeq] = useState<number | null>(null)
@@ -227,20 +239,45 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
             </span>
           </div>
 
+          {/* P0：体验模式入口 —— 醒目横幅，不藏二级交互 */}
           {!geoAvailable && (
-            <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-dashed border-ink-200 bg-paper px-4 py-3">
-              <span className="text-sm text-ink-500">
-                📡 当前站点为 HTTP，移动端（含夸克）GPS 被禁用。开启体验模式可免定位演示打卡解锁。
-              </span>
-              <label className="flex cursor-pointer items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={demoMode}
-                  onChange={e => setDemoMode(e.target.checked)}
-                  className="h-4 w-4 accent-vermilion"
-                />
-                <span className="font-semibold text-vermilion">体验模式</span>
-              </label>
+            <div className={`mt-4 rounded-2xl border-2 px-5 py-4 transition-all ${
+              demoMode
+                ? 'border-vermilion bg-vermilion/5'
+                : 'border-dashed border-vermilion/40 bg-vermilion/3'
+            }`}>
+              {showDemoHint && !demoMode && (
+                <div className="mb-2 text-sm font-semibold text-vermilion">
+                  💡 首次提示：当前网页为 HTTP，无法获取你的真实定位，打卡按钮会显示"过远"。
+                  <button
+                    type="button"
+                    onClick={() => { setDemoMode(true); setShowDemoHint(false) }}
+                    className="ml-2 underline underline-offset-2 hover:opacity-70"
+                  >
+                    点此一键开启体验模式 →
+                  </button>
+                </div>
+              )}
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="text-sm text-ink-600">
+                  {demoMode ? (
+                    <span><span className="font-bold text-vermilion">✓ 体验模式已开启</span> · 可直接点「体验打卡」解锁全部点位</span>
+                  ) : (
+                    <span>📡 当前为 HTTP 站点，移动端 GPS 被浏览器禁用。开启体验模式可<span className="font-semibold text-vermilion">免定位模拟打卡</span>。</span>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setDemoMode(!demoMode)}
+                  className={`xc-pill text-sm transition-all ${
+                    demoMode
+                      ? 'border-2 border-ink-200 bg-white text-ink-600'
+                      : 'bg-vermilion text-white hover:opacity-90'
+                  }`}
+                >
+                  {demoMode ? '关闭体验模式' : '⚡ 开启体验模式'}
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -325,6 +362,19 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
                         ? '⚡ 体验打卡（免定位）'
                         : `到点位打卡（${CHECKIN_RADIUS_METERS}m 内）`}
                     </button>
+                    {/* P0：未开体验模式且因 HTTP 过远禁用时，直接加快捷入口 */}
+                    {!done && tooFarFor(p) && !demoMode && !geoAvailable && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDemoMode(true)
+                          setTimeout(() => handleCheckin(p), 50)
+                        }}
+                        className="xc-pill border-2 border-vermilion bg-white text-sm text-vermilion hover:bg-vermilion/5"
+                      >
+                        ⚡ 开启体验模式并打卡
+                      </button>
+                    )}
                     <a
                       href={amapNavUrl(p)}
                       target="_blank"
