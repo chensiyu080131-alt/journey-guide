@@ -32,6 +32,16 @@ const CONFIDENCE_LABEL: Record<RoutePoint['excerptConfidence'], { text: string; 
   pending: { text: '出处待考', cls: 'bg-[#F6E9E7] text-[#9C4A42] border-[#E8CBC6]' },
 }
 
+/** Task4：把路线"是什么"翻译成一句人话。优先用 JSON 里的 plainExplain，没有则按 book 类型推断兜底。 */
+function routeSummaryPlain(route: RouteDetail): string {
+  if (route.plainExplain) return route.plainExplain
+  // 兜底：按 book 字段推断
+  const b = route.book || ''
+  if (b.includes('游戏')) return `跟着游戏场景，去现实中的取景灵感地走一遍，在每个点位对比"游戏里 vs 现实中"。`
+  if (b.includes('音乐') || b.includes('词') || b.includes('曲')) return `这不是听歌打卡，而是跟着词里写到的地名和意境，去走${route.city}。`
+  return `跟着《${route.book}》里的描写，去${route.city}走这条真实的文学路线，到每个点位打卡解锁文学卡片。`
+}
+
 export function RouteDetailView({ route: initialRoute }: { route: RouteDetail }) {
   const [route, setRoute] = useState<RouteDetail>(initialRoute)
   const [dataSource, setDataSource] = useState<'static' | 'supabase'>('static')
@@ -202,8 +212,14 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
     realMode && geo.kind === 'ok' && p.distance !== null && p.distance > CHECKIN_RADIUS_METERS
 
   return (
-    <div className="bg-paper min-h-screen">
-      {/* ① 路线概览 */}
+    <div className={`bg-paper min-h-screen ${demoMode ? 'demo-mode-active' : ''}`}>
+      {/* 体验模式全局状态条：开启时顶部明显提示，避免误以为真实定位（Task1 强化） */}
+      {demoMode && (
+        <div className="sticky top-16 z-30 bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-sm text-amber-800">
+          <span className="font-semibold">🎭 体验模式进行中</span> · 当前为模拟打卡，非真实定位 · <button type="button" onClick={() => setDemoMode(false)} className="underline underline-offset-2 hover:opacity-70">退出</button>
+        </div>
+      )}
+      {/* ① 路线概览 —— Task4 统一首屏骨架：一句人话解释 / 为什么值得去 */}
       <section className="bg-paper">
         <div className="xc-container pt-10 pb-8">
           <div className="text-xs text-ink-400">
@@ -222,7 +238,19 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
             {route.title}
           </h1>
           <p className="mt-2 font-serif text-ink-400 tracking-[0.15em]">{route.author} · 共 {route.points.length} 个点位</p>
-          <p className="mt-5 max-w-2xl font-serif text-base text-ink-500 leading-relaxed">{route.summary}</p>
+
+          {/* Task4：一句人话解释（区别于 summary 的文学化表达） */}
+          <div className="mt-5 rounded-2xl bg-white/70 border border-ink-100 px-5 py-4">
+            <p className="text-base text-ink-700 leading-relaxed font-serif">
+              <span className="font-semibold text-vermilion">这是什么 · </span>
+              {routeSummaryPlain(route)}
+            </p>
+          </div>
+          {/* Task4：为什么值得去 */}
+          <div className="mt-3 text-sm text-ink-500 leading-relaxed">
+            <span className="font-semibold text-charcoal">为什么值得去 · </span>{route.whyWorth || route.summary}
+          </div>
+          <p className="mt-3 max-w-2xl font-serif text-sm text-ink-400 leading-relaxed">{route.summary}</p>
 
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <button
@@ -335,7 +363,11 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
                     <footer className="mt-1.5 text-xs text-ink-400 not-italic">—— {p.excerptSource}</footer>
                   </blockquote>
 
-                  <p className="mt-3 text-sm leading-relaxed text-ink-500">{p.interpretation}</p>
+                  {/* Task2/3：文学 ↔ 现实 对照说明块 */}
+                  <div className="mt-3 rounded-xl border border-ink-100 bg-paper/60 px-4 py-3">
+                    <div className="text-[11px] font-semibold tracking-widest text-ink-400 uppercase mb-1.5">文学 ↔ 现实 对照</div>
+                    <p className="text-sm leading-relaxed text-ink-600">{p.interpretation}</p>
+                  </div>
 
                   <div className="mt-4 rounded-xl bg-paper px-4 py-3 text-sm text-ink-500">
                     <span className="font-semibold text-[#8A6D2F]">打卡任务：</span>
