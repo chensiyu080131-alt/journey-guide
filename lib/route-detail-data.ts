@@ -2,6 +2,12 @@
 // 切换方式：实现 fetchRouteFromSupabase 并把 getRouteDetail 内部分支打开，页面代码无需改动
 
 import rawYangzhou from '@/public/xunji-mvp/db/yangzhou-wangzengqi-zaocha.json'
+import rawSuzhouHanshan from '@/public/xunji-mvp/db/suzhou-hanshansi-fengqiao.json'
+import rawSuzhouZhuozheng from '@/public/xunji-mvp/db/suzhou-zhuozhengyuan-wenzhengming.json'
+import rawHangzhouSudi from '@/public/xunji-mvp/db/hangzhou-sudi-sushi.json'
+import rawHangzhouBaidi from '@/public/xunji-mvp/db/hangzhou-baidi-baijiuyi.json'
+import rawNanjingQinhuai from '@/public/xunji-mvp/db/nanjing-qinhuaihe-zhuziqing.json'
+import rawNanjingFuzimiao from '@/public/xunji-mvp/db/nanjing-fuzimiao-shishuoxinyu.json'
 
 export type ExcerptConfidence = 'verified' | 'derived' | 'pending'
 
@@ -80,7 +86,15 @@ function normalize(raw: RawRouteFile): RouteDetail {
 }
 
 // mock 数据源注册表（新增路线：加一个 JSON 导入即可）
-const MOCK_ROUTES: RouteDetail[] = [normalize(rawYangzhou as RawRouteFile)]
+const MOCK_ROUTES: RouteDetail[] = [
+  normalize(rawYangzhou as RawRouteFile),
+  normalize(rawSuzhouHanshan as RawRouteFile),
+  normalize(rawSuzhouZhuozheng as RawRouteFile),
+  normalize(rawHangzhouSudi as RawRouteFile),
+  normalize(rawHangzhouBaidi as RawRouteFile),
+  normalize(rawNanjingQinhuai as RawRouteFile),
+  normalize(rawNanjingFuzimiao as RawRouteFile),
+]
 
 export function getAllRouteSlugs(): string[] {
   return MOCK_ROUTES.map(r => r.slug)
