@@ -218,18 +218,17 @@ const filmCovers: HomeCover[] = [
 // ──────────────────────────────────────
 const gameCovers: HomeCover[] = [
   {
-    id: 'yuanshen',
+    id: 'zhangjiajie-qifeng',
     category: '🎮 游戏',
-    title: '原神 · 璃月原型地',
-    subtitle: '原神璃月原型地 · 去张家界找',
-    route: '/route/yuanshen-liyue-zhangjiajie/',
-    image: '/images/cover-yuanshen.jpg',
+    title: '张家界 · 奇峰入画来',
+    subtitle: '山水画灵感地 · 阿凡达取景',
+    route: '/route/zhangjiajie-qifeng-ruhua/',
     style: {
-      bg: 'linear-gradient(165deg, #E0D8F0 0%, #B8A8D8 100%)',
-      border: '#6A5A8A',
-      title: '#3A2E5A',
-      subtitle: '#6A5A8A',
-      motif: 'game',
+      bg: 'linear-gradient(165deg, #D4E8D4 0%, #A8C8A8 100%)',
+      border: '#5A7A5A',
+      title: '#3A4A3A',
+      subtitle: '#6A8A6A',
+      motif: 'landscape',
     },
   },
   {
@@ -485,7 +484,7 @@ const cityCovers: HomeCover[] = [
   { id: 'city-xian', category: '🏙️ 城市', title: '西安', subtitle: '长安 · 盛唐遗韵', route: '/guide/xian', style: { bg: 'linear-gradient(165deg, #E0D0B8 0%, #C8A878 100%)', border: '#8A6A3A', title: '#4A3A1E', subtitle: '#7A5A2A', motif: 'city' } },
   { id: 'city-yangzhou', category: '🏙️ 城市', title: '扬州', subtitle: '淮左名都 · 二分明月', route: '/guide/yangzhou', style: { bg: 'linear-gradient(165deg, #D4E8E0 0%, #B8D4C8 100%)', border: '#5A7D78', title: '#3D5550', subtitle: '#6B8480', motif: 'city' } },
   { id: 'city-fenghuang', category: '🏙️ 城市', title: '凤凰', subtitle: '边城 · 沱江吊脚楼', route: '/guide/fenghuang', style: { bg: 'linear-gradient(165deg, #C8D0D8 0%, #98A8B8 100%)', border: '#5A6878', title: '#2E3E4E', subtitle: '#5A6A7A', motif: 'city' } },
-  { id: 'city-zhangjiajie', category: '🏙️ 城市', title: '张家界', subtitle: '奇峰 · 原神取景', route: '/guide/zhangjiajie', style: { bg: 'linear-gradient(165deg, #D4E8D4 0%, #A8C8A8 100%)', border: '#5A7A5A', title: '#3A4A3A', subtitle: '#6A8A6A', motif: 'city' } },
+  { id: 'city-zhangjiajie', category: '🏙️ 城市', title: '张家界', subtitle: '奇峰 · 山水画灵感地', route: '/guide/zhangjiajie', style: { bg: 'linear-gradient(165deg, #D4E8D4 0%, #A8C8A8 100%)', border: '#5A7A5A', title: '#3A4A3A', subtitle: '#6A8A6A', motif: 'city' } },
 ]
 
 export function getCoversForTab(tab: HomeTab): HomeCover[] {
