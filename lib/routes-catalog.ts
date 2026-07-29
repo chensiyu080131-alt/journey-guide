@@ -81,6 +81,28 @@ export const routesCatalog: RouteCatalogItem[] = [
       '1923 年夏夜，朱自清与俞平伯同泛秦淮。循那夜的桨声灯影，从夫子庙到桃叶渡，走一段民国文人的河。',
   },
   {
+    slug: 'yuanshen-liyue-zhangjiajie',
+    title: '璃月巡礼 · 原神里的张家界',
+    book: '游戏·原神（璃月地区）',
+    city: '张家界',
+    emoji: '🎮',
+    status: 'live',
+    pointsCount: 5,
+    blurb:
+      '层岩巨渊的云海、绝云间石峰——原神的璃月从张家界的奇峰里走来。循取景地走一段现实与虚构互文的山水。',
+  },
+  {
+    slug: 'yangzhou-man-jiangkui',
+    title: '扬州慢 · 姜夔的淮左名都',
+    book: '姜夔《扬州慢·淮左名都》',
+    city: '扬州',
+    emoji: '🎵',
+    status: 'live',
+    pointsCount: 5,
+    blurb:
+      '淳熙三年冬至，姜夔过扬州写下“黍离之悲”。八百年后，循二十四桥与春风十里路走一段扬州。',
+  },
+  {
     slug: 'nanjing-fuzimiao-shishuoxinyu',
     title: '六朝烟水 · 《世说新语》里的建康',
     book: '刘义庆《世说新语》',

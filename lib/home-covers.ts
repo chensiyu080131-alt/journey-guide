@@ -222,7 +222,7 @@ const gameCovers: HomeCover[] = [
     category: '🎮 游戏',
     title: '原神',
     subtitle: '璃月取景 · 张家界巡礼',
-    route: '/guide/zhangjiajie',
+    route: '/route/yuanshen-liyue-zhangjiajie/',
     image: '/images/cover-yuanshen.jpg',
     style: {
       bg: 'linear-gradient(165deg, #E0D8F0 0%, #B8A8D8 100%)',
@@ -285,7 +285,7 @@ const musicCovers: HomeCover[] = [
     category: '🎵 音乐',
     title: '扬州慢',
     subtitle: '姜夔 · 淮左名都',
-    route: '/guide/yangzhou',
+    route: '/route/yangzhou-man-jiangkui/',
     style: {
       bg: 'linear-gradient(165deg, #D4E8E0 0%, #B8D4C8 100%)',
       border: '#5A7D78',
@@ -497,6 +497,6 @@ export function getCoversForTab(tab: HomeTab): HomeCover[] {
 }
 
 /** 待开发的 Tab：中部显示占位提示，不展示封面 */
-export const underDevelopmentTabs: HomeTab[] = ['🎮 游戏', '🎵 音乐']
+export const underDevelopmentTabs: HomeTab[] = []
 
 export const homeTabs: HomeTab[] = ['首页', '📖 书籍', '🏙️ 城市', '🎮 游戏', '🎵 音乐']
