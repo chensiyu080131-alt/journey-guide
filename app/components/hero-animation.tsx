@@ -185,39 +185,41 @@ export function HeroAnimation() {
           <div className="xh-headline">
             <div className="xh-motto">有迹可循 · 寻迹而至</div>
 
-            <svg className="xh-title" viewBox="0 0 420 190" aria-label="寻迹">
-              <defs>
-                <filter id="xhInkEdge" x="-30%" y="-30%" width="160%" height="160%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="3" seed="11" result="n" />
-                  <feDisplacementMap in="SourceGraphic" in2="n" scale="22" />
-                </filter>
-                <filter id="xhInkBleed" x="-10%" y="-10%" width="120%" height="120%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="4" result="t" />
-                  <feDisplacementMap in="SourceGraphic" in2="t" scale="2.2" />
-                </filter>
-                <mask id="xhM1">
-                  <circle cx="105" cy="98" r="0" fill="#fff" filter="url(#xhInkEdge)">
-                    <animate attributeName="r" from="0" to="118" begin="0.9s" dur="1.15s"
-                      calcMode="spline" keySplines="0.25 0.6 0.3 1" fill="freeze" />
-                  </circle>
-                </mask>
-                <mask id="xhM2">
-                  <circle cx="290" cy="98" r="0" fill="#fff" filter="url(#xhInkEdge)">
-                    <animate attributeName="r" from="0" to="118" begin="1.55s" dur="1.15s"
-                      calcMode="spline" keySplines="0.25 0.6 0.3 1" fill="freeze" />
-                  </circle>
-                </mask>
-              </defs>
-              <g filter="url(#xhInkBleed)">
-                <text x="30" y="150" mask="url(#xhM1)">寻</text>
-                <text x="215" y="150" mask="url(#xhM2)">迹</text>
-              </g>
-              <g className="xh-seal" transform="translate(360,124)">
-                <rect x="0" y="0" width="52" height="52" rx="7" fill="#8B4545" opacity="0.9" />
-                <text x="26" y="23" textAnchor="middle" fontSize="19" fill="#F7F3EB" fontFamily="'Kaiti SC','STKaiti','KaiTi',serif">寻</text>
-                <text x="26" y="44" textAnchor="middle" fontSize="19" fill="#F7F3EB" fontFamily="'Kaiti SC','STKaiti','KaiTi',serif">迹</text>
-              </g>
-            </svg>
+            <div className="xh-title-wrap">
+              <svg className="xh-title" viewBox="0 0 420 190" aria-label="寻迹">
+                <defs>
+                  <filter id="xhInkEdge" x="-30%" y="-30%" width="160%" height="160%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="3" seed="11" result="n" />
+                    <feDisplacementMap in="SourceGraphic" in2="n" scale="22" />
+                  </filter>
+                  <filter id="xhInkBleed" x="-10%" y="-10%" width="120%" height="120%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="4" result="t" />
+                    <feDisplacementMap in="SourceGraphic" in2="t" scale="2.2" />
+                  </filter>
+                  <mask id="xhM1">
+                    <circle cx="105" cy="98" r="0" fill="#fff" filter="url(#xhInkEdge)">
+                      <animate attributeName="r" from="0" to="118" begin="0.9s" dur="1.15s"
+                        calcMode="spline" keySplines="0.25 0.6 0.3 1" fill="freeze" />
+                    </circle>
+                  </mask>
+                  <mask id="xhM2">
+                    <circle cx="290" cy="98" r="0" fill="#fff" filter="url(#xhInkEdge)">
+                      <animate attributeName="r" from="0" to="118" begin="1.55s" dur="1.15s"
+                        calcMode="spline" keySplines="0.25 0.6 0.3 1" fill="freeze" />
+                    </circle>
+                  </mask>
+                </defs>
+                <g filter="url(#xhInkBleed)">
+                  <text x="30" y="150" mask="url(#xhM1)">寻</text>
+                  <text x="215" y="150" mask="url(#xhM2)">迹</text>
+                </g>
+                <g className="xh-seal" transform="translate(354,128)">
+                  <rect x="0" y="0" width="48" height="48" rx="6" fill="#8B4545" opacity="0.9" />
+                  <text x="24" y="22" textAnchor="middle" fontSize="17" fill="#F7F3EB" fontFamily="'Kaiti SC','STKaiti','KaiTi',serif">寻</text>
+                  <text x="24" y="41" textAnchor="middle" fontSize="17" fill="#F7F3EB" fontFamily="'Kaiti SC','STKaiti','KaiTi',serif">迹</text>
+                </g>
+              </svg>
+            </div>
 
             <p className="xh-sub" ref={subtitleRef}>书籍 · 游戏 · 音乐 —— 跟着文化载体去旅行</p>
 
@@ -322,9 +324,10 @@ const heroStyles = `
 .xh-ambient{position:absolute;inset:0;pointer-events:none;background:radial-gradient(55% 42% at 68% 22%,#fffbee80,transparent 70%);opacity:0;animation:xhAmbient 22s ease-in-out 3.4s infinite;}
 @keyframes xhAmbient{0%,100%{opacity:.25;}50%{opacity:.6;}}
 .xh-stage{position:relative;z-index:2;display:grid;grid-template-columns:minmax(380px,46%) 1fr;align-items:center;gap:40px;padding:40px 48px 36px;min-height:560px;}
-.xh-headline{position:relative;}
-.xh-motto{position:absolute;left:-42px;top:6px;writing-mode:vertical-rl;font-size:.78rem;letter-spacing:.5em;color:#8A7A7280;opacity:0;animation:xhIn 1.6s ease 2.9s forwards;font-family:'Noto Serif SC','STSong',serif;}
-.xh-title{width:min(320px,82%);display:block;overflow:visible;}
+.xh-headline{position:relative;min-width:0;padding-left:8px;}
+.xh-motto{position:absolute;left:-34px;top:6px;writing-mode:vertical-rl;font-size:.78rem;letter-spacing:.5em;color:#8A7A7280;opacity:0;animation:xhIn 1.6s ease 2.9s forwards;font-family:'Noto Serif SC','STSong',serif;max-height:240px;}
+.xh-title-wrap{width:100%;max-width:340px;overflow:hidden;line-height:0;}
+.xh-title{display:block;width:100%;height:auto;max-height:150px;overflow:hidden;}
 .xh-title text{font-family:'Kaiti SC','STKaiti','KaiTi','DFKai-SB',serif;font-size:150px;fill:#3D2E2E;}
 .xh-seal{transform:scale(.7) rotate(-8deg);opacity:0;transform-origin:center;animation:xhSeal 1s cubic-bezier(.2,1.4,.4,1) 2.5s forwards;}
 @keyframes xhSeal{0%{opacity:0;transform:scale(.7) rotate(-8deg);}55%{opacity:1;transform:scale(1.06) rotate(-3.5deg);}100%{opacity:.92;transform:scale(1) rotate(-4deg);}}
@@ -404,5 +407,6 @@ const heroStyles = `
 .xh-decknav button.xh-on{background:#8B4545;width:36px;}
 @keyframes xhIn{from{opacity:0;}to{opacity:1;}}
 @media (prefers-reduced-motion: reduce){.xunji-hero *,.xunji-hero *::before,.xunji-hero *::after{animation-duration:.01ms !important;animation-delay:0s !important;transition-duration:.2s !important;}.xh-light,.xh-ambient{display:none;}.xh-card.xh-enter{opacity:1;transform:none;}.xh-card.xh-pos-0{animation:none;}}
-@media (max-width:900px){.xh-stage{grid-template-columns:1fr;gap:24px;padding:28px 22px;min-height:auto;}.xh-deckwrap{height:460px;}.xh-motto{display:none;}.xh-title{width:min(280px,90%);}.xh-title text{font-size:120px;}}
+@media (max-width:900px){.xh-stage{grid-template-columns:1fr;gap:24px;padding:28px 22px;min-height:auto;}.xh-deckwrap{height:440px;}.xh-motto{display:none;}.xh-title-wrap{max-width:260px;}.xh-title text{font-size:120px;}.xh-deck{height:420px;}.xh-card{width:260px;height:380px;margin:-190px 0 0 -130px;}.xh-card.xh-pos-1{transform:translateX(120px) translateZ(-120px) rotate(2deg) scale(.9);}.xh-card.xh-pos-2{transform:translateX(220px) translateZ(-240px) rotate(4deg) scale(.8);opacity:.3;}.xh-card.xh-pos-3,.xh-card.xh-pos-out{opacity:0;}}
+@media (max-width:480px){.xh-stage{padding:22px 16px;}.xh-title-wrap{max-width:220px;}.xh-title text{font-size:100px;}.xh-sub{font-size:.92rem;letter-spacing:.1em;}.xh-stats{gap:28px;margin-top:30px;}.xh-num{font-size:1.5rem;}.xh-deckwrap{height:400px;}.xh-card{width:240px;height:360px;margin:-180px 0 0 -120px;}}
 `
