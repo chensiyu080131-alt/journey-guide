@@ -12,7 +12,7 @@ const tabImages: Record<HomeTab, string> = {
   '首页': '/images/tab-home.png',
   '📖 书籍': '/images/tab-book.png',
   '🏙️ 城市': '/images/tab-city.png',
-  '💡 灵感': '/images/tab-game.png',
+  '🎐 东方美学': '/images/tab-game.png',
   '🎵 音乐': '/images/tab-music.png',
 }
 
@@ -20,7 +20,7 @@ const tabAlts: Record<HomeTab, string> = {
   '首页': '首页',
   '📖 书籍': '书籍',
   '🏙️ 城市': '城市',
-  '💡 灵感': '灵感',
+  '🎐 东方美学': '东方美学',
   '🎵 音乐': '音乐',
 }
 

@@ -1,13 +1,13 @@
 'use client'
 
-const tabMeta: Record<'音乐' | '灵感', { motif: 'note' | 'inspiration'; hint: string }> = {
+const tabMeta: Record<'音乐' | '东方美学', { motif: 'note' | 'inspiration'; hint: string }> = {
   音乐: {
     motif: 'note',
     hint: '江南曲调、古琴雅韵与戏曲唱段，即将在此与你相遇',
   },
-  灵感: {
+  东方美学: {
     motif: 'inspiration',
-    hint: '东方山水幻想原型地、中式楼阁与古典审美的现实灵感，筹备中',
+    hint: '东方山水、中式楼阁与古典审美的现实原型地，筹备中',
   },
 }
 
@@ -33,7 +33,7 @@ function MotifIcon({ type }: { type: 'note' | 'inspiration' }) {
 }
 
 interface HomeComingSoonProps {
-  tab: '音乐' | '灵感'
+  tab: '音乐' | '东方美学'
 }
 
 export function HomeComingSoon({ tab }: HomeComingSoonProps) {

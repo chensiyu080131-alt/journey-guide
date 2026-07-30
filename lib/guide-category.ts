@@ -3,18 +3,18 @@ import { CoverCategory } from './home-covers'
 const BOOK_GUIDE_IDS = new Set(['shajiabang', 'niehaifeng', 'wengtonghe', 'qianliu', 'renjianziwei'])
 const CITY_GUIDE_IDS = new Set(['yangzhou', 'nanjing', 'suzhou', 'wuxi', 'zhenjiang'])
 
-/** 音乐/灵感封面映射到实际攻略 ID 时的来源分类 */
+/** 音乐/东方美学封面映射到实际攻略 ID 时的来源分类 */
 const MUSIC_GUIDE_IDS = new Set(['yangzhou', 'shajiabang', 'wengtonghe', 'niehaifeng'])
 
 export type GuideCategoryTab = '首页' | CoverCategory
 
 export function getDefaultCategory(guideId: string): CoverCategory {
   if (BOOK_GUIDE_IDS.has(guideId)) return '书籍'
-  return '💡 灵感'
+  return '🎐 东方美学'
 }
 
 export function parseCategoryParam(cat: string | null, guideId: string): CoverCategory {
-  const validCats: CoverCategory[] = ['书籍', '💡 灵感', '🎵 音乐', '🏃 运动']
+  const validCats: CoverCategory[] = ['书籍', '🎐 东方美学', '🎵 音乐', '🏃 运动']
   if (cat && validCats.includes(cat as CoverCategory)) return cat as CoverCategory
   // 兼容旧参数 '城市'
   if (cat === '城市') return '书籍'

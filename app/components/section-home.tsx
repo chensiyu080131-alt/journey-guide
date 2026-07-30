@@ -19,9 +19,9 @@ interface SectionConfig {
   disclaimer?: string
 }
 
-const SECTIONS: Record<'💡 灵感' | '🎵 音乐', SectionConfig> = {
-  '💡 灵感': {
-    tab: '💡 灵感',
+const SECTIONS: Record<'🎐 东方美学' | '🎵 音乐', SectionConfig> = {
+  '🎐 东方美学': {
+    tab: '🎐 东方美学',
     explain:
       '跟着东方山水、楼阁与古典审美，去寻找那些启发了虚构世界的现实灵感地。不是按图索骥找"取景地"，而是去看真实的山川、水巷与飞檐——它们本身就是最了不起的创作原型。',
     liveFilter: r => r.category === 'inspiration' && r.status === 'live',
@@ -48,7 +48,7 @@ const SECTIONS: Record<'💡 灵感' | '🎵 音乐', SectionConfig> = {
   },
 }
 
-export function SectionHome({ tab }: { tab: '💡 灵感' | '🎵 音乐' }) {
+export function SectionHome({ tab }: { tab: '🎐 东方美学' | '🎵 音乐' }) {
   const cfg = SECTIONS[tab]
   const live = routesCatalog.filter(r => r.status === 'live' && cfg.liveFilter(r))
   const soon = cfg.soonPlaceholders
