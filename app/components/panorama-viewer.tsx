@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { track } from '@/lib/track'
 
 /**
  * 360° 全景查看器组件（Pannellum via CDN，'use client'）
@@ -29,6 +30,7 @@ export function PanoramaViewer({ imageUrl, title, source, onClose }: PanoramaVie
   useEffect(() => {
     let viewer: any = null
     let cancelled = false
+    let cleanupDrag: (() => void) | null = null
 
     const loadScript = (src: string): Promise<void> =>
       new Promise((resolve, reject) => {
@@ -67,8 +69,29 @@ export function PanoramaViewer({ imageUrl, title, source, onClose }: PanoramaVie
           title: title || '',
           author: source || '',
         })
-        viewer.on('load', () => { if (!cancelled) setStatus('ready') })
+        viewer.on('load', () => {
+          if (cancelled) return
+          setStatus('ready')
+          track('panorama_open', { title, source })
+        })
         viewer.on('error', () => { if (!cancelled) setStatus('error') })
+
+        // 首次拖动/触摸旋转上报一次 —— 用于测"全景是否真被使用"
+        let dragged = false
+        const onFirstDrag = () => {
+          if (dragged) return
+          dragged = true
+          track('panorama_drag', { title })
+        }
+        const el = containerRef.current
+        el?.addEventListener('mousedown', onFirstDrag)
+        el?.addEventListener('touchstart', onFirstDrag, { passive: true })
+        el?.addEventListener('pointerdown', onFirstDrag)
+        cleanupDrag = () => {
+          el?.removeEventListener('mousedown', onFirstDrag)
+          el?.removeEventListener('touchstart', onFirstDrag)
+          el?.removeEventListener('pointerdown', onFirstDrag)
+        }
       } catch (e) {
         if (!cancelled) setStatus('error')
       }
@@ -76,6 +99,7 @@ export function PanoramaViewer({ imageUrl, title, source, onClose }: PanoramaVie
 
     return () => {
       cancelled = true
+      try { cleanupDrag?.() } catch {}
       try { viewer?.destroy?.() } catch {}
     }
   }, [imageUrl, title, source])
@@ -87,7 +111,7 @@ export function PanoramaViewer({ imageUrl, title, source, onClose }: PanoramaVie
           <div className="font-serif text-sm font-bold text-charcoal truncate">
             {title || '360° 全景浏览'} · 拖动可旋转
           </div>
-          <button onClick={onClose} className="text-ink-400 hover:text-vermilion text-xl leading-none px-2" aria-label="关闭">✕</button>
+          <button onClick={() => { track('panorama_close', { title }); onClose() }} className="text-ink-400 hover:text-vermilion text-xl leading-none px-2" aria-label="关闭">✕</button>
         </div>
         <div className="relative bg-white rounded-b-xl overflow-hidden" style={{ height: '60vh' }}>
           {status === 'loading-script' && (

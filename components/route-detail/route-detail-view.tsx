@@ -21,6 +21,8 @@ import rawHeritage from '@/public/heritage.json'
 import { ReviewPanel } from './review-panel'
 import { fetchReviewsForPoint, syncPendingReviews, type PointReviews } from '@/lib/reviews-store'
 import { fetchRepliesForReviews } from '@/lib/merchant-store'
+import { track, useTrackImpression } from '@/lib/track'
+import TrackDebug from '@/app/components/track-debug'
 
 type GeoState =
   | { kind: 'idle' }
@@ -109,8 +111,6 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
   const [merchantReplies, setMerchantReplies] = useState<Record<string, string>>({})
   // Task3：360° 全景 modal 状态（null 关闭，非 null 显示该点位的全景）
   const [panoramaPoint, setPanoramaPoint] = useState<{ p: RoutePoint; img: { url: string; source: string } } | null>(null)
-  // Task2：非遗展开状态（点位 seq -> 展开的非遗 id）
-  const [expandedHeritage, setExpandedHeritage] = useState<string | null>(null)
 
   const loadPointReviews = useCallback(
     (seq: number) => {
@@ -184,8 +184,12 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
     setTimeout(() => setToast(null), 3500)
   }, [])
 
+  // 点位列表区块进入视口（≥50% 可见）上报一次 —— 用于测"非遗是否把主内容挤下去"
+  const pointsRef = useTrackImpression<HTMLElement>('points_section_view', { slug: route.slug })
+
   const handleCheckin = useCallback(
     (point: RoutePoint) => {
+      track('checkin_click', { point: point.seq, demo: demoMode || !geoAvailable })
       // 体验模式 或 无 GPS 环境：直接模拟到点位打卡（同坐标、距离 0）
       if (demoMode || !geoAvailable) {
         const now = new Date().toISOString()
@@ -359,8 +363,11 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
         </div>
       </section>
 
+      {/* ②½ 路线级「附近非遗」独立区块（去同城重复，强对比） */}
+      <RouteHeritageSection city={route.city} />
+
       {/* ③ 点位列表 + ④ 打卡按钮 */}
-      <section className="bg-paper">
+      <section ref={pointsRef} className="bg-paper">
         <div className="xc-container py-10">
           <h2 className="font-serif text-2xl font-bold text-charcoal mb-6">点位 · 沿着汪老的笔触走</h2>
           <div className="space-y-5">
@@ -406,18 +413,15 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
                     <p className="text-sm leading-relaxed text-ink-600">{p.interpretation}</p>
                   </div>
 
-                  {/* Task2：附近非遗（按城市匹配） */}
-                  <PointHeritage city={route.city} expandedId={expandedHeritage} onToggle={setExpandedHeritage} />
-
-                  {/* Task3：360° 全景浏览入口 */}
+                  {/* Task3：360° 全景浏览入口（强对比 + 显眼） */}
                   {(() => {
                     const img = getPanorama(p)
                     if (!img) return null
                     return (
                       <button
                         type="button"
-                        onClick={() => setPanoramaPoint({ p, img })}
-                        className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-[#C6DCC6] bg-[#EAF3EA] px-3 py-1 text-xs font-semibold text-[#3E6B3E] hover:bg-[#DCEECE]"
+                        onClick={() => { track('panorama_open_click', { point: p.seq }); setPanoramaPoint({ p, img }) }}
+                        className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#3E6B3E] px-4 py-1.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#345C34]"
                       >
                         🌀 全景浏览 · 360° 看看这里
                       </button>
@@ -557,6 +561,9 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
           {toast}
         </div>
       )}
+
+      {/* 埋点实时 HUD：仅在 URL 带 ?track=debug 时出现，正常用户无感 */}
+      <TrackDebug />
     </div>
   )
 }
@@ -597,49 +604,65 @@ function SeasonBanner({ route }: { route: RouteDetail }) {
   )
 }
 
-/** Task2：点位卡片内的「附近非遗」区块，按城市匹配，可展开查看详情 */
-function PointHeritage({ city, expandedId, onToggle }: {
-  city: string
-  expandedId: string | null
-  onToggle: (id: string | null) => void
-}) {
-  const items = getHeritageByCity(city, 3)
+/** Task2（重构）：路线级「附近非遗」独立区块 —— 按城市匹配、去同城重复、强对比 */
+function RouteHeritageSection({ city }: { city: string }) {
+  const items = getHeritageByCity(city, 6)
+  // 区块进入视口上报一次 —— 用于测"非遗是否被自然看见"
+  const secRef = useTrackImpression<HTMLElement>('heritage_section_view', { city, count: items.length })
   if (items.length === 0) {
     return (
-      <div className="mt-3 border-t border-dashed border-ink-100 pt-2.5 text-xs text-ink-400">
-        🎭 附近非遗 · 暂无非遗活动信息
-      </div>
+      <section ref={secRef} className="bg-white border-t border-ink-100">
+        <div className="xc-container py-10">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🎭</span>
+            <h2 className="font-serif text-2xl font-bold text-charcoal">附近非遗</h2>
+          </div>
+          <p className="mt-3 text-sm text-ink-500">这条路线暂未收录该地的非遗活动信息，后续会补充。</p>
+        </div>
+      </section>
     )
   }
   return (
-    <div className="mt-3 border-t border-dashed border-ink-100 pt-2.5">
-      <div className="text-[11px] font-semibold tracking-widest text-ink-400 uppercase mb-1.5">
-        🎭 附近非遗 · {city}
+    <section ref={secRef} className="bg-white border-t border-ink-100">
+      <div className="xc-container py-10">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🎭</span>
+            <h2 className="font-serif text-2xl font-bold text-charcoal">附近非遗 · {city}</h2>
+          </div>
+          <p className="text-sm text-ink-500">这条路线所在的{city}，藏着这些活着的传统技艺与习俗</p>
+        </div>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map(h => (
+            <HeritageCard key={h.id} h={h} />
+          ))}
+        </div>
       </div>
-      <div className="flex flex-wrap gap-2">
-        {items.map(h => {
-          const open = expandedId === h.id
-          return (
-            <div key={h.id} className="min-w-0">
-              <button
-                type="button"
-                onClick={() => onToggle(open ? null : h.id)}
-                className="inline-flex items-center gap-1 rounded-full border border-[#E3D5B3] bg-[#F5EFE0] px-2.5 py-0.5 text-xs text-[#8A6D2F] hover:bg-[#EFE6D0]"
-              >
-                <span className="font-semibold">{h.name}</span>
-                <span className="text-[10px] opacity-70">· {h.category}</span>
-              </button>
-              {open && (
-                <div className="mt-1.5 rounded-lg border border-[#E3D5B3] bg-[#FBF8F0] px-3 py-2 text-xs leading-relaxed text-ink-600">
-                  <p>{h.fullDesc}</p>
-                  <p className="mt-1.5"><span className="font-semibold text-[#8A6D2F]">活动：</span>{h.activity}</p>
-                  <p className="mt-0.5"><span className="font-semibold text-[#8A6D2F]">地点：</span>{h.venue}</p>
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </div>
+    </section>
+  )
+}
+
+/** 单张非遗卡片：标题/级别/类别 + 摘要，点击展开活动与地点 */
+function HeritageCard({ h }: { h: HeritageItem }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="rounded-2xl border border-[#E3D5B3] bg-[#FBF8F0] p-4 transition-shadow hover:shadow-md">
+      <button type="button" onClick={() => { track('heritage_card_expand', { id: h.id, level: h.level, category: h.category }); setOpen(o => !o) }} className="block w-full text-left">
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-serif text-base font-bold text-charcoal">{h.name}</span>
+          <span className="shrink-0 rounded-full bg-[#F5EFE0] px-2 py-0.5 text-[11px] font-semibold text-[#8A6D2F]">{h.level}</span>
+        </div>
+        <div className="mt-1 text-xs text-ink-400">{h.category}</div>
+        <p className="mt-2 text-sm leading-relaxed text-ink-600">{h.summary}</p>
+        <span className="mt-2 inline-block text-xs font-semibold text-vermilion">{open ? '收起 ▲' : '展开看看 ▼'}</span>
+      </button>
+      {open && (
+        <div className="mt-3 border-t border-dashed border-ink-100 pt-3 text-sm leading-relaxed text-ink-600">
+          <p>{h.fullDesc}</p>
+          <p className="mt-2"><span className="font-semibold text-[#8A6D2F]">📅 活动：</span>{h.activity}</p>
+          <p className="mt-1"><span className="font-semibold text-[#8A6D2F]">📍 地点：</span>{h.venue}</p>
+        </div>
+      )}
     </div>
   )
 }
