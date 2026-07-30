@@ -10,6 +10,14 @@ import rawNanjingQinhuai from '@/public/xunji-mvp/db/nanjing-qinhuaihe-zhuziqing
 import rawNanjingFuzimiao from '@/public/xunji-mvp/db/nanjing-fuzimiao-shishuoxinyu.json'
 import rawYuanshen from '@/public/xunji-mvp/db/zhangjiajie-qifeng-ruhua.json'
 import rawYangzhouMan from '@/public/xunji-mvp/db/yangzhou-man-jiangkui.json'
+import rawLingyinsi from '@/public/xunji-mvp/db/hangzhou-lingyinsi-luobinwang.json'
+import rawLongjing from '@/public/xunji-mvp/db/hangzhou-longjing-sushi.json'
+import rawGushan from '@/public/xunji-mvp/db/hangzhou-gushan-linbu.json'
+import rawHuqiu from '@/public/xunji-mvp/db/suzhou-huqiu-sushi.json'
+import rawPingjiang from '@/public/xunji-mvp/db/suzhou-pingjiang-fushengliuji.json'
+import rawMochou from '@/public/xunji-mvp/db/nanjing-mochouhu-liangwudi.json'
+import rawYuejiang from '@/public/xunji-mvp/db/nanjing-yuejianglou-songlian.json'
+import rawShouxihu from '@/public/xunji-mvp/db/yangzhou-shouxihu-dumu.json'
 
 export type ExcerptConfidence = 'verified' | 'derived' | 'pending'
 
@@ -37,6 +45,10 @@ export interface RouteDetail {
   plainExplain?: string
   /** 为什么值得去（Task4）：给用户一个行动理由 */
   whyWorth?: string
+  /** 季节（Task4 季节区块）：spring/summer/autumn/winter */
+  season?: string
+  /** 分类（Task2 筛选）：scenic 经典名胜 / literary 文学名篇 / figure 人物行旅 */
+  category?: string
   points: RoutePoint[]
 }
 
@@ -75,6 +87,8 @@ function normalize(raw: RawRouteFile): RouteDetail {
     summary: raw.route.summary,
     plainExplain: raw.route.plain_explain,
     whyWorth: raw.route.why_worth,
+    season: (raw.route as { season?: string }).season,
+    category: (raw.route as { category?: string }).category,
     points: raw.points
       .slice()
       .sort((a, b) => a.seq - b.seq)
@@ -106,6 +120,14 @@ const MOCK_ROUTES: RouteDetail[] = [
   normalize(rawNanjingFuzimiao as RawRouteFile),
   normalize(rawYuanshen as RawRouteFile),
   normalize(rawYangzhouMan as RawRouteFile),
+  normalize(rawLingyinsi as RawRouteFile),
+  normalize(rawLongjing as RawRouteFile),
+  normalize(rawGushan as RawRouteFile),
+  normalize(rawHuqiu as RawRouteFile),
+  normalize(rawPingjiang as RawRouteFile),
+  normalize(rawMochou as RawRouteFile),
+  normalize(rawYuejiang as RawRouteFile),
+  normalize(rawShouxihu as RawRouteFile),
 ]
 
 export function getAllRouteSlugs(): string[] {
