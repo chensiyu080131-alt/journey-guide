@@ -16,6 +16,8 @@ import {
 import { loadCheckins, saveCheckin, syncPendingToSupabase } from '@/lib/checkin-store'
 import { RouteMap, amapNavUrl } from './route-map'
 import { LiteraryCards } from './literary-cards'
+import { PanoramaViewer } from '@/app/components/panorama-viewer'
+import rawHeritage from '@/public/heritage.json'
 import { ReviewPanel } from './review-panel'
 import { fetchReviewsForPoint, syncPendingReviews, type PointReviews } from '@/lib/reviews-store'
 import { fetchRepliesForReviews } from '@/lib/merchant-store'
@@ -30,6 +32,37 @@ const CONFIDENCE_LABEL: Record<RoutePoint['excerptConfidence'], { text: string; 
   verified: { text: '原文实据', cls: 'bg-[#EAF3EA] text-[#3E6B3E] border-[#C6DCC6]' },
   derived: { text: '主题引用', cls: 'bg-[#F5EFE0] text-[#8A6D2F] border-[#E3D5B3]' },
   pending: { text: '出处待考', cls: 'bg-[#F6E9E7] text-[#9C4A42] border-[#E8CBC6]' },
+}
+
+/** 非遗数据（Task2）—— 从 heritage.json 读取，按城市匹配 */
+interface HeritageItem {
+  id: string
+  name: string
+  city: string
+  category: string
+  level: string
+  summary: string
+  fullDesc: string
+  activity: string
+  venue: string
+  routeRelated: string[]
+}
+const HERITAGE_ALL: HeritageItem[] = (rawHeritage as { items: HeritageItem[] }).items
+/** 按城市取非遗，最多取 3 条（点位卡片展示用） */
+function getHeritageByCity(city: string, limit = 3): HeritageItem[] {
+  return HERITAGE_ALL.filter(h => h.city === city).slice(0, limit)
+}
+/** 全景图来源：使用 Pannellum 官方示例全景图（公开、免授权）作为原型占位 */
+const PANORAMA_FALLBACKS = [
+  { url: 'https://pannellum.org/images/alma.jpg', source: 'Pannellum 官方示例' },
+  { url: 'https://pannellum.org/images/cerro-toco-0.jpg', source: 'Pannellum 官方示例' },
+  { url: 'https://pannellum.org/images/jfk.jpg', source: 'Pannellum 官方示例' },
+]
+/** 给点位配全景图：优先用 JSON 里的 panorama 字段，没有则按 seq 取一张占位图 */
+function getPanorama(p: RoutePoint): { url: string; source: string } | null {
+  if (p.panorama) return { url: p.panorama, source: p.panoramaSource || '网络公开全景图' }
+  const fb = PANORAMA_FALLBACKS[p.seq % PANORAMA_FALLBACKS.length]
+  return fb
 }
 
 /** Task4：把路线"是什么"翻译成一句人话。优先用 JSON 里的 plainExplain，没有则按 book 类型推断兜底。 */
@@ -74,6 +107,10 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
   const [reviewsBySeq, setReviewsBySeq] = useState<Record<number, PointReviews>>({})
   // 反馈回路 Step2：评价对应的商家回复（reviewId -> 回复文本）
   const [merchantReplies, setMerchantReplies] = useState<Record<string, string>>({})
+  // Task3：360° 全景 modal 状态（null 关闭，非 null 显示该点位的全景）
+  const [panoramaPoint, setPanoramaPoint] = useState<{ p: RoutePoint; img: { url: string; source: string } } | null>(null)
+  // Task2：非遗展开状态（点位 seq -> 展开的非遗 id）
+  const [expandedHeritage, setExpandedHeritage] = useState<string | null>(null)
 
   const loadPointReviews = useCallback(
     (seq: number) => {
@@ -363,11 +400,29 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
                     <footer className="mt-1.5 text-xs text-ink-400 not-italic">—— {p.excerptSource}</footer>
                   </blockquote>
 
-                  {/* Task2/3：文学 ↔ 现实 对照说明块 */}
+                  {/* Task2/3：文学 ↔ 现�� 对照说明块 */}
                   <div className="mt-3 rounded-xl border border-ink-100 bg-paper/60 px-4 py-3">
                     <div className="text-[11px] font-semibold tracking-widest text-ink-400 uppercase mb-1.5">文学 ↔ 现实 对照</div>
                     <p className="text-sm leading-relaxed text-ink-600">{p.interpretation}</p>
                   </div>
+
+                  {/* Task2：附近非遗（按城市匹配） */}
+                  <PointHeritage city={route.city} expandedId={expandedHeritage} onToggle={setExpandedHeritage} />
+
+                  {/* Task3：360° 全景浏览入口 */}
+                  {(() => {
+                    const img = getPanorama(p)
+                    if (!img) return null
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => setPanoramaPoint({ p, img })}
+                        className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-[#C6DCC6] bg-[#EAF3EA] px-3 py-1 text-xs font-semibold text-[#3E6B3E] hover:bg-[#DCEECE]"
+                      >
+                        🌀 全景浏览 · 360° 看看这里
+                      </button>
+                    )
+                  })()}
 
                   <div className="mt-4 rounded-xl bg-paper px-4 py-3 text-sm text-ink-500">
                     <span className="font-semibold text-[#8A6D2F]">打卡任务：</span>
@@ -486,6 +541,16 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
       {/* Task4：为什么今天适合去（季节区块） */}
       <SeasonBanner route={route} />
 
+      {/* Task3：360° 全景查看器 modal */}
+      {panoramaPoint && (
+        <PanoramaViewer
+          imageUrl={panoramaPoint.img.url}
+          title={panoramaPoint.p.name}
+          source={panoramaPoint.img.source}
+          onClose={() => setPanoramaPoint(null)}
+        />
+      )}
+
       {/* Toast */}
       {toast && (
         <div className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full bg-charcoal px-6 py-3 text-sm text-white shadow-lg">
@@ -529,5 +594,52 @@ function SeasonBanner({ route }: { route: RouteDetail }) {
         </div>
       </div>
     </section>
+  )
+}
+
+/** Task2：点位卡片内的「附近非遗」区块，按城市匹配，可展开查看详情 */
+function PointHeritage({ city, expandedId, onToggle }: {
+  city: string
+  expandedId: string | null
+  onToggle: (id: string | null) => void
+}) {
+  const items = getHeritageByCity(city, 3)
+  if (items.length === 0) {
+    return (
+      <div className="mt-3 border-t border-dashed border-ink-100 pt-2.5 text-xs text-ink-400">
+        🎭 附近非遗 · 暂无非遗活动信息
+      </div>
+    )
+  }
+  return (
+    <div className="mt-3 border-t border-dashed border-ink-100 pt-2.5">
+      <div className="text-[11px] font-semibold tracking-widest text-ink-400 uppercase mb-1.5">
+        🎭 附近非遗 · {city}
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {items.map(h => {
+          const open = expandedId === h.id
+          return (
+            <div key={h.id} className="min-w-0">
+              <button
+                type="button"
+                onClick={() => onToggle(open ? null : h.id)}
+                className="inline-flex items-center gap-1 rounded-full border border-[#E3D5B3] bg-[#F5EFE0] px-2.5 py-0.5 text-xs text-[#8A6D2F] hover:bg-[#EFE6D0]"
+              >
+                <span className="font-semibold">{h.name}</span>
+                <span className="text-[10px] opacity-70">· {h.category}</span>
+              </button>
+              {open && (
+                <div className="mt-1.5 rounded-lg border border-[#E3D5B3] bg-[#FBF8F0] px-3 py-2 text-xs leading-relaxed text-ink-600">
+                  <p>{h.fullDesc}</p>
+                  <p className="mt-1.5"><span className="font-semibold text-[#8A6D2F]">活动：</span>{h.activity}</p>
+                  <p className="mt-0.5"><span className="font-semibold text-[#8A6D2F]">地点：</span>{h.venue}</p>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
   )
 }
