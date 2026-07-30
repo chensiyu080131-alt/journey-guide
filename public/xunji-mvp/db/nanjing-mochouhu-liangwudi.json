@@ -1,0 +1,84 @@
+{
+  "route": {
+    "slug": "nanjing-mochouhu-liangwudi",
+    "title": "莫愁烟雨 · 梁武帝笔下的洛���女儿",
+    "author": "梁武帝（萧衍）/ 古乐府",
+    "city": "南京",
+    "book": "梁武帝《河中之水歌》（莫愁女传说）",
+    "summary": "一个洛阳嫁到金陵的女子，被写进帝王的诗里，成了千年传说。莫愁湖的烟雨里，藏着南朝最温柔的民间记忆。",
+    "plain_explain": "跟着《河中之水歌》里莫愁女的传说，去莫愁湖走一遍，看一个洛阳女儿如何在南京成了千年记忆。",
+    "why_worth": "莫愁湖是南京最柔美的湖，莫愁女的传说是它的灵魂——这是一条走进南朝民间记忆的路线。",
+    "season": "spring",
+    "category": "literary",
+    "cover_image": "",
+    "source": "human",
+    "note": "坐标为 GCJ-02（高德坐标系）近似最佳值，待在高德地图二次核对。"
+  },
+  "points": [
+    {
+      "seq": 1,
+      "name": "莫愁湖公园（南门）",
+      "address": "南京市建邺区水西门大街132号莫愁湖公园",
+      "lng": 118.738,
+      "lat": 32.038,
+      "excerpt": "河中之水向东流，洛阳女儿名莫愁。",
+      "excerpt_source": "梁武帝萧衍《河中之水歌》，《乐府诗集》卷七十四",
+      "excerpt_confidence": "verified",
+      "interpretation": "这首诗让莫愁女名传天下。河洛之水东流，洛阳的女儿嫁到了金陵——南朝最动人的迁徙故事。",
+      "checkin_task": "在莫愁湖公园门口读一遍《河中之水歌》开篇，想想一个女子为何叫莫愁。",
+      "source": "human"
+    },
+    {
+      "seq": 2,
+      "name": "莫愁女故居（郁金堂）",
+      "address": "南京市建邺区莫愁湖公园内郁金堂",
+      "lng": 118.7382,
+      "lat": 32.0382,
+      "excerpt": "十四嫁为卢家妇，莫愁心中有莫愁。",
+      "excerpt_source": "梁武帝《河中之水歌》；郁金堂为后人建为莫愁女故居",
+      "excerpt_confidence": "verified",
+      "interpretation": "郁金堂传说是莫愁女的居所。她嫁到卢家，富贵却愁苦——莫愁二字是反讽，也是祝愿。",
+      "checkin_task": "在郁金堂前看莫愁女塑像，拍一张她眺望湖面的背影。",
+      "source": "human"
+    },
+    {
+      "seq": 3,
+      "name": "莫愁湖（湖心亭）",
+      "address": "南京市建邺区莫愁湖公园湖心",
+      "lng": 118.7385,
+      "lat": 32.0385,
+      "excerpt": "水面初平云脚低。",
+      "excerpt_source": "白居易《钱塘湖春行》句，其写湖山之意亦适莫愁湖",
+      "excerpt_confidence": "derived",
+      "interpretation": "莫愁湖水波不兴，是南京城里最安静的一面镜子。春日云脚低的意境，白居易写过，这里也有。",
+      "checkin_task": "在湖心亭坐一刻，拍一张水面的倒影，想想莫愁此刻对你意味着什么。",
+      "source": "human"
+    },
+    {
+      "seq": 4,
+      "name": "胜棋楼",
+      "address": "南京市建邺区莫愁湖公园胜棋楼",
+      "lng": 118.7388,
+      "lat": 32.0388,
+      "excerpt": "南朝遗事多，莫愁湖畔。",
+      "excerpt_source": "胜棋楼传为明代建筑，与莫愁女传说同为南京文化记忆",
+      "excerpt_confidence": "derived",
+      "interpretation": "胜棋楼是明代朱元璋与徐达下棋的传说地。莫愁湖从南朝到明代，层层叠叠都是故事。",
+      "checkin_task": "在胜棋楼看一副棋盘，想想这湖里到底有多少朝代的故事。",
+      "source": "human"
+    },
+    {
+      "seq": 5,
+      "name": "莫愁湖海棠专类园",
+      "address": "南京市建邺区莫愁湖公园海棠专类园",
+      "lng": 118.739,
+      "lat": 32.039,
+      "excerpt": "春来江水绿如蓝。",
+      "excerpt_source": "白居易《忆江南》句；莫愁湖海棠为春日名景",
+      "excerpt_confidence": "derived",
+      "interpretation": "莫愁湖的海棠春天开成海。白居易写春来江水绿如蓝，莫愁湖的春就是这般颜色。",
+      "checkin_task": "春天来莫愁湖看海棠（3-4月），拍一张最像莫愁心情的花。",
+      "source": "human"
+    }
+  ]
+}
