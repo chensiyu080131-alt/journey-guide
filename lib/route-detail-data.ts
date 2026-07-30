@@ -32,6 +32,10 @@ export interface RoutePoint {
   excerptConfidence: ExcerptConfidence
   interpretation: string
   checkinTask: string
+  /** 360° 全景图 URL（可选，无则不显示全景入口） */
+  panorama?: string
+  /** 全景图来源标注（版权/出处） */
+  panoramaSource?: string
 }
 
 export interface RouteDetail {
@@ -74,6 +78,8 @@ interface RawRouteFile {
     excerpt_confidence: string
     interpretation: string
     checkin_task: string
+    panorama?: string
+    panorama_source?: string
   }>
 }
 
@@ -105,6 +111,8 @@ function normalize(raw: RawRouteFile): RouteDetail {
           : 'pending') as ExcerptConfidence,
         interpretation: p.interpretation,
         checkinTask: p.checkin_task,
+        panorama: p.panorama,
+        panoramaSource: p.panorama_source,
       })),
   }
 }
