@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * 游戏/音乐板块首页（Task2/3）
+ * 灵感/音乐板块首页（Task2/3）
  * 不再只是封面轮播，而是：一句白话解释 + live 路线 + soon 占位
  * 让用户 10 秒内看懂这个板块是干什么的。
  */
@@ -15,20 +15,24 @@ interface SectionConfig {
   liveFilter: (r: RouteCatalogItem) => boolean
   soonFilter: (r: RouteCatalogItem) => boolean
   soonPlaceholders: { title: string; book: string; city: string }[]
+  /** 栏目免责声明（灵感栏目必加，音乐栏目可选） */
+  disclaimer?: string
 }
 
-const SECTIONS: Record<'🎮 游戏' | '🎵 音乐', SectionConfig> = {
-  '🎮 游戏': {
-    tab: '🎮 游戏',
+const SECTIONS: Record<'💡 灵感' | '🎵 音乐', SectionConfig> = {
+  '💡 灵感': {
+    tab: '💡 灵感',
     explain:
-      '跟着游戏与影视里的场景，去现实中真正的取景灵感地走一遍。在每个点位对比"画面里 vs 现实中"，拍一张同款视角——让屏幕里的山水，变成脚下的路。',
-    liveFilter: r => r.slug === 'zhangjiajie-qifeng-ruhua',
+      '跟着东方山水、楼阁与古典审美，去寻找那些启发了虚构世界的现实灵感地。不是按图索骥找"取景地"，而是去看真实的山川、水巷与飞檐——它们本身就是最了不起的创作原型。',
+    liveFilter: r => r.category === 'inspiration' && r.status === 'live',
     soonFilter: r => false,
     soonPlaceholders: [
-      { title: '黑神话·悟空 · 山西古建巡礼', book: '游戏·黑神话悟空', city: '山西' },
-      { title: '仙剑奇侠传 · 取景地巡礼', book: '游戏·仙剑奇侠传', city: '待定' },
-      { title: '刺客信条 · 中国古建', book: '游戏·刺客信条', city: '待定' },
+      { title: '东方楼阁与中式建筑美学', book: '灵感·古建飞檐', city: '苏州/杭州' },
+      { title: '古塔与长桥的空间美学', book: '灵感·雷峰塔/宝带桥', city: '杭州/苏州' },
+      { title: '石窟与造像的东方��象', book: '灵感·石窟艺术', city: '待定' },
     ],
+    disclaimer:
+      '本栏目关注东方审美与现实地景对虚构世界创作的启发关系，不代表与任何游戏或影视品牌存在合作或授权关系。',
   },
   '🎵 音乐': {
     tab: '🎵 音乐',
@@ -44,7 +48,7 @@ const SECTIONS: Record<'🎮 游戏' | '🎵 音乐', SectionConfig> = {
   },
 }
 
-export function SectionHome({ tab }: { tab: '🎮 游戏' | '🎵 音乐' }) {
+export function SectionHome({ tab }: { tab: '💡 灵感' | '🎵 音乐' }) {
   const cfg = SECTIONS[tab]
   const live = routesCatalog.filter(r => r.status === 'live' && cfg.liveFilter(r))
   const soon = cfg.soonPlaceholders
@@ -98,7 +102,7 @@ export function SectionHome({ tab }: { tab: '🎮 游戏' | '🎵 音乐' }) {
             className="rounded-2xl border border-dashed border-ink-200 bg-ink-50/60 p-5 opacity-80"
           >
             <div className="flex items-center justify-between">
-              <span className="text-2xl grayscale">🎬</span>
+              <span className="text-2xl grayscale">💡</span>
               <span className="rounded-full bg-ink-100 px-2 py-0.5 text-[10px] text-ink-400">筹备中</span>
             </div>
             <h4 className="mt-2 font-serif text-base font-bold text-literary-ink">{s.title}</h4>
@@ -106,6 +110,15 @@ export function SectionHome({ tab }: { tab: '🎮 游戏' | '🎵 音乐' }) {
           </div>
         ))}
       </div>
+
+      {/* 免责声明（灵感栏目底部） */}
+      {cfg.disclaimer && (
+        <div className="mt-8 rounded-xl border border-literary-wine/15 bg-literary-paper/30 px-5 py-4">
+          <p className="text-xs text-literary-muted leading-relaxed font-serif">
+            {cfg.disclaimer}
+          </p>
+        </div>
+      )}
     </section>
   )
 }
