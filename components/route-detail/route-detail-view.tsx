@@ -72,7 +72,7 @@ function routeSummaryPlain(route: RouteDetail): string {
   if (route.plainExplain) return route.plainExplain
   // 兜底：按 book 字段推断
   const b = route.book || ''
-  if (b.includes('游戏')) return `跟着游戏场景，去现实中的取景灵感地走一遍，在每个点位对比"游戏里 vs 现实中"。`
+  if (b.includes('灵感')) return `跟着东方山水与古典审美，去现实中真实的景观里，寻找那些启发了虚构世界的灵感地。`
   if (b.includes('音乐') || b.includes('词') || b.includes('曲')) return `这不是听歌打卡，而是跟着词里写到的地名和意境，去走${route.city}。`
   // book 字段常已自带书名号（如「刘义庆《世说新语》」），不可再套一层，否则出现《刘义庆《世说新语》》
   const bookLabel = /[《》]/.test(b) ? b : `《${b}》`
