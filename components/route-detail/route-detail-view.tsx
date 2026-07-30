@@ -21,6 +21,8 @@ import rawHeritage from '@/public/heritage.json'
 import { ReviewPanel } from './review-panel'
 import { fetchReviewsForPoint, syncPendingReviews, type PointReviews } from '@/lib/reviews-store'
 import { fetchRepliesForReviews } from '@/lib/merchant-store'
+import { track, useTrackImpression } from '@/lib/track'
+import TrackDebug from '@/app/components/track-debug'
 
 type GeoState =
   | { kind: 'idle' }
@@ -182,8 +184,12 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
     setTimeout(() => setToast(null), 3500)
   }, [])
 
+  // 点位列表区块进入视口（≥50% 可见）上报一次 —— 用于测"非遗是否把主内容挤下去"
+  const pointsRef = useTrackImpression<HTMLElement>('points_section_view', { slug: route.slug })
+
   const handleCheckin = useCallback(
     (point: RoutePoint) => {
+      track('checkin_click', { point: point.seq, demo: demoMode || !geoAvailable })
       // 体验模式 或 无 GPS 环境：直接模拟到点位打卡（同坐标、距离 0）
       if (demoMode || !geoAvailable) {
         const now = new Date().toISOString()
@@ -361,7 +367,7 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
       <RouteHeritageSection city={route.city} />
 
       {/* ③ 点位列表 + ④ 打卡按钮 */}
-      <section className="bg-paper">
+      <section ref={pointsRef} className="bg-paper">
         <div className="xc-container py-10">
           <h2 className="font-serif text-2xl font-bold text-charcoal mb-6">点位 · 沿着汪老的笔触走</h2>
           <div className="space-y-5">
@@ -414,7 +420,7 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
                     return (
                       <button
                         type="button"
-                        onClick={() => setPanoramaPoint({ p, img })}
+                        onClick={() => { track('panorama_open_click', { point: p.seq }); setPanoramaPoint({ p, img }) }}
                         className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#3E6B3E] px-4 py-1.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#345C34]"
                       >
                         🌀 全景浏览 · 360° 看看这里
@@ -555,6 +561,9 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
           {toast}
         </div>
       )}
+
+      {/* 埋点实时 HUD：仅在 URL 带 ?track=debug 时出现，正常用户无感 */}
+      <TrackDebug />
     </div>
   )
 }
@@ -598,9 +607,11 @@ function SeasonBanner({ route }: { route: RouteDetail }) {
 /** Task2（重构）：路线级「附近非遗」独立区块 —— 按城市匹配、去同城重复、强对比 */
 function RouteHeritageSection({ city }: { city: string }) {
   const items = getHeritageByCity(city, 6)
+  // 区块进入视口上报一次 —— 用于测"非遗是否被自然看见"
+  const secRef = useTrackImpression<HTMLElement>('heritage_section_view', { city, count: items.length })
   if (items.length === 0) {
     return (
-      <section className="bg-white border-t border-ink-100">
+      <section ref={secRef} className="bg-white border-t border-ink-100">
         <div className="xc-container py-10">
           <div className="flex items-center gap-2">
             <span className="text-2xl">🎭</span>
@@ -612,7 +623,7 @@ function RouteHeritageSection({ city }: { city: string }) {
     )
   }
   return (
-    <section className="bg-white border-t border-ink-100">
+    <section ref={secRef} className="bg-white border-t border-ink-100">
       <div className="xc-container py-10">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -636,7 +647,7 @@ function HeritageCard({ h }: { h: HeritageItem }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="rounded-2xl border border-[#E3D5B3] bg-[#FBF8F0] p-4 transition-shadow hover:shadow-md">
-      <button type="button" onClick={() => setOpen(o => !o)} className="block w-full text-left">
+      <button type="button" onClick={() => { track('heritage_card_expand', { id: h.id, level: h.level, category: h.category }); setOpen(o => !o) }} className="block w-full text-left">
         <div className="flex items-center justify-between gap-2">
           <span className="font-serif text-base font-bold text-charcoal">{h.name}</span>
           <span className="shrink-0 rounded-full bg-[#F5EFE0] px-2 py-0.5 text-[11px] font-semibold text-[#8A6D2F]">{h.level}</span>
