@@ -33,13 +33,11 @@ function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color:
       </svg>
     )
   }
-  if (type === 'game') {
+  if (type === 'inspiration') {
     return (
       <svg viewBox="0 0 64 64" className={cls} fill="none">
-        <rect x="14" y="22" width="36" height="24" rx="4" stroke={stroke} strokeWidth="1.2" />
-        <circle cx="24" cy="34" r="4" stroke={stroke} strokeWidth="1" />
-        <circle cx="40" cy="30" r="2" fill={stroke} opacity="0.5" />
-        <circle cx="44" cy="36" r="2" fill={stroke} opacity="0.5" />
+        <path d="M8 48 Q20 28 32 48 Q44 28 56 48" stroke={stroke} strokeWidth="1.5" />
+        <path d="M12 44 Q24 32 36 44" stroke={stroke} strokeWidth="1" opacity="0.6" />
       </svg>
     )
   }
@@ -48,21 +46,6 @@ function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color:
       <svg viewBox="0 0 64 64" className={cls} fill="none">
         <path d="M8 48 Q20 28 32 48 Q44 28 56 48" stroke={stroke} strokeWidth="1.5" />
         <path d="M12 44 Q24 32 36 44" stroke={stroke} strokeWidth="1" opacity="0.6" />
-      </svg>
-    )
-  }
-  if (type === 'film') {
-    return (
-      <svg viewBox="0 0 64 64" className={cls} fill="none">
-        <rect x="14" y="14" width="36" height="36" rx="2" stroke={stroke} strokeWidth="1.2" />
-        <rect x="10" y="18" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
-        <rect x="10" y="28" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
-        <rect x="10" y="38" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
-        <rect x="50" y="18" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
-        <rect x="50" y="28" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
-        <rect x="50" y="38" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
-        <circle cx="32" cy="32" r="8" stroke={stroke} strokeWidth="1.2" />
-        <circle cx="32" cy="32" r="3" fill={stroke} opacity="0.3" />
       </svg>
     )
   }
