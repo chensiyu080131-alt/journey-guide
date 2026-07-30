@@ -74,7 +74,9 @@ function routeSummaryPlain(route: RouteDetail): string {
   const b = route.book || ''
   if (b.includes('游戏')) return `跟着游戏场景，去现实中的取景灵感地走一遍，在每个点位对比"游戏里 vs 现实中"。`
   if (b.includes('音乐') || b.includes('词') || b.includes('曲')) return `这不是听歌打卡，而是跟着词里写到的地名和意境，去走${route.city}。`
-  return `跟着《${route.book}》里的描写，去${route.city}走这条真实的文学路线，到每个点位打卡解锁文学卡片。`
+  // book 字段常已自带书名号（如「刘义庆《世说新语》」），不可再套一层，否则出现《刘义庆《世说新语》》
+  const bookLabel = /[《》]/.test(b) ? b : `《${b}》`
+  return `跟着${bookLabel}里的描写，去${route.city}走这条真实的文学路线，到每个点位打卡解锁文学卡片。`
 }
 
 export function RouteDetailView({ route: initialRoute }: { route: RouteDetail }) {
