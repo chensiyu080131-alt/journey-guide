@@ -6,7 +6,7 @@ import { JiluFloat } from '@/components/jilu-float'
 
 export const metadata: Metadata = {
   title: '寻迹 - 有迹可循，寻迹而至',
-  description: 'AI驱动的文化旅行攻略。书籍·游戏·音乐——跟着文化载体去旅行，让文字照进现实。',
+  description: 'AI驱动的文化旅行攻略。书籍·灵感·音乐——跟着文化载体去旅行，让文字照进现实。',
   keywords: ['跟着书本去旅行', '文学旅行', '文化旅行', '寻迹', 'AI攻略'],
 }
 
