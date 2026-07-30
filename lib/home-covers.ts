@@ -1,12 +1,12 @@
-export type HomeTab = '首页' | '📖 书籍' | '🏙️ 城市' | '🎮 游戏' | '🎵 音乐'
-export type CoverCategory = '书籍' | '🎬 影视' | '🎮 游戏' | '🎵 音乐' | '🏃 运动' | '🏙️ 城市' | '🔍 搜索'
+export type HomeTab = '首页' | '📖 书籍' | '🏙️ 城市' | '💡 灵感' | '🎵 音乐'
+export type CoverCategory = '书籍' | '💡 灵感' | '🎵 音乐' | '🏃 运动' | '🏙️ 城市' | '🔍 搜索'
 
 export interface CoverStyle {
   bg: string
   border: string
   title: string
   subtitle: string
-  motif: 'book' | 'note' | 'game' | 'landscape' | 'city' | 'film' | 'sport' | 'search'
+  motif: 'book' | 'note' | 'inspiration' | 'landscape' | 'city' | 'sport' | 'search'
 }
 
 export interface HomeCover {
@@ -123,105 +123,14 @@ const bookCovers: HomeCover[] = [
 ]
 
 // ──────────────────────────────────────
-//  🎬 影视 Tab
-// ──────────────────────────────────────
-const filmCovers: HomeCover[] = [
-  {
-    id: 'fanhua',
-    category: '🎬 影视',
-    title: '繁花',
-    subtitle: '王家卫 · 上海弄堂',
-    route: '/guide/shanghai',
-    image: '/images/cover-fanhua.jpg',
-    style: {
-      bg: 'linear-gradient(165deg, #E8D4CC 0%, #C4A898 100%)',
-      border: '#8A5A4A',
-      title: '#4A2E24',
-      subtitle: '#7A5A4A',
-      motif: 'film',
-    },
-  },
-  {
-    id: 'biancheng-film',
-    category: '🎬 影视',
-    title: '边城',
-    subtitle: '沈从文 · 湘西凤凰',
-    route: '/guide/fenghuang',
-    style: {
-      bg: 'linear-gradient(165deg, #D4D8E0 0%, #A8B4C0 100%)',
-      border: '#5A6878',
-      title: '#2E3E4E',
-      subtitle: '#5A6A7A',
-      motif: 'film',
-    },
-  },
-  {
-    id: 'shajiabang-film',
-    category: '🎬 影视',
-    title: '沙家浜',
-    subtitle: '京剧经典 · 芦苇荡传奇',
-    route: '/guide/shajiabang',
-    style: {
-      bg: 'linear-gradient(165deg, #EDE8DF 0%, #D9D0C2 100%)',
-      border: '#8A8278',
-      title: '#4A4540',
-      subtitle: '#8A8278',
-      motif: 'film',
-    },
-  },
-  {
-    id: 'baishechuan',
-    category: '🎬 影视',
-    title: '白蛇传',
-    subtitle: '千年传说 · 金山水漫',
-    route: '/guide/zhenjiang',
-    style: {
-      bg: 'linear-gradient(165deg, #D8E0E8 0%, #B0C0D0 100%)',
-      border: '#5A7088',
-      title: '#2E4458',
-      subtitle: '#5A7088',
-      motif: 'film',
-    },
-  },
-  {
-    id: 'changan-film',
-    category: '🎬 影视',
-    title: '长安三万里',
-    subtitle: '大唐诗仙 · 长安梦回',
-    route: '/guide/xian',
-    style: {
-      bg: 'linear-gradient(165deg, #E0D0B8 0%, #C8A878 100%)',
-      border: '#8A6A3A',
-      title: '#4A3A1E',
-      subtitle: '#7A5A2A',
-      motif: 'film',
-    },
-  },
-  {
-    id: 'chaguan-film',
-    category: '🎬 影视',
-    title: '茶馆',
-    subtitle: '老舍 · 北京人艺经典',
-    route: '/guide/beijing',
-    style: {
-      bg: 'linear-gradient(165deg, #E0C8C0 0%, #C09888 100%)',
-      border: '#8A4A3A',
-      title: '#4A2E24',
-      subtitle: '#7A4A3A',
-      motif: 'film',
-    },
-  },
-]
-
-// ──────────────────────────────────────
-//  🎮 游戏 Tab
-// ──────────────────────────────────────
-const gameCovers: HomeCover[] = [
+//  💡 灵感 Tab（原「游戏」安全重构 · 无任何 IP）
+// ────────────────────────���─────────────
+const inspirationCovers: HomeCover[] = [
   {
     id: 'zhangjiajie-qifeng',
-    category: '🎮 游戏',
+    category: '💡 灵感',
     title: '张家界 · 奇峰入画来',
-    subtitle: '山水画灵感地 · 阿凡达取景',
+    subtitle: '层叠峰林 · 东方山水画的现实灵感',
     route: '/route/zhangjiajie-qifeng-ruhua/',
     style: {
       bg: 'linear-gradient(165deg, #D4E8D4 0%, #A8C8A8 100%)',
@@ -232,45 +141,45 @@ const gameCovers: HomeCover[] = [
     },
   },
   {
-    id: 'black-myth',
-    category: '🎮 游戏',
-    title: '黑神话·悟空',
-    subtitle: '取景地 · 山西古建巡礼',
-    route: '/guide/shanxi',
+    id: 'jiangnan-shuixiang-inspiration',
+    category: '💡 灵感',
+    title: '水乡楼船 · 中式虚构城市的灵感',
+    subtitle: '粉墙黛瓦与水巷 · 现实灵感地',
+    route: '/route/jiangnan-shuixiang-inspiration/',
     style: {
-      bg: 'linear-gradient(165deg, #E0D8D0 0%, #B8A898 100%)',
-      border: '#7A6A58',
-      title: '#4A3A28',
-      subtitle: '#7A6A58',
-      motif: 'game',
-    },
-  },
-  {
-    id: 'poem-challenge',
-    category: '🎮 游戏',
-    title: '诗词诵读',
-    subtitle: '跟着原文 · 朗读挑战',
-    route: '/guide/niehaifeng',
-    style: {
-      bg: 'linear-gradient(165deg, #D8E4E2 0%, #A8BFB8 100%)',
+      bg: 'linear-gradient(165deg, #E0E8E4 0%, #A8C8B8 100%)',
       border: '#5A7D78',
       title: '#3D5550',
       subtitle: '#6B8480',
-      motif: 'game',
+      motif: 'landscape',
     },
   },
   {
-    id: 'treasure-hunt',
-    category: '🎮 游戏',
-    title: '古籍寻宝',
-    subtitle: '找错字 · 读原文',
-    route: '/guide/wengtonghe',
+    id: 'guta-changqiao-inspiration',
+    category: '💡 灵感',
+    title: '古塔长桥 · 中式空间美学',
+    subtitle: '雷峰塔与宝带桥 · 真实景观的美学解读',
+    route: '/route/guta-changqiao-inspiration/',
     style: {
       bg: 'linear-gradient(165deg, #EDE4D8 0%, #D4C8B8 100%)',
       border: '#8A7B6A',
       title: '#4A4238',
       subtitle: '#7A7064',
-      motif: 'game',
+      motif: 'landscape',
+    },
+  },
+  {
+    id: 'gujian-meixue-inspiration',
+    category: '💡 灵感',
+    title: '古建飞檐 · 中式楼阁美学巡礼',
+    subtitle: '亭台楼阁与歇山顶 · 东方建筑审美',
+    route: '/route/gujian-meixue-inspiration/',
+    style: {
+      bg: 'linear-gradient(165deg, #E0D8D0 0%, #B8A898 100%)',
+      border: '#7A6A58',
+      title: '#4A3A28',
+      subtitle: '#7A6A58',
+      motif: 'landscape',
     },
   },
 ]
@@ -410,7 +319,7 @@ const musicCovers: HomeCover[] = [
 /** 首页「城市」版块入口封面（自设计的城市名封面，点击进入城市版块） */
 const suzhouCityCover: HomeCover = {
   id: 'city-suzhou',
-  category: '🎬 影视',
+  category: '🏙️ 城市',
   title: '苏州',
   subtitle: '姑苏城 · 园林诗画',
   route: '/guide/suzhou',
@@ -440,12 +349,12 @@ export const featuredCovers: HomeCover[] = [
   },
   {
     ...suzhouCityCover,
-    stack: [toStackLayer(filmCovers[4]), toStackLayer(filmCovers[3])],
+    stack: [toStackLayer(inspirationCovers[1]), toStackLayer(inspirationCovers[2])],
   },
   {
-    ...gameCovers[0],
-    targetTab: '🎮 游戏',
-    stack: [toStackLayer(gameCovers[1]), toStackLayer(gameCovers[3])],
+    ...inspirationCovers[0],
+    targetTab: '💡 灵感',
+    stack: [toStackLayer(inspirationCovers[1]), toStackLayer(inspirationCovers[3])],
   },
   {
     ...musicCovers[0],
@@ -498,4 +407,4 @@ export function getCoversForTab(tab: HomeTab): HomeCover[] {
 /** 待开发的 Tab：中部显示占位提示，不展示封面 */
 export const underDevelopmentTabs: HomeTab[] = []
 
-export const homeTabs: HomeTab[] = ['首页', '📖 书籍', '🏙️ 城市', '🎮 游戏', '🎵 音乐']
+export const homeTabs: HomeTab[] = ['首页', '📖 书籍', '🏙️ 城市', '💡 灵感', '🎵 音乐']
