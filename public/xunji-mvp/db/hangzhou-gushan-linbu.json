@@ -1,0 +1,84 @@
+{
+  "route": {
+    "slug": "hangzhou-gushan-linbu",
+    "title": "孤山放鹤 · 林逋的梅妻鹤子",
+    "author": "林逋",
+    "city": "杭州",
+    "book": "林逋《山园小梅》",
+    "summary": "他隐居孤山二十年，以梅为妻、以鹤为子，写下“疏影横斜水清浅”的千古名句。走一趟孤山，看一位宋代文人如何把孤独活成诗意。",
+    "plain_explain": "跟着林逋《山园小梅》诗里写到的梅花、水影、白鹤，去孤山走一段隐士的诗意居所。",
+    "why_worth": "林逋是宋代最纯粹的隐士，孤山是他的桃花源——这是一条走进梅妻鹤子传说的路线。",
+    "season": "winter",
+    "category": "figure",
+    "cover_image": "",
+    "source": "human",
+    "note": "坐标为 GCJ-02（高德坐标系）近似最佳值，待在高德地图二次核对。"
+  },
+  "points": [
+    {
+      "seq": 1,
+      "name": "放鹤亭",
+      "address": "杭州市西湖区孤山北麓放鹤亭",
+      "lng": 120.1445,
+      "lat": 30.2545,
+      "excerpt": "疏影横斜水清浅，暗香浮动月黄昏。",
+      "excerpt_source": "林逋《山园小梅》，《全宋诗》卷一零六；放鹤亭为后人建",
+      "excerpt_confidence": "verified",
+      "interpretation": "这是咏梅千古名句。放鹤亭是林逋梅妻鹤子传说的载体——亭下有他植的梅，亭前是他放鹤的湖。",
+      "checkin_task": "在放鹤亭前背一遍疏影横斜，找一枝最像诗里横斜姿态的梅枝拍下来。",
+      "source": "human"
+    },
+    {
+      "seq": 2,
+      "name": "林逋墓（故址）",
+      "address": "杭州市西湖区孤山北麓",
+      "lng": 120.1448,
+      "lat": 30.2542,
+      "excerpt": "霜禽欲下先偷眼，粉蝶如知合断魂。",
+      "excerpt_source": "林逋《山园小梅》；林逋墓为其归葬地，《宋史·隐逸传》",
+      "excerpt_confidence": "verified",
+      "interpretation": "林逋在此隐居二十年，死后亦葬于此。墓今已废，但孤山的梅与鹤仍记得他。",
+      "checkin_task": "在林逋墓故址静立片刻，想想一个人为何会选择这样的生活。",
+      "source": "human"
+    },
+    {
+      "seq": 3,
+      "name": "孤山梅园",
+      "address": "杭州市西湖区孤山后山梅园",
+      "lng": 120.145,
+      "lat": 30.2538,
+      "excerpt": "疏影横斜水清浅。",
+      "excerpt_source": "林逋《山园小梅》；孤山梅花为杭州古老梅区",
+      "excerpt_confidence": "verified",
+      "interpretation": "孤山的梅花因林逋而名。每年冬末春初，这里的梅开得最清冷——正是暗香浮动的样子。",
+      "checkin_task": "在梅园花期拍一张孤山梅，对比林逋诗里的疏影。",
+      "source": "human"
+    },
+    {
+      "seq": 4,
+      "name": "西泠印社",
+      "address": "杭州市西湖区孤山路西泠印社",
+      "lng": 120.1455,
+      "lat": 30.2535,
+      "excerpt": "暗香浮动月黄昏。",
+      "excerpt_source": "林逋《山园小梅》；西泠印社建在林逋隐居地",
+      "excerpt_confidence": "derived",
+      "interpretation": "西泠印社建在林逋隐居之地。文人篆刻与梅花清气一脉相承——孤山是杭州文气的根。",
+      "checkin_task": "在西泠印社看一方印章，感受孤山延续千年的文人气息。",
+      "source": "human"
+    },
+    {
+      "seq": 5,
+      "name": "孤山-白堤连接处",
+      "address": "杭州市西湖区孤山东端接白堤",
+      "lng": 120.146,
+      "lat": 30.255,
+      "excerpt": "幸有微吟可相狎，不须檀板共金樽。",
+      "excerpt_source": "林逋《山园小梅》末联",
+      "excerpt_confidence": "verified",
+      "interpretation": "孤山连着白堤，是林逋日常散步的路。山光水色之间，是他二十年不出的桃花源。",
+      "checkin_task": "从孤山走到白堤，拍一张山、水、堤同框的照片，体会隐士的日常。",
+      "source": "human"
+    }
+  ]
+}

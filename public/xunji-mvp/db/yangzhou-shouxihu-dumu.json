@@ -1,0 +1,84 @@
+{
+  "route": {
+    "slug": "yangzhou-shouxihu-dumu",
+    "title": "瘦西湖诗画 · 杜牧的二十四桥明月",
+    "author": "杜牧 / 郑板桥",
+    "city": "扬州",
+    "book": "杜牧《寄扬州韩绰判官》+ 郑板桥《瘦西湖》诗",
+    "summary": "二十四桥明月夜，玉人何处教吹箫。杜牧一句诗让瘦西湖的桥与月成了千年的意象。走一趟湖上园林，看诗里的桥、画里的柳。",
+    "plain_explain": "跟着杜牧二十四桥明月夜和历代写瘦西湖的诗画，去湖上走一段桥、柳、月的诗画路线。",
+    "why_worth": "瘦西湖是扬州的名片，杜牧的诗是它的广告词——这是一条走进二十四桥明月夜的路线。",
+    "season": "spring",
+    "category": "scenic",
+    "cover_image": "",
+    "source": "human",
+    "note": "坐标为 GCJ-02（高德坐标系）近似最佳值，待在高德地图二次核对。"
+  },
+  "points": [
+    {
+      "seq": 1,
+      "name": "瘦西湖（大虹桥）",
+      "address": "扬州市邗江区大虹桥路瘦西湖风景名胜区",
+      "lng": 119.418,
+      "lat": 32.412,
+      "excerpt": "二十四桥明月夜，玉人何处教吹箫。",
+      "excerpt_source": "杜牧《寄扬州韩绰判官》，《全唐诗》卷二六；大虹桥为瘦西湖名桥",
+      "excerpt_confidence": "verified",
+      "interpretation": "杜牧这句诗让瘦西湖的桥与月成了千古绝唱。大虹桥是瘦西湖的入口，也是历代诗人写湖的起点。",
+      "checkin_task": "在大虹桥上拍一张湖面的全景，背一遍杜牧的诗。",
+      "source": "human"
+    },
+    {
+      "seq": 2,
+      "name": "二十四桥景区",
+      "address": "扬州市邗江区瘦西湖风景名胜区二十四桥景区",
+      "lng": 119.4195,
+      "lat": 32.4135,
+      "excerpt": "二十四桥明月夜。",
+      "excerpt_source": "杜牧《寄扬州韩绰判官》；二十四桥为现代重建，名出杜牧诗",
+      "excerpt_confidence": "verified",
+      "interpretation": "二十四桥是瘦西湖的灵魂。不论历史上是二十四座桥还是一座桥，杜牧的诗已让它成了扬州最浪漫的坐标。",
+      "checkin_task": "在二十四桥看一次月色或灯光，拍下水中桥影，想想玉人何处教吹箫。",
+      "source": "human"
+    },
+    {
+      "seq": 3,
+      "name": "五亭桥",
+      "address": "扬州市邗江区瘦西湖风景名胜区五亭桥",
+      "lng": 119.4188,
+      "lat": 32.413,
+      "excerpt": "五亭注湖乡。",
+      "excerpt_source": "郑板桥等历代文人写瘦西湖之诗；五亭桥为瘦西湖标志建筑",
+      "excerpt_confidence": "derived",
+      "interpretation": "五亭桥是瘦西湖最美的建筑，建在湖心，五亭如莲。中国园林虽由人作、宛自天开的典范。",
+      "checkin_task": "在五亭桥上找一扇最好的窗框，拍一张框住的湖景。",
+      "source": "human"
+    },
+    {
+      "seq": 4,
+      "name": "白塔",
+      "address": "扬州市邗江区瘦西湖风景名胜区白塔",
+      "lng": 119.419,
+      "lat": 32.4128,
+      "excerpt": "塔影凌波。",
+      "excerpt_source": "扬州白塔传为仿北京白塔而建，见《扬州画舫录》",
+      "excerpt_confidence": "derived",
+      "interpretation": "白塔矗立湖畔，倒影入水。传说扬州盐商为迎乾隆一夜仿建——虽是传说，说明扬州昔日富甲天下的气派。",
+      "checkin_task": "拍一张白塔与水中倒影的对称构图。",
+      "source": "human"
+    },
+    {
+      "seq": 5,
+      "name": "熙春台",
+      "address": "扬州市邗江区瘦西湖风景名胜区熙春台",
+      "lng": 119.42,
+      "lat": 32.414,
+      "excerpt": "春风十里扬州路。",
+      "excerpt_source": "杜牧《赠别》句；熙春台为乾隆南巡时观演之处",
+      "excerpt_confidence": "verified",
+      "interpretation": "熙春台是乾隆看戏的地方。春风十里扬州路的繁华，在瘦西湖的这头最盛。杜牧写的扬州，就是这般金粉。",
+      "checkin_task": "在熙春台远眺瘦西湖，找出春风十里的方向，拍一张最繁华的湖景。",
+      "source": "human"
+    }
+  ]
+}

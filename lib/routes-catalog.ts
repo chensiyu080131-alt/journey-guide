@@ -11,6 +11,8 @@ export interface RouteCatalogItem {
   status: 'live' | 'soon'
   pointsCount: number
   blurb: string
+  /** 分类（Task2 筛选）：scenic 经典名胜 / literary 文学名篇 / figure 人物行旅 */
+  category?: 'scenic' | 'literary' | 'figure'
 }
 
 export const routesCatalog: RouteCatalogItem[] = [
@@ -22,6 +24,7 @@ export const routesCatalog: RouteCatalogItem[] = [
     emoji: '🍵',
     status: 'live',
     pointsCount: 5,
+    category: 'literary',
     blurb:
       '跟着汪老的笔触，用一顿早茶走完扬州：富春 · 冶春 · 锦春 · 大麒麟阁 · 东关街。GPS 打卡解锁 5 枚文学卡片。',
   },
@@ -33,6 +36,7 @@ export const routesCatalog: RouteCatalogItem[] = [
     emoji: '🔔',
     status: 'live',
     pointsCount: 5,
+    category: 'literary',
     blurb:
       '一首二十八字的小诗，让城外的寺院响了千年。从枫桥到寒山寺，沿张继那夜的愁眠与钟声走一段姑苏水路。',
   },
@@ -44,6 +48,7 @@ export const routesCatalog: RouteCatalogItem[] = [
     emoji: '🌿',
     status: 'live',
     pointsCount: 5,
+    category: 'scenic',
     blurb:
       '园名来自一句自嘲，画家为它画了三十一景。循文徵明笔意走拙政园，看明代文人如何把山水搬进院墙。',
   },
@@ -55,6 +60,7 @@ export const routesCatalog: RouteCatalogItem[] = [
     emoji: '🌊',
     status: 'live',
     pointsCount: 5,
+    category: 'figure',
     blurb:
       '他疏浚西湖筑起长堤，又把西湖写成了西子。沿苏东坡的堤与诗，走一遍晴雨皆宜的湖山。',
   },
@@ -66,6 +72,7 @@ export const routesCatalog: RouteCatalogItem[] = [
     emoji: '🌉',
     status: 'live',
     pointsCount: 5,
+    category: 'figure',
     blurb:
       '他说"江南好"，便让千年的人都跟着忆。从断桥到孤山，走一段白乐天走过的白沙堤。',
   },
@@ -77,6 +84,7 @@ export const routesCatalog: RouteCatalogItem[] = [
     emoji: '🏮',
     status: 'live',
     pointsCount: 5,
+    category: 'literary',
     blurb:
       '1923 年夏夜，朱自清与俞平伯同泛秦淮。循那夜的桨声灯影，从夫子庙到桃叶渡，走一段民国文人的河。',
   },
@@ -88,19 +96,21 @@ export const routesCatalog: RouteCatalogItem[] = [
     emoji: '⛰️',
     status: 'live',
     pointsCount: 5,
+    category: 'scenic',
     blurb:
       '三千奇峰拔地而起，是画家吴冠中笔下"养在深闺人未识"的秘境，也是电影《阿凡达》悬浮山的灵感之地。走进峰林，看真实山水如何变成画里的世界。',
   },
   {
     slug: 'yangzhou-man-jiangkui',
-    title: '扬州慢 · 姜夔的淮左名都',
+    title: '一首词里的扬州 · 跟着《扬州慢》逛城',
     book: '姜夔《扬州慢·淮左名都》',
     city: '扬州',
     emoji: '🎵',
     status: 'live',
     pointsCount: 5,
+    category: 'literary',
     blurb:
-      '淳熙三年冬至，姜夔过扬州写下“黍离之悲”。八百年后，循二十四桥与春风十里路走一段扬州。',
+      '这不是听歌打卡，而是跟着姜夔《扬州慢》词里写到的二十四桥、春风十里路，去走扬州。八百年前的词，今天还能在城里找到对应的地方。',
   },
   {
     slug: 'nanjing-fuzimiao-shishuoxinyu',
@@ -110,9 +120,108 @@ export const routesCatalog: RouteCatalogItem[] = [
     emoji: '🏛️',
     status: 'live',
     pointsCount: 5,
+    category: 'literary',
     blurb:
       '魏晋的建康，住着一群最会说话的人。从新亭对泣到乌衣巷口，走一段六朝旧都的清言与风骨。',
   },
+  // ========== 新增 8 条（2026-07-29 扩充） ==========
+  {
+    slug: 'hangzhou-lingyinsi-luobinwang',
+    title: '灵隐飞来峰 · 骆宾王的禅意山寺',
+    book: '骆宾王《灵隐寺》诗',
+    city: '杭州',
+    emoji: '🛕',
+    status: 'live',
+    pointsCount: 5,
+    category: 'scenic',
+    blurb:
+      '飞来峰下的千年古刹，骆宾王遭贬路过此地，写下"楼观沧海日，门对浙江潮"。循着诗里的禅意与山色，走一座杭州最深的文化名山。',
+  },
+  {
+    slug: 'hangzhou-longjing-sushi',
+    title: '龙井茶山 · 苏轼的试焙新茶',
+    book: '苏轼《次韵曹辅寄壑源试焙新茶》',
+    city: '杭州',
+    emoji: '🍵',
+    status: 'live',
+    pointsCount: 5,
+    category: 'literary',
+    blurb:
+      '春茶一杯，是苏轼在杭州最爱的闲适。循着茶香走进龙井村，看采茶、品新茶，走一段茶与诗的山路。',
+  },
+  {
+    slug: 'hangzhou-gushan-linbu',
+    title: '孤山放鹤 · 林逋的梅妻鹤子',
+    book: '林逋《山园小梅》',
+    city: '杭州',
+    emoji: '🦩',
+    status: 'live',
+    pointsCount: 5,
+    category: 'figure',
+    blurb:
+      '他隐居孤山二十年，以梅为妻、以鹤为子，写下"疏影横斜水清浅"。走一趟孤山，看一位宋代文人如何把孤独活成诗意。',
+  },
+  {
+    slug: 'suzhou-huqiu-sushi',
+    title: '虎丘剑池 · 苏东坡的苏州第一憾事',
+    book: '苏轼语 + 袁宏道《虎丘记》',
+    city: '苏州',
+    emoji: '⚔️',
+    status: 'live',
+    pointsCount: 5,
+    category: 'scenic',
+    blurb:
+      '苏东坡说"到苏州不游虎丘，乃憾事也"。袁宏道写下中秋虎丘的笙歌。一座小山，藏着吴王阖闾的剑与文人千年的唱和。',
+  },
+  {
+    slug: 'suzhou-pingjiang-fushengliuji',
+    title: '平江路烟火 · 沈复的浮生六记',
+    book: '沈复《浮生六记》',
+    city: '苏州',
+    emoji: '🏮',
+    status: 'live',
+    pointsCount: 5,
+    category: 'figure',
+    blurb:
+      '一对普通夫妻的市井日常，被沈复写成最动人的散文。沿平江路水巷与老铺，走一段乾隆年间苏州人的烟火人生。',
+  },
+  {
+    slug: 'nanjing-mochouhu-liangwudi',
+    title: '莫愁烟雨 · 梁武帝笔下的洛阳女儿',
+    book: '梁武帝《河中之水歌》',
+    city: '南京',
+    emoji: '💧',
+    status: 'live',
+    pointsCount: 5,
+    category: 'literary',
+    blurb:
+      '一个洛阳嫁到金陵的女子，被写进帝王的诗里，成了千年传说。莫愁湖的烟雨里，藏着南朝最温柔的民间记忆。',
+  },
+  {
+    slug: 'nanjing-yuejianglou-songlian',
+    title: '阅江楼 · 宋濂笔下的帝王之楼',
+    book: '宋濂《阅江楼记》',
+    city: '南京',
+    emoji: '🏯',
+    status: 'live',
+    pointsCount: 5,
+    category: 'scenic',
+    blurb:
+      '朱元璋要在狮子山上建阅江楼，命文臣写记，宋濂拔得头筹。但楼六百年没建成——这是一篇记比楼先有名的地方。',
+  },
+  {
+    slug: 'yangzhou-shouxihu-dumu',
+    title: '瘦西湖诗画 · 杜牧的二十四桥明月',
+    book: '杜牧《寄扬州韩绰判官》',
+    city: '扬州',
+    emoji: '🌙',
+    status: 'live',
+    pointsCount: 5,
+    category: 'scenic',
+    blurb:
+      '二十四桥明月夜，玉人何处教吹箫。杜牧一句诗让瘦西湖的桥与月成了千年的意象。��一趟湖上园林，看诗里的桥、画里的柳。',
+  },
+  // ========== 即将上线 ==========
   {
     slug: 'biancheng-fenghuang',
     title: '沈从文的边城',

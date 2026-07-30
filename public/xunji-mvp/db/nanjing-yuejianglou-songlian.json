@@ -1,0 +1,84 @@
+{
+  "route": {
+    "slug": "nanjing-yuejianglou-songlian",
+    "title": "阅江楼 · 宋濂笔下的帝王之楼",
+    "author": "宋濂",
+    "city": "南京",
+    "book": "宋濂《阅江楼记》",
+    "summary": "朱元璋要在狮子山上建一座阅江楼，命文臣写记，宋濂拔得头筹。但楼六百年没建成，直到2001年——这是一篇记比楼先有名的地方。",
+    "plain_explain": "跟着宋濂《阅江楼记》里写到的狮子山、大江、金陵形胜，去登一座先有文后有楼的名楼。",
+    "why_worth": "阅江楼是有记无楼六百年的奇观，宋濂的一篇文章让它名垂青史——这是一条走进帝王文章与江山形胜的路线。",
+    "season": "autumn",
+    "category": "scenic",
+    "cover_image": "",
+    "source": "human",
+    "note": "坐标为 GCJ-02（高德坐标系）近似最佳值，待在高德地图二次核对。"
+  },
+  "points": [
+    {
+      "seq": 1,
+      "name": "阅江楼",
+      "address": "南京市鼓楼区建宁路202号狮子山巅",
+      "lng": 118.752,
+      "lat": 32.095,
+      "excerpt": "登阅江之楼，仰观大江。",
+      "excerpt_source": "宋濂《阅江楼记》，《宋学士全集》；阅江楼2001年建成",
+      "excerpt_confidence": "verified",
+      "interpretation": "宋濂的《阅江楼记》让它名扬天下，但楼六百年都没建起来。如今登楼，大江仍在，文章的气象还在。",
+      "checkin_task": "登阅江楼顶层，找一找宋濂笔下金陵之形胜的方向，拍一张大江。",
+      "source": "human"
+    },
+    {
+      "seq": 2,
+      "name": "狮子山（明城墙段）",
+      "address": "南京市鼓楼区狮子山明城墙",
+      "lng": 118.7518,
+      "lat": 32.0948,
+      "excerpt": "金陵之形胜。",
+      "excerpt_source": "宋濂《阅江楼记》写金陵山川形势；狮子山即古卢龙山",
+      "excerpt_confidence": "verified",
+      "interpretation": "狮子山扼长江与金陵要冲。宋濂写金陵之形胜，指的就是这种山控大江的格局。",
+      "checkin_task": "在城墙上看长江的方向，体会形胜二字。",
+      "source": "human"
+    },
+    {
+      "seq": 3,
+      "name": "仪凤门",
+      "address": "南京市鼓楼区仪凤门",
+      "lng": 118.7515,
+      "lat": 32.0945,
+      "excerpt": "城门以望江。",
+      "excerpt_source": "宋濂《阅江楼记》记金陵城门；仪凤门为明代城门",
+      "excerpt_confidence": "derived",
+      "interpretation": "仪凤门是明城墙十三门之一，出此门即可望江。宋濂时代的文人就是从这里登狮子山的。",
+      "checkin_task": "穿过仪凤门，拍一张门洞框住的长江或山色。",
+      "source": "human"
+    },
+    {
+      "seq": 4,
+      "name": "天妃宫（故址）",
+      "address": "南京市鼓楼区下关天妃宫故址",
+      "lng": 118.7505,
+      "lat": 32.096,
+      "excerpt": "亦写民生之忘。",
+      "excerpt_source": "宋濂《阅江楼记》记与阅江楼同期之建筑；天妃宫为明永乐帝建",
+      "excerpt_confidence": "derived",
+      "interpretation": "天妃宫与阅江楼同时期规划。宋濂在记里劝帝王不要只看江山，也要顾念民生——这是文章的良心。",
+      "checkin_task": "在天妃宫故址附近，找一处能看到普通南京人生活的地方，拍一张。",
+      "source": "human"
+    },
+    {
+      "seq": 5,
+      "name": "下关滨江风光带",
+      "address": "南京市鼓楼区下关滨江风光带",
+      "lng": 118.749,
+      "lat": 32.098,
+      "excerpt": "江山如画。",
+      "excerpt_source": "宋濂《阅江楼记》写大江东去之壮阔；下关滨江为观江胜地",
+      "excerpt_confidence": "verified",
+      "interpretation": "下关滨江是看长江最开阔处。宋濂笔下大江东去的壮阔，在这里看得最满。",
+      "checkin_task": "在下关江边拍一张最开阔的长江，配一句宋濂写江山的句子。",
+      "source": "human"
+    }
+  ]
+}

@@ -483,6 +483,9 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
       {/* ⑤ 文学卡片收集 + 分享图（T4） */}
       <LiteraryCards route={route} checkedSeqs={Object.keys(checkedIn).map(Number)} />
 
+      {/* Task4：为什么今天适合去（季节区块） */}
+      <SeasonBanner route={route} />
+
       {/* Toast */}
       {toast && (
         <div className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full bg-charcoal px-6 py-3 text-sm text-white shadow-lg">
@@ -490,5 +493,41 @@ export function RouteDetailView({ route: initialRoute }: { route: RouteDetail })
         </div>
       )}
     </div>
+  )
+}
+
+/** Task4：季节区块 —— 根据当前月份与路线 season 字段，显示"为什么今天适合去" */
+function SeasonBanner({ route }: { route: RouteDetail }) {
+  const month = new Date().getMonth() + 1
+  const currentSeason = month >= 3 && month <= 5 ? 'spring' : month >= 6 && month <= 8 ? 'summer' : month >= 9 && month <= 11 ? 'autumn' : 'winter'
+  const routeSeason = route.season || 'spring'
+  const SEASON_NAME: Record<string, string> = { spring: '春', summer: '夏', autumn: '秋', winter: '冬' }
+
+  const copy: Record<string, string> = {
+    spring: `${SEASON_NAME.spring}天适合走这条路线——草木初醒，光线柔和，正是诗里"行到水穷处"的好时节。`,
+    summer: `${SEASON_NAME.summer}天适合走这条路线——树荫浓密，水风清凉，午后斜阳把石板晒出文学的气味。`,
+    autumn: `${SEASON_NAME.autumn}天适合走这条路线——天高气爽，月色最明，是读这首诗最好的季节。`,
+    winter: `${SEASON_NAME.winter}天适合走这条路线——游人稀少，山水清瘦，恰能看见文人笔下最干净的那一笔。`,
+  }
+
+  const isCurrent = currentSeason === routeSeason
+  const text = isCurrent
+    ? copy[routeSeason]
+    : `虽然现在是${SEASON_NAME[currentSeason]}季，但「${route.title}」在${SEASON_NAME[routeSeason]}季有别样的味道：${copy[routeSeason].split('——')[1] || copy[routeSeason]}`
+
+  return (
+    <section className="bg-white border-t border-ink-100">
+      <div className="xc-container py-8">
+        <div className="rounded-2xl bg-gradient-to-br from-paper-warm to-camel-light px-6 py-5">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl shrink-0">{isCurrent ? '🌿' : '🍂'}</span>
+            <div>
+              <h3 className="font-serif text-base font-bold text-charcoal">为什么今天适合去</h3>
+              <p className="mt-1.5 text-sm text-ink-600 leading-relaxed">{text}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
