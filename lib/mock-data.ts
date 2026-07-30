@@ -421,7 +421,7 @@ const yangzhouSpots: Spot[] = [
     originalText: '天下三分明月夜，二分无赖是扬州。',
     originalSource: '徐凝《忆扬州》',
     realityNote: '何园复道回廊是摄影经典，建议从东门入、沿回廊上至二楼俯瞰水心亭。与个园风格不同，更见晚清中西交融的痕迹。',
-    culturalTag: '🎬影视', culturalTagDetail: '🎬 影视剧取景地——晚清第一园何园',
+    culturalTag: '📖书籍', culturalTagDetail: '📖 晚清第一园何园——中西合璧园林建筑',
   },
   {
     id: 'yz-7', name: '史可法纪念馆', desc: '梅花岭上，忠义气节与扬州城防记忆',
