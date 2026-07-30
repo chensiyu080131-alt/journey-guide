@@ -1,33 +1,33 @@
-# PROGRESS.md — 寻迹 扩充+热点+筛选+季节（2026-07-29 晚）
+# PROGRESS — 非遗活动 + 360°全景 浏览层
 
-> 优先级：有内容 > 能跑通 > 好看。
+## 基线（2026-07-30 Task0 确认）
+- live 路线：17 条（线上 /routes 去重确认）
+- 城市：扬州/苏州/杭州/南京/张家界（非遗覆盖前 4 城）
+- 点位卡片现状结构：标题/地址 → 文学原文blockquote → 文学↔现实对照块(interpretation) → 打卡任务 → 打卡按钮+导航+评价
+- 现有依赖：无 pannellum / photo-sphere-viewer / three
+- RoutePoint 类型字段：seq/name/address/lng/lat/excerpt/excerptSource/excerptConfidence/interpretation/checkinTask（无 panorama 字段）
 
-## Task 0：基线
-- 扩充前：9 条 live（扬州1/苏州2/杭州2/南京2/张家界1/扬州慢1），4 城，45 点位。
-- 数字旧：6城·10路线·50+点位·5载体（含类型定义虚高）。
+## 任务执行顺序（按"有内容>能跑通>好看"）
+- Task1 heritage.json（内容地基）→ Task2 非遗区块 → Task3 全景组件 → Task4 层级整理 → build → 推送
 
-## 完成记录
+## 进度（全部完成）
+- [x] **Task1**: heritage.json — 20 条非遗（4城×5：扬州5/苏州5/杭州5/南京5），远超≥15要求，每城≥3。全部真实国家级/省级/联合国非遗项目，简介基于公开资料。
+- [x] **Task2**: 点位卡片底部加「附近非遗」区块（PointHeritage 组件），按 route.city 匹配，每点显示3张迷你卡片可展开。空城市显示"暂无非遗活动信息"。
+- [x] **Task3**: 新建 panorama-viewer.tsx（'use client'），点位卡片加"🌀 全景浏览"按钮弹 modal。**决策：不 npm install pannellum，改用 CDN 动态加载（见下）**��
+- [x] **Task4**: 点位层级整理为：文学原文 → 现代解读(对照) → 非遗活动 → 全景浏览 → 打卡任务，分隔线/留白区分。
+- [x] **build 通过**：17 条详情页全预渲染，/route/[id] 39.1kB→47.3kB。
 
-### Task1 ✅ 新增 8 条路线（17 live）
-杭州3（灵隐骆宾王/龙井苏轼/孤山林逋）+ 苏州2（虎丘/平江路浮生六记）+ 南京2（莫愁湖/阅江楼）+ 扬州1（瘦西湖杜牧）。
-每条 5 点位，文学原文均带出处（书名+篇名/作者+总集卷次）。含 category/season/plain_explain/why_worth 字段。
-旧9条 JSON 已补 category+season。route-detail-data.ts 注册17条。构建产物 /route/[id] SSG 预渲染17详情页。
+## 关键决策（建议走更好的路，记一句）
+1. **全景库方案**：任务书建议 npm install pannellum。实际改用 **CDN 动态加载**（jsdelivr pannellum@2.5.6）。
+   - 理由：pannellum npm 包强依赖 jQuery，在 Next.js（尤其 output:'export' 静态导出）下 SSR 兼容差，需额外配置 webpack。
+   - CDN 方案：①零新增 npm 依赖（满足"不超过2个依赖"硬约束）②SSR 安全，仅点击时按需加载脚本 ③功能完全等价。
+   - 代价：依赖 CDN 可用性（jsdelivr 是稳定大厂 CDN）；原型阶段可接受，后期可换 npm 方案或自托管 pannellum 脚本。
+2. **全景图占位**：原型阶段用 Pannellum 官方示例全景图（alma/cerro-toco/jfk），按点位 seq 轮换。后期替换实拍（已在 source 字段标注来源）。
+3. **非遗城市覆盖**：张家界无非遗数据（非遗主要覆盖扬苏杭宁4城），张家界路线点位显示"暂无非遗活动信息"兜底，不报错。
 
-### Task2 ✅ /routes 分类筛选
-RouteCatalogItem 加 category 字段。/routes 页顶部加4标签（全部/经典名胜/文学名篇/人物行旅），前端 state 过滤。空结果显示"暂无此类路线"占位。
-
-### Task3 ✅ 首页今日热点
-新建 public/hotspots.json（3天×3条=9条示例数据）。新建 app/components/today-hotspots.tsx 读取当天date渲染3卡片，无数据显示占位。首页精选路线下方接入。
-
-### Task4 ✅ 路线页季节区块
-route-detail-data RouteDetail 加 season 字段。route-detail-view.tsx 末尾加 SeasonBanner 组件：根据当前月份判断季节，匹配路线season字段，显示"为什么今天适合去"。非当季路线也显示（别样味道文案）。
-
-### Task5 ✅ 数字更新
-首页数据统计：6城·10路线 → 5城·17路线·85+点位·3载体（实际统计：扬州/苏州/杭州/南京/张家界=5城；17路线；17×5=85点位；书籍/游戏/音乐=3载体）。
-
-## 构建
-npm run build 通过（Next 14.2.35）。零新增 npm 依赖。
-
-## ���离记录
-- 任务书要求"总计17条"——实际达成17条 live。
-- 游戏板块占位的"黑神话/仙剑"等仍为示意占位（section-home.tsx 硬编码），未做成真实路线（合规审查未过不做，见 BLOCKED）。
+## 文件清单
+- 新增：`public/heritage.json`（20条非遗）
+- 新增：`app/components/panorama-viewer.tsx`（全景组件）
+- 修改：`lib/route-detail-data.ts`（RoutePoint 加 panorama/panoramaSource 字段 + RawRouteFile 对齐）
+- 修改：`components/route-detail/route-detail-view.tsx`（非遗区块+全景入口+层级整理+PointHeritage子组件）
+- 零新增 npm 依赖
