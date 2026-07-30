@@ -219,7 +219,7 @@ export function HeroAnimation() {
               <div className="xh-seal" aria-hidden="true"><span>寻<br/>迹</span></div>
             </div>
 
-            <p className="xh-sub" ref={subtitleRef}>书籍 · 游戏 · 音乐 —— 跟着文化载体去旅行</p>
+            <p className="xh-sub" ref={subtitleRef}>书籍 · 灵感 · 音乐 —— 跟着文化载体去旅行</p>
 
             <div className="xh-quote">
               <p className="xh-quote-t">「他沿着河沿走过三座桥，<em>在城门下停了一会儿</em>。」—— 而你，可以真的走到那里。</p>

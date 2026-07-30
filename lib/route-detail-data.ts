@@ -18,6 +18,16 @@ import rawPingjiang from '@/public/xunji-mvp/db/suzhou-pingjiang-fushengliuji.js
 import rawMochou from '@/public/xunji-mvp/db/nanjing-mochouhu-liangwudi.json'
 import rawYuejiang from '@/public/xunji-mvp/db/nanjing-yuejianglou-songlian.json'
 import rawShouxihu from '@/public/xunji-mvp/db/yangzhou-shouxihu-dumu.json'
+// ========== 新增路线（灵感2 + 北上广深7） ==========
+import rawJiangnanShuixiang from '@/public/xunji-mvp/db/jiangnan-shuixiang-inspiration.json'
+import rawGutaChangqiao from '@/public/xunji-mvp/db/guta-changqiao-inspiration.json'
+import rawBeijingHonglou from '@/public/xunji-mvp/db/beijing-hongloumeng-yixiang.json'
+import rawBeijingXishan from '@/public/xunji-mvp/db/beijing-xishan-wenren.json'
+import rawShanghaiSongjiang from '@/public/xunji-mvp/db/shanghai-songjiang-yunjian.json'
+import rawShanghaiYuyuan from '@/public/xunji-mvp/db/shanghai-yuyuan-mingqing.json'
+import rawGuangzhouLingnan from '@/public/xunji-mvp/db/guangzhou-lingnan-shiwen.json'
+import rawGuangzhouXiguan from '@/public/xunji-mvp/db/guangzhou-xiguan-shenghuo.json'
+import rawShenzhenDapeng from '@/public/xunji-mvp/db/shenzhen-dapeng-haifang.json'
 
 export type ExcerptConfidence = 'verified' | 'derived' | 'pending'
 
@@ -136,6 +146,16 @@ const MOCK_ROUTES: RouteDetail[] = [
   normalize(rawMochou as RawRouteFile),
   normalize(rawYuejiang as RawRouteFile),
   normalize(rawShouxihu as RawRouteFile),
+  // ========== 新增路线（灵感2 + 北上广深7） ==========
+  normalize(rawJiangnanShuixiang as RawRouteFile),
+  normalize(rawGutaChangqiao as RawRouteFile),
+  normalize(rawBeijingHonglou as RawRouteFile),
+  normalize(rawBeijingXishan as RawRouteFile),
+  normalize(rawShanghaiSongjiang as RawRouteFile),
+  normalize(rawShanghaiYuyuan as RawRouteFile),
+  normalize(rawGuangzhouLingnan as RawRouteFile),
+  normalize(rawGuangzhouXiguan as RawRouteFile),
+  normalize(rawShenzhenDapeng as RawRouteFile),
 ]
 
 export function getAllRouteSlugs(): string[] {
