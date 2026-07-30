@@ -9,6 +9,7 @@ import { getFavorites, toggleFavorite } from '@/lib/favorites-store'
 export default function RoutesPage() {
   const [progress, setProgress] = useState<Record<string, number>>({})
   const [favs, setFavs] = useState<string[]>([])
+  const [filter, setFilter] = useState<'all' | 'scenic' | 'literary' | 'figure'>('all')
 
   useEffect(() => {
     const p: Record<string, number> = {}
@@ -19,8 +20,16 @@ export default function RoutesPage() {
     setFavs(getFavorites())
   }, [])
 
-  const liveRoutes = routesCatalog.filter(r => r.status === 'live')
+  const allLiveRoutes = routesCatalog.filter(r => r.status === 'live')
+  const liveRoutes = filter === 'all' ? allLiveRoutes : allLiveRoutes.filter(r => r.category === filter)
   const soonRoutes = routesCatalog.filter(r => r.status === 'soon')
+
+  const FILTERS: { key: 'all' | 'scenic' | 'literary' | 'figure'; label: string }[] = [
+    { key: 'all', label: '全部' },
+    { key: 'scenic', label: '经典名胜' },
+    { key: 'literary', label: '文学名篇' },
+    { key: 'figure', label: '人物行旅' },
+  ]
 
   return (
     <main className="bg-paper min-h-screen">
@@ -38,6 +47,28 @@ export default function RoutesPage() {
         </p>
 
         <h2 className="mt-9 font-serif text-xl font-bold text-charcoal">已上线</h2>
+        {/* Task2：分类筛选标签 */}
+        <div className="mt-3 flex flex-wrap gap-2">
+          {FILTERS.map(f => (
+            <button
+              key={f.key}
+              type="button"
+              onClick={() => setFilter(f.key)}
+              className={`rounded-full border px-4 py-1.5 text-sm transition-all ${
+                filter === f.key
+                  ? 'border-vermilion bg-vermilion text-white'
+                  : 'border-ink-200 bg-white text-ink-500 hover:border-vermilion/40'
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+        {liveRoutes.length === 0 ? (
+          <div className="mt-4 rounded-2xl border border-dashed border-ink-200 bg-ink-50 p-8 text-center text-sm text-ink-400">
+            暂无此类路线
+          </div>
+        ) : (
         <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {liveRoutes.map(r => {
             const fav = favs.includes(r.slug)
@@ -78,6 +109,7 @@ export default function RoutesPage() {
             )
           })}
         </div>
+        )}
 
         <h2 className="mt-10 font-serif text-xl font-bold text-charcoal">即将上线</h2>
         <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
