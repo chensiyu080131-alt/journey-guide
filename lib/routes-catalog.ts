@@ -11,8 +11,8 @@ export interface RouteCatalogItem {
   status: 'live' | 'soon'
   pointsCount: number
   blurb: string
-  /** 分类（Task2 筛选）：scenic 经典名胜 / literary 文学名篇 / figure 人物行旅 */
-  category?: 'scenic' | 'literary' | 'figure'
+  /** 分类（Task2 筛选）：scenic 经典名胜 / literary 文学名篇 / figure 人物行旅 / inspiration 灵感观察 */
+  category?: 'scenic' | 'literary' | 'figure' | 'inspiration'
 }
 
 export const routesCatalog: RouteCatalogItem[] = [
@@ -96,9 +96,9 @@ export const routesCatalog: RouteCatalogItem[] = [
     emoji: '⛰️',
     status: 'live',
     pointsCount: 5,
-    category: 'scenic',
+    category: 'inspiration',
     blurb:
-      '三千奇峰拔地而起，是画家吴冠中笔下"养在深闺人未识"的秘境，也是电影《阿凡达》悬浮山的灵感之地。走进峰林，看真实山水如何变成画里的世界。',
+      '三千奇峰拔地而起，是画家吴冠中笔下"养在深闺人未识"的秘境。走进峰林，看真实的层叠峰林如何启发东方山水画的创作。',
   },
   {
     slug: 'yangzhou-man-jiangkui',
@@ -261,6 +261,110 @@ export const routesCatalog: RouteCatalogItem[] = [
     status: 'soon',
     pointsCount: 0,
     blurb: '王家卫镜头下的上海，梧桐树下寻访弄堂烟火。',
+  },
+  // ========== 灵感栏目（Task1 去IP化重构） ==========
+  {
+    slug: 'jiangnan-shuixiang-inspiration',
+    title: '水乡楼船 · 中式虚构城市的现实灵感',
+    book: '灵感·东方水乡原型地',
+    city: '苏州/杭州',
+    emoji: '🛶',
+    status: 'live',
+    pointsCount: 5,
+    category: 'inspiration',
+    blurb: '粉墙黛瓦、水巷穿城、楼船画舫——江南水乡的城市格局，是无数中式虚构世界最深的灵感源头。',
+  },
+  {
+    slug: 'guta-changqiao-inspiration',
+    title: '古塔长桥 · 中式空间美学',
+    book: '灵感·古塔与长桥美学',
+    city: '杭州/苏州',
+    emoji: '🏯',
+    status: 'live',
+    pointsCount: 5,
+    category: 'inspiration',
+    blurb: '雷峰塔、保俶塔、宝带桥——真实存在了几百上千年的古建筑，构成中式空间审美的底层语言。',
+  },
+  // ========== 北京（Task3 扩张） ==========
+  {
+    slug: 'beijing-hongloumeng-yixiang',
+    title: '红楼一梦 · 北京的红楼梦意象',
+    book: '曹雪芹《红楼梦》',
+    city: '北京',
+    emoji: '📕',
+    status: 'live',
+    pointsCount: 5,
+    category: 'literary',
+    blurb: '从恭王府到大观园，从什刹海到香山，寻找《红楼梦》留在京城里的真实印记。',
+  },
+  {
+    slug: 'beijing-xishan-wenren',
+    title: '西山行旅 · 文人与香山的秋色',
+    book: '曹雪芹《红楼梦》· 纳兰性德《饮水词》',
+    city: '北京',
+    emoji: '🍁',
+    status: 'live',
+    pointsCount: 5,
+    category: 'scenic',
+    blurb: '香山红叶、碧云古寺、樱桃沟清泉——西山是北京文人最重要的精神原乡。',
+  },
+  // ========== 上海（Task4 扩张） ==========
+  {
+    slug: 'shanghai-songjiang-yunjian',
+    title: '云间词派 · 松江古城的文脉',
+    book: '陈子龙《湘真阁存稿》· 夏完淳《南冠草》',
+    city: '上海',
+    emoji: '📜',
+    status: 'live',
+    pointsCount: 5,
+    category: 'literary',
+    blurb: '松江古称"云间"，是上海最古老的城区。陈子龙与夏完淳师徒，在此写下了中国文学史上最壮烈的一页。',
+  },
+  {
+    slug: 'shanghai-yuyuan-mingqing',
+    title: '豫园与老城厢 · 明清上海的城市生活',
+    book: '潘允端《豫园记》· 王韬《瀛壖杂志》',
+    city: '上海',
+    emoji: '🏮',
+    status: 'live',
+    pointsCount: 5,
+    category: 'scenic',
+    blurb: '在"上海"还是一座江南县城的年代，老城厢就是一切。走一圈，看清上海在开埠之前的本来面目。',
+  },
+  // ========== 广州（Task5 扩张） ==========
+  {
+    slug: 'guangzhou-lingnan-shiwen',
+    title: '岭南诗文 · 珠江文脉巡礼',
+    book: '屈大均《广东新语》· 张九龄《曲江集》',
+    city: '广州',
+    emoji: '🌊',
+    status: 'live',
+    pointsCount: 5,
+    category: 'literary',
+    blurb: '从南海神庙的海丝记忆，到陈家祠的岭南建筑巅峰，再到珠江堤上的古今对照。',
+  },
+  {
+    slug: 'guangzhou-xiguan-shenghuo',
+    title: '西关生活 · 岭南叙事与骑楼街巷',
+    book: '岭南民俗 · 西关大屋与骑楼文化',
+    city: '广州',
+    emoji: '🏘️',
+    status: 'live',
+    pointsCount: 5,
+    category: 'figure',
+    blurb: '西关大屋的趟栊门、恩宁路的骑楼、永庆坊的复兴——广州最完整的市井生活肌理。',
+  },
+  // ========== 深圳（Task6 扩张） ==========
+  {
+    slug: 'shenzhen-dapeng-haifang',
+    title: '大鹏所城 · 深圳的海防文脉',
+    book: '大鹏所城海防史料 · 赖氏家族抗英事迹',
+    city: '深圳',
+    emoji: '🏰',
+    status: 'live',
+    pointsCount: 5,
+    category: 'scenic',
+    blurb: '大鹏所城始建于1394年，是明清南海海防的军事枢纽。深圳简称"鹏城"就来自这里——深圳的根比你想的深。',
   },
 ]
 
