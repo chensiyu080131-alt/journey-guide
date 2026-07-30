@@ -56,9 +56,9 @@ function getHeritageByCity(city: string, limit = 3): HeritageItem[] {
 }
 /** 全景图来源：使用 Pannellum 官方示例全景图（公开、免授权）作为原型占位 */
 const PANORAMA_FALLBACKS = [
-  { url: 'https://pannellum.org/images/alma.jpg', source: 'Pannellum 官方示例' },
-  { url: 'https://pannellum.org/images/cerro-toco-0.jpg', source: 'Pannellum 官方示例' },
-  { url: 'https://pannellum.org/images/jfk.jpg', source: 'Pannellum 官方示例' },
+  { url: 'https://pannellum.org/images/alma.jpg', source: '示意图 · 非景点实拍（Pannellum 官方示例）' },
+  { url: 'https://pannellum.org/images/cerro-toco-0.jpg', source: '示意图 · 非景点实拍（Pannellum 官方示例）' },
+  { url: 'https://pannellum.org/images/jfk.jpg', source: '示意图 · 非景点实拍（Pannellum 官方示例）' },
 ]
 /** 给点位配全景图：优先用 JSON 里的 panorama 字段，没有则按 seq 取一张占位图 */
 function getPanorama(p: RoutePoint): { url: string; source: string } | null {
@@ -72,7 +72,7 @@ function routeSummaryPlain(route: RouteDetail): string {
   if (route.plainExplain) return route.plainExplain
   // 兜底：按 book 字段推断
   const b = route.book || ''
-  if (b.includes('灵感')) return `跟着东方山水与古典审美，去现实中真实的景观里，寻找那些启发了虚构世界的灵感地。`
+  if (b.includes('灵感') || b.includes('美学') || b.includes('原型')) return `跟着东方山水与古典审美，去现实中真实的景观里，寻找那些启发了虚构世界的灵感地��`
   if (b.includes('音乐') || b.includes('词') || b.includes('曲')) return `这不是听歌打卡，而是跟着词里写到的地名和意境，去走${route.city}。`
   // book 字段常已自带书名号（如「刘义庆《世说新语》」），不可再套一层，否则出现《刘义庆《世说新语》》
   const bookLabel = /[《》]/.test(b) ? b : `《${b}》`
