@@ -124,16 +124,19 @@ export default function HomePage() {
       <TodayHotspots />
 
       <footer className="px-4 sm:px-6 pb-8 sm:pb-10 flex-shrink-0">
-        <div className="mb-6 flex items-center justify-center gap-6 text-sm">
-          <Link href="/routes" className="font-serif text-literary-wine hover:opacity-80">
-            所有路线
-          </Link>
-          <Link href="/reviews" className="font-serif text-literary-wine hover:opacity-80">
-            用户评价
-          </Link>
-          <Link href="/favorites" className="font-serif text-literary-wine hover:opacity-80">
-            我的收藏
-          </Link>
+        <div className="mb-7 flex flex-col items-center gap-2.5">
+          <span className="text-[11px] tracking-[0.3em] text-literary-muted font-serif">探索更多</span>
+          <div className="flex items-center gap-1 rounded-full border border-literary-wine/20 bg-white/60 p-1">
+            <Link href="/routes" className="rounded-full px-4 py-1.5 text-sm font-serif text-literary-ink transition-colors hover:bg-literary-wine/10 hover:text-literary-wine">
+              所有路线
+            </Link>
+            <Link href="/reviews" className="rounded-full px-4 py-1.5 text-sm font-serif text-literary-ink transition-colors hover:bg-literary-wine/10 hover:text-literary-wine">
+              用户评价
+            </Link>
+            <Link href="/favorites" className="rounded-full px-4 py-1.5 text-sm font-serif text-literary-ink transition-colors hover:bg-literary-wine/10 hover:text-literary-wine">
+              我的收藏
+            </Link>
+          </div>
         </div>
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-10 text-center sm:text-left max-w-6xl mx-auto">
           <div>
