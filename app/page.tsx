@@ -6,6 +6,7 @@ import { HomeNav } from '@/components/home-nav'
 import { HomeCoverCarousel } from '@/components/home-cover-carousel'
 import { HeroAnimation } from '@/app/components/hero-animation'
 import { SectionHome } from '@/app/components/section-home'
+import { TodayHotspots } from '@/app/components/today-hotspots'
 import { HomeTab, getCoversForTab, underDevelopmentTabs } from '@/lib/home-covers'
 
 const taglineImages: Record<HomeTab, string> = {
@@ -119,6 +120,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 今日热点 · Task3 */}
+      <TodayHotspots />
+
       <footer className="px-4 sm:px-6 pb-8 sm:pb-10 flex-shrink-0">
         <div className="mb-6 flex items-center justify-center gap-6 text-sm">
           <Link href="/routes" className="font-serif text-literary-wine hover:opacity-80">
@@ -142,7 +146,7 @@ export default function HomePage() {
           </div>
           <div>
             <p className="text-sm font-serif font-medium text-literary-ink">数据</p>
-            <p className="mt-1 text-xs text-literary-muted">6 城 · 10 路线 · 50+ 点位 · 5 文化载体</p>
+            <p className="mt-1 text-xs text-literary-muted">5 城 · 17 路线 · 85+ 点位 · 3 文化载体</p>
           </div>
           <div>
             <p className="text-sm font-serif font-medium text-literary-ink">说明</p>
