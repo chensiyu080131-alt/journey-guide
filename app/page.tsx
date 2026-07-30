@@ -13,7 +13,7 @@ const taglineImages: Record<HomeTab, string> = {
   '首页': '/images/tagline-home.png',
   '📖 书籍': '/images/tagline-book.png',
   '🏙️ 城市': '/images/tagline-city.png',
-  '🎮 游戏': '/images/tagline-game.png',
+  '💡 灵感': '/images/tagline-game.png',
   '🎵 音乐': '/images/tagline-music.png',
 }
 
@@ -21,7 +21,7 @@ const taglineAlts: Record<HomeTab, string> = {
   '首页': '有迹可循，寻迹而至',
   '📖 书籍': '字里行间，可抵山河',
   '🏙️ 城市': '一城一页，藏尽风华',
-  '🎮 游戏': '屏幕之外，次元之间',
+  '💡 灵感': '山水楼阁��虚构之根',
   '🎵 音乐': '入耳入心，落地成迹',
 }
 
@@ -46,7 +46,7 @@ export default function HomePage() {
 
       {activeTab === '首页' ? (
         <HeroAnimation />
-      ) : (activeTab === '🎮 游戏' || activeTab === '🎵 音乐') ? (
+      ) : (activeTab === '💡 灵感' || activeTab === '🎵 音乐') ? (
         <SectionHome tab={activeTab} />
       ) : (
         <>
@@ -142,14 +142,14 @@ export default function HomePage() {
           <div>
             <p className="text-sm font-serif font-medium text-literary-ink">寻迹 · 有迹可循</p>
             <p className="mt-1 text-xs text-literary-muted leading-relaxed">
-              书籍·游戏·音乐
+              书籍·灵感·音乐
               <br />
               有迹可循，寻迹而至
             </p>
           </div>
           <div>
             <p className="text-sm font-serif font-medium text-literary-ink">数据</p>
-            <p className="mt-1 text-xs text-literary-muted">5 城 · 17 路线 · 85+ 点位 · 3 文化载体</p>
+            <p className="mt-1 text-xs text-literary-muted">9 城 · 26 路线 · 130+ 点位 · 4 文化载体</p>
           </div>
           <div>
             <p className="text-sm font-serif font-medium text-literary-ink">说明</p>
