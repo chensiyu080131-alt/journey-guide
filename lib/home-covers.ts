@@ -1,5 +1,5 @@
-export type HomeTab = '首页' | '📖 书籍' | '🏙️ 城市' | '💡 灵感' | '🎵 音乐'
-export type CoverCategory = '书籍' | '💡 灵感' | '🎵 音乐' | '🏃 运动' | '🏙️ 城市' | '🔍 搜索'
+export type HomeTab = '首页' | '📖 书籍' | '🏙️ 城市' | '🎐 东方美学' | '🎵 音乐'
+export type CoverCategory = '书籍' | '🎐 东方美学' | '🎵 音乐' | '🏃 运动' | '🏙️ 城市' | '🔍 搜索'
 
 export interface CoverStyle {
   bg: string
@@ -123,12 +123,12 @@ const bookCovers: HomeCover[] = [
 ]
 
 // ──────────────────────────────────────
-//  💡 灵感 Tab（原「游戏」安全重构 · 无任何 IP）
+//  🎐 东方美学 Tab（原「游戏」安全重构 · 无任何 IP）
 // ────────────────────────���─────────────
 const inspirationCovers: HomeCover[] = [
   {
     id: 'zhangjiajie-qifeng',
-    category: '💡 灵感',
+    category: '🎐 东方美学',
     title: '张家界 · 奇峰入画来',
     subtitle: '层叠峰林 · 东方山水画的现实灵感',
     route: '/route/zhangjiajie-qifeng-ruhua/',
@@ -142,7 +142,7 @@ const inspirationCovers: HomeCover[] = [
   },
   {
     id: 'jiangnan-shuixiang-inspiration',
-    category: '💡 灵感',
+    category: '🎐 东方美学',
     title: '水乡楼船 · 中式虚构城市的灵感',
     subtitle: '粉墙黛瓦与水巷 · 现实灵感地',
     route: '/route/jiangnan-shuixiang-inspiration/',
@@ -156,7 +156,7 @@ const inspirationCovers: HomeCover[] = [
   },
   {
     id: 'guta-changqiao-inspiration',
-    category: '💡 灵感',
+    category: '🎐 东方美学',
     title: '古塔长桥 · 中式空间美学',
     subtitle: '雷峰塔与宝带桥 · 真实景观的美学解读',
     route: '/route/guta-changqiao-inspiration/',
@@ -170,7 +170,7 @@ const inspirationCovers: HomeCover[] = [
   },
   {
     id: 'gujian-meixue-inspiration',
-    category: '💡 灵感',
+    category: '🎐 东方美学',
     title: '古建飞檐 · 中式楼阁美学巡礼',
     subtitle: '亭台楼阁与歇山顶 · 东方建筑审美',
     route: '/route/gujian-meixue-inspiration/',
@@ -353,7 +353,7 @@ export const featuredCovers: HomeCover[] = [
   },
   {
     ...inspirationCovers[0],
-    targetTab: '💡 灵感',
+    targetTab: '🎐 东方美学',
     stack: [toStackLayer(inspirationCovers[1]), toStackLayer(inspirationCovers[3])],
   },
   {
@@ -407,4 +407,4 @@ export function getCoversForTab(tab: HomeTab): HomeCover[] {
 /** 待开发的 Tab：中部显示占位提示，不展示封面 */
 export const underDevelopmentTabs: HomeTab[] = []
 
-export const homeTabs: HomeTab[] = ['首页', '📖 书籍', '🏙️ 城市', '💡 灵感', '🎵 音乐']
+export const homeTabs: HomeTab[] = ['首页', '📖 书籍', '🏙️ 城市', '🎐 东方美学', '🎵 音乐']
