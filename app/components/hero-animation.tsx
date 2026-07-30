@@ -237,12 +237,12 @@ export function HeroAnimation() {
             <div className="xh-actions">
               <Link href="/routes/" className="xh-btn xh-btn-primary">
                 <span className="xh-blot" />
-                开始寻迹 <span className="xh-arrow">→</span>
+                全部路线 <span className="xh-arrow">→</span>
                 <span className="xh-underline" />
               </Link>
               <Link href="/route/yangzhou-wangzengqi-zaocha/" className="xh-btn">
                 <span className="xh-blot" />
-                进入路线 <span className="xh-arrow">→</span>
+                精选推荐 <span className="xh-arrow">→</span>
                 <span className="xh-underline" />
               </Link>
             </div>
@@ -390,11 +390,12 @@ const heroStyles = `
 .xh-card.xh-pos-2{transform:translateX(255px) translateZ(-240px) rotate(4deg) scale(.8);opacity:.38;z-index:10;}
 .xh-card.xh-pos-3{transform:translateX(340px) translateZ(-360px) rotate(5deg) scale(.72);opacity:0;z-index:5;pointer-events:none;}
 .xh-card.xh-pos-out{transform:translateX(-180px) translateZ(-80px) rotate(-4deg) scale(.9);opacity:0;z-index:8;pointer-events:none;}
-.xh-cat{font-size:.72rem;letter-spacing:.36em;color:#8B4545;display:flex;align-items:center;gap:8px;}
+.xh-cat{font-size:.7rem;letter-spacing:.34em;color:#8B4545;display:flex;align-items:center;gap:8px;}
 .xh-cat::after{content:"";flex:1;height:1px;background:#8B454533;}
-.xh-card h3{margin-top:18px;font-size:1.6rem;font-weight:500;letter-spacing:.06em;font-family:'Kaiti SC','STKaiti','KaiTi',serif;line-height:1.4;}
-.xh-city{margin-top:6px;font-size:.86rem;color:#8A7A72;letter-spacing:.26em;}
-.xh-desc{margin-top:18px;font-size:.86rem;line-height:2;color:#8A7A72;letter-spacing:.04em;flex:1;}
+/* 三级文字层级拉开：标题(大) → 副标题(中,深色) → 描述(小,浅色,行距加大) */
+.xh-card h3{margin-top:16px;font-size:1.7rem;font-weight:600;letter-spacing:.04em;font-family:'Kaiti SC','STKaiti','KaiTi',serif;line-height:1.32;}
+.xh-city{margin-top:10px;font-size:.92rem;font-weight:500;color:#3D2E2E;letter-spacing:.2em;line-height:1.5;}
+.xh-desc{margin-top:16px;font-size:.78rem;line-height:2.15;color:#8A7A72;letter-spacing:.03em;flex:1;}
 .xh-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #e4dcc9;padding-top:16px;}
 .xh-spots{font-size:.76rem;color:#8A7A7280;letter-spacing:.12em;}
 .xh-go{font-size:.8rem;color:#8B4545;letter-spacing:.18em;text-decoration:none;display:inline-flex;align-items:center;gap:6px;position:relative;padding-bottom:3px;}
@@ -408,5 +409,5 @@ const heroStyles = `
 @keyframes xhIn{from{opacity:0;}to{opacity:1;}}
 @media (prefers-reduced-motion: reduce){.xunji-hero *,.xunji-hero *::before,.xunji-hero *::after{animation-duration:.01ms !important;animation-delay:0s !important;transition-duration:.2s !important;}.xh-light,.xh-ambient{display:none;}.xh-card.xh-enter{opacity:1;transform:none;}.xh-card.xh-pos-0{animation:none;}}
 @media (max-width:900px){.xh-stage{grid-template-columns:1fr;gap:24px;padding:28px 22px;min-height:auto;}.xh-deckwrap{height:440px;}.xh-motto{display:none;}.xh-title-wrap{max-width:260px;}.xh-title text{font-size:120px;}.xh-deck{height:420px;}.xh-card{width:260px;height:380px;margin:-190px 0 0 -130px;}.xh-card.xh-pos-1{transform:translateX(120px) translateZ(-120px) rotate(2deg) scale(.9);}.xh-card.xh-pos-2{transform:translateX(220px) translateZ(-240px) rotate(4deg) scale(.8);opacity:.3;}.xh-card.xh-pos-3,.xh-card.xh-pos-out{opacity:0;}}
-@media (max-width:480px){.xh-stage{padding:22px 16px;}.xh-title-wrap{max-width:220px;}.xh-title text{font-size:100px;}.xh-sub{font-size:.92rem;letter-spacing:.1em;}.xh-stats{gap:28px;margin-top:30px;}.xh-num{font-size:1.5rem;}.xh-deckwrap{height:400px;}.xh-card{width:240px;height:360px;margin:-180px 0 0 -120px;}}
+@media (max-width:480px){.xh-stage{padding:22px 16px;}.xh-title-wrap{max-width:220px;}.xh-title text{font-size:100px;}.xh-sub{font-size:.92rem;letter-spacing:.1em;}.xh-stats{gap:28px;margin-top:30px;}.xh-num{font-size:1.5rem;}.xh-deckwrap{height:400px;}.xh-card{width:240px;height:360px;margin:-180px 0 0 -120px;}.xh-card h3{font-size:1.5rem;}.xh-city{font-size:.86rem;}.xh-desc{font-size:.76rem;line-height:2.1;}}
 `
