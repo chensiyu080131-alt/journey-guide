@@ -27,9 +27,9 @@ const SECTIONS: Record<'🎐 东方美学' | '🎵 音乐', SectionConfig> = {
     liveFilter: r => r.category === 'inspiration' && r.status === 'live',
     soonFilter: r => false,
     soonPlaceholders: [
-      { title: '东方楼阁与中式建筑美学', book: '灵感·古建飞檐', city: '苏州/杭州' },
-      { title: '古塔与长桥的空间美学', book: '灵感·雷峰塔/宝带桥', city: '杭州/苏州' },
-      { title: '石窟与造像的东方��象', book: '灵感·石窟艺术', city: '待定' },
+      { title: '东方楼阁与中式建筑美学', book: '东方美学·古建飞檐', city: '苏州/杭州' },
+      { title: '古塔与长桥的空间美学', book: '东方美学·雷峰塔/宝带桥', city: '杭州/苏州' },
+      { title: '石窟与造像的东方��象', book: '东方美学·石窟艺术', city: '待定' },
     ],
     disclaimer:
       '本栏目关注东方审美与现实地景对虚构世界创作的启发关系，不代表与任何游戏或影视品牌存在合作或授权关系。',
