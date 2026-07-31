@@ -3,134 +3,135 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { HomeNav } from '@/components/home-nav'
-import { HomeCoverCarousel } from '@/components/home-cover-carousel'
-import { HomeTab, getCoversForTab, underDevelopmentTabs } from '@/lib/home-covers'
+import { XunjiHomeHero } from '@/components/xunji-home-hero'
+import { HomeRouteDeck } from '@/components/home-route-deck'
+import { HomeCitiesPanel } from '@/components/home-cities-panel'
+import { HomeDailyHotspots } from '@/components/home-daily-hotspots'
+import { HomeTab, underDevelopmentTabs } from '@/lib/home-covers'
+import { getRouteStats, listAllRoutes, type RouteDetail } from '@/lib/route-detail-data'
 
-const taglineImages: Record<HomeTab, string> = {
-  '首页': '/images/tagline-home.png',
-  '📖 书籍': '/images/tagline-book.png',
-  '🏙️ 城市': '/images/tagline-city.png',
-  '🎮 游戏': '/images/tagline-game.png',
-  '🎵 音乐': '/images/tagline-music.png',
-}
+const FEATURED_SLUGS = [
+  'yangzhou-wangzengqi-zaocha',
+  'suzhou-hanshansi-fengqiao',
+  'hangzhou-sudi-sushi',
+  'nanjing-qinhuaihe-zhuziqing',
+  'shaoxing-luxun-baicaoyuan',
+  'harbin-xiaohong-hulanhe',
+]
 
-const taglineAlts: Record<HomeTab, string> = {
-  '首页': '有迹可循，寻迹而至',
-  '📖 书籍': '字里行间，可抵山河',
-  '🏙️ 城市': '一城一页，藏尽风华',
-  '🎮 游戏': '屏幕之外，次元之间',
-  '🎵 音乐': '入耳入心，落地成迹',
+function pickShowcaseRoutes(all: RouteDetail[], limit = 6): RouteDetail[] {
+  const bySlug = new Map(all.map(r => [r.slug, r]))
+  const picked: RouteDetail[] = []
+  for (const slug of FEATURED_SLUGS) {
+    const r = bySlug.get(slug)
+    if (r) picked.push(r)
+    if (picked.length >= limit) return picked
+  }
+  for (const r of all) {
+    if (picked.some(p => p.slug === r.slug)) continue
+    picked.push(r)
+    if (picked.length >= limit) break
+  }
+  return picked
 }
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<HomeTab>('首页')
-  const covers = getCoversForTab(activeTab)
   const isUnderDevelopment = underDevelopmentTabs.includes(activeTab)
+  const stats = getRouteStats()
+  const allRoutes = listAllRoutes()
+  const showcase = pickShowcaseRoutes(allRoutes)
+  const featured = allRoutes.find(r => r.slug === 'yangzhou-wangzengqi-zaocha') ?? showcase[0]
 
   return (
     <main className="xc-home-bg min-h-screen flex flex-col">
-      <header className="pt-6 sm:pt-8 pb-3 flex-shrink-0">
-        <div className="xc-home-logo mb-2 sm:mb-3">
+      <header className="pt-6 sm:pt-8 pb-2 flex-shrink-0">
+        <div className="xc-home-logo mb-3 sm:mb-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/logo.png"
-            alt="寻城 Xun Cheng"
-            className="h-[2.56rem] sm:h-[3.2rem] w-auto"
-          />
+          <img src="/images/logo.png" alt="寻迹" className="h-10 sm:h-12 w-auto" />
         </div>
         <HomeNav active={activeTab} onChange={setActiveTab} />
       </header>
 
-      <div className="text-center px-6 flex-shrink-0">
-        {activeTab === '首页' && (
-          <p className="text-[10px] sm:text-[11px] text-literary-wine tracking-[0.25em] font-serif uppercase">
-            Tracking
-          </p>
-        )}
-        <h1 className="mt-1">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={taglineImages[activeTab]}
-            alt={taglineAlts[activeTab]}
-            className="h-12 sm:h-16 w-auto mx-auto object-contain"
-          />
-        </h1>
-        <p className="mt-1 text-[11px] text-literary-muted tracking-wide font-serif max-w-md mx-auto leading-relaxed">
-          {activeTab === '首页'
-            ? '书籍·游戏·音乐——跟着文化载体去旅行'
-            : '滑动或点击箭头选择封面，点击进入探索'}
-        </p>
-      </div>
+      {activeTab === '首页' && (
+        <>
+          <XunjiHomeHero routes={showcase} stats={stats} />
 
-      <section className="flex-1 flex items-center justify-center py-4 sm:py-6 min-h-[50vh]">
-        {isUnderDevelopment ? (
-          <div className="text-center px-6">
+          {/* 线上同款：精选文学路线 */}
+          <section className="px-4 sm:px-6 pb-2 flex-shrink-0 pt-4">
+            <div className="mx-auto max-w-6xl">
+              <div className="flex items-end justify-between">
+                <h2 className="font-serif text-lg font-bold text-literary-ink">精选文学路线</h2>
+                <span className="text-[11px] tracking-[0.2em] text-literary-wine uppercase">Live</span>
+              </div>
+              {featured && (
+                <Link
+                  href={`/route/${featured.slug}`}
+                  className="group mt-3 flex flex-col gap-3 rounded-2xl border border-literary-wine/30 bg-white/70 p-5 transition-all hover:border-literary-wine hover:shadow-md sm:flex-row sm:items-center"
+                >
+                  <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-literary-wine/10 text-2xl">
+                    🍵
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-[11px] tracking-[0.25em] text-literary-wine uppercase">
+                      {featured.book.split(/[／/]/)[0]} · {featured.city}
+                    </p>
+                    <h3 className="mt-0.5 font-serif text-xl font-bold text-literary-ink">
+                      {featured.title}
+                    </h3>
+                    <p className="mt-1 text-xs text-literary-muted leading-relaxed">
+                      {featured.plainExplain || featured.summary}
+                    </p>
+                  </div>
+                  <span className="xc-pill shrink-0 bg-literary-wine text-sm text-white group-hover:opacity-90">
+                    开始寻迹 →
+                  </span>
+                </Link>
+              )}
+            </div>
+          </section>
+
+          <HomeDailyHotspots />
+        </>
+      )}
+
+      {activeTab === '📖 书籍' && (
+        <section className="flex-1 flex flex-col items-center py-8 sm:py-12 px-4">
+          <div className="text-center mb-6 max-w-lg">
+            <h2 className="font-lishu text-3xl sm:text-4xl font-normal text-literary-ink tracking-[0.16em]">
+              字里行间，可抵山河
+            </h2>
+            <p className="mt-2 text-sm text-literary-muted font-serif tracking-wide">
+              以书寻迹
+            </p>
+          </div>
+          <HomeRouteDeck routes={allRoutes} size="lg" variant="book" />
+          <Link
+            href="/routes"
+            className="mt-8 text-sm font-serif text-literary-wine hover:text-literary-wine-dark"
+          >
+            浏览全部路线目录 →
+          </Link>
+        </section>
+      )}
+
+      {activeTab === '🏙️ 城市' && <HomeCitiesPanel />}
+
+      {isUnderDevelopment && (
+        <section className="flex-1 flex items-center justify-center py-16 px-6">
+          <div className="text-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/under-development.png"
               alt="待开发"
               className="h-28 sm:h-36 w-auto mx-auto object-contain"
             />
-            <p className="mt-3 text-xs sm:text-sm text-literary-muted tracking-wide font-serif">
+            <p className="mt-3 text-sm text-literary-muted tracking-wide font-serif">
               该功能正在建设中，敬请期待
             </p>
           </div>
-        ) : (
-          <HomeCoverCarousel
-            key={activeTab}
-            covers={covers}
-            onExploreCover={(cover) => {
-              if (cover.targetTab) setActiveTab(cover.targetTab)
-            }}
-          />
-        )}
-      </section>
-
-      {/* CTA 入口按钮（保留原版功能：跟书旅行 / 搜一座城 / 文旅局工作台） */}
-      <div className="px-4 sm:px-6 pb-6 flex-shrink-0">
-        <div className="max-w-xl mx-auto flex flex-wrap justify-center gap-2">
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new CustomEvent('xuncheng:open-book-guide'))}
-            className="px-4 py-2 rounded-full bg-literary-wine text-white text-xs sm:text-sm font-medium hover:bg-literary-wine/90 transition-colors shadow-sm ring-2 ring-literary-wine/20"
-          >
-            📖 跟书旅行
-          </button>
-          <Link
-            href="/guide/destination"
-            className="px-4 py-2 rounded-full border border-literary-wine/30 bg-literary-wine/10 text-literary-wine text-xs sm:text-sm font-medium hover:bg-literary-wine/15 transition-colors"
-          >
-            搜一座城
-          </Link>
-          <Link
-            href="/dashboard"
-            className="px-4 py-2 rounded-full border border-literary-sand bg-white/70 text-literary-ink text-xs sm:text-sm font-medium hover:border-literary-wine/40 transition-colors"
-          >
-            文旅局工作台
-          </Link>
-        </div>
-      </div>
-
-      <footer className="px-4 sm:px-6 pb-8 sm:pb-10 flex-shrink-0">
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-10 text-center sm:text-left max-w-6xl mx-auto">
-          <div>
-            <p className="text-sm font-serif font-medium text-literary-ink">寻迹 · 有迹可循</p>
-            <p className="mt-1 text-xs text-literary-muted leading-relaxed">
-              书籍·游戏·音乐
-              <br />
-              有迹可循，寻迹而至
-            </p>
-          </div>
-          <div>
-            <p className="text-sm font-serif font-medium text-literary-ink">数据</p>
-            <p className="mt-1 text-xs text-literary-muted">6 城 · 10 路线 · 50+ 点位 · 5 文化载体</p>
-          </div>
-          <div>
-            <p className="text-sm font-serif font-medium text-literary-ink">说明</p>
-            <p className="mt-1 text-xs text-literary-muted">图片来源均为网络图片，仅供原型演示</p>
-          </div>
-        </div>
-      </footer>
+        </section>
+      )}
     </main>
   )
 }

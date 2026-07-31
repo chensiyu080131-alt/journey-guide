@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { BookGuideFloat } from '@/components/book-guide-float'
+import { XunjiExploreFooter } from '@/components/xunji-explore-footer'
 
 export const metadata: Metadata = {
   title: '寻城 - 跟着书本去旅行',
@@ -36,8 +37,9 @@ export default function RootLayout({
           <script id="xuncheng-amap-runtime" dangerouslySetInnerHTML={{ __html: runtimeBootstrap }} />
         ) : null}
       </head>
-      <body className="min-h-screen bg-paper-warm">
-        {children}
+      <body className="min-h-screen bg-paper-warm flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0">{children}</div>
+        <XunjiExploreFooter />
         <BookGuideFloat />
       </body>
     </html>

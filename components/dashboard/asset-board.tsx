@@ -1,19 +1,65 @@
 'use client'
 
-/** P1 · 内容资产看板（Mock 数据，展示商业想象力） */
-const KPIS: { label: string; value: string; hint: string; emoji: string }[] = [
-  { emoji: '🏙️', label: '已生成路线城市', value: '3', hint: '常熟 · 松阳 · 婺源' },
-  { emoji: '📚', label: '累计生成攻略', value: '87 篇', hint: '含预设 + AI 生成' },
-  { emoji: '💰', label: '预估带动文旅消费', value: '¥2.3M', hint: '按引流转化估算' },
-  { emoji: '⚡', label: 'AI 内容生产成本', value: '¥47.50', hint: '单篇平均 token 成本' },
-]
+import { useEffect, useState } from 'react'
 
+/** P1 · 内容资产看板（有 DB 时读真实统计，否则标注为文件回退） */
 export function AssetBoard() {
+  const [stats, setStats] = useState<{
+    source: string
+    cities: number
+    guides: number
+    spots: number
+    books: number
+    verifiedSpots: number
+    databaseConfigured: boolean
+  } | null>(null)
+
+  useEffect(() => {
+    fetch('/api/content?stats=1')
+      .then(r => r.json())
+      .then(setStats)
+      .catch(() => setStats(null))
+  }, [])
+
+  const kpis = stats
+    ? [
+        {
+          emoji: '🏙️',
+          label: '城市',
+          value: String(stats.cities),
+          hint: stats.source === 'database' ? '来自 PostgreSQL' : '文件回退统计',
+        },
+        {
+          emoji: '🗺️',
+          label: '攻略路线',
+          value: String(stats.guides),
+          hint: '已发布 / 可展示',
+        },
+        {
+          emoji: '📍',
+          label: '点位',
+          value: String(stats.spots),
+          hint: `其中核验 ${stats.verifiedSpots}`,
+        },
+        {
+          emoji: '📚',
+          label: '城市书单条目',
+          value: String(stats.books),
+          hint: stats.databaseConfigured ? '可编辑' : '待接入 DATABASE_URL',
+        },
+      ]
+    : [
+        { emoji: '🏙️', label: '城市', value: '…', hint: '加载中' },
+        { emoji: '🗺️', label: '攻略路线', value: '…', hint: '加载中' },
+        { emoji: '📍', label: '点位', value: '…', hint: '加载中' },
+        { emoji: '📚', label: '城市书单条目', value: '…', hint: '加载中' },
+      ]
+
   return (
     <div className="space-y-3">
       <h2 className="text-lg font-serif font-bold text-ink-900">📊 内容资产看板</h2>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {KPIS.map(k => (
+        {kpis.map(k => (
           <div
             key={k.label}
             className="rounded-2xl border border-ink-100 bg-white p-4 hover:shadow-md transition-shadow"
@@ -25,7 +71,11 @@ export function AssetBoard() {
           </div>
         ))}
       </div>
-      <p className="text-[11px] text-ink-300">* 看板为演示数据，用于说明内容资产的规模与单位成本优势。</p>
+      <p className="text-[11px] text-ink-300">
+        {stats?.databaseConfigured
+          ? '统计来自数据库；可在下方内容编辑器修改点位后刷新查看。'
+          : '尚未配置 DATABASE_URL 时显示文件侧统计；接入 Neon/Supabase 并 seed 后即为真实资产数。'}
+      </p>
     </div>
   )
 }

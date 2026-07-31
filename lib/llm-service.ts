@@ -1,10 +1,26 @@
 import { Guide, InterestTag, BudgetLevel } from '@/types'
 import { getMockGuideById } from './mock-data'
 
-/** 通过路线ID获取攻略（预设路线走本地 Mock，无需网络） */
+/**
+ * 通过路线 ID 获取攻略。
+ * 浏览器侧走 /api/content（DB 优先，文件回退）；服务端直读仓储。
+ */
 export async function getGuideById(id: string): Promise<Guide | null> {
-  await simulateDelay(600 + Math.random() * 600)
-  return getMockGuideById(id)
+  if (typeof window === 'undefined') {
+    const { getGuideByIdFromRepo } = await import('./content-repo')
+    const { guide } = await getGuideByIdFromRepo(id)
+    return guide
+  }
+
+  try {
+    const res = await fetch(`/api/content?id=${encodeURIComponent(id)}`)
+    if (!res.ok) return getMockGuideById(id)
+    const data = await res.json()
+    return (data.guide as Guide) ?? null
+  } catch (error) {
+    console.error('getGuideById API 失败，回退文件:', error)
+    return getMockGuideById(id)
+  }
 }
 
 /**
@@ -65,9 +81,5 @@ export async function generateBookGuide(
     throw new Error(err.error || `API ${res.status}`)
   }
   return res.json()
-}
-
-function simulateDelay(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms))
 }
 

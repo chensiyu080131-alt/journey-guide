@@ -4,6 +4,15 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
 
+/* 标题隶书：仅含「字里行间… / 一城一页…」等用字的自托管子集 */
+@font-face {
+  font-family: 'Xunji Lishu';
+  src: url('/fonts/xunji-lishu.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 247 243 235;

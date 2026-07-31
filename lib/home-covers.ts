@@ -15,6 +15,8 @@ export interface HomeCover {
   title: string
   subtitle: string
   route: string
+  /** 可打卡文学路线 slug；有则点击优先进 /route/[slug] */
+  checkinSlug?: string
   /** 可选封面图，有则覆盖渐变背景 */
   image?: string
   /** 卡片顶部小标签，默认用 category */
@@ -22,6 +24,14 @@ export interface HomeCover {
   /** 首页总览封面：点击「开始探索」后切换到的 Tab */
   targetTab?: HomeTab
   style: CoverStyle
+}
+
+/** 打卡优先：有 checkinSlug 进 /route，否则回 /guide */
+export function resolveCoverHref(cover: HomeCover, includeCat = true): string {
+  if (cover.checkinSlug) return `/route/${cover.checkinSlug}`
+  if (!includeCat) return cover.route
+  const sep = cover.route.includes('?') ? '&' : '?'
+  return `${cover.route}${sep}cat=${encodeURIComponent(cover.category)}`
 }
 
 // ──────────────────────────────────────
@@ -34,6 +44,7 @@ const bookCovers: HomeCover[] = [
     title: '人间滋味',
     subtitle: '汪曾祺 · 高邮烟火',
     route: '/guide/renjianziwei',
+    checkinSlug: 'yangzhou-wangzengqi-zaocha',
     style: {
       bg: 'linear-gradient(165deg, #FDF8F2 0%, #E8D8CC 100%)',
       border: '#8B4545',
@@ -48,6 +59,7 @@ const bookCovers: HomeCover[] = [
     title: '边城',
     subtitle: '沈从文 · 湘西凤凰',
     route: '/guide/fenghuang',
+    checkinSlug: 'fenghuang-shencongwen-biancheng',
     style: {
       bg: 'linear-gradient(165deg, #D4D8E0 0%, #A8B4C0 100%)',
       border: '#5A6878',
@@ -104,6 +116,7 @@ const bookCovers: HomeCover[] = [
     title: '沙家浜',
     subtitle: '红色经典 · 芦苇荡',
     route: '/guide/shajiabang',
+    checkinSlug: 'changshu-shajiabang-jingju',
     style: {
       bg: 'linear-gradient(165deg, #DDE5DC 0%, #B5C4B0 100%)',
       border: '#5C7260',
@@ -132,6 +145,7 @@ const bookCovers: HomeCover[] = [
     title: '钱塘湖春行',
     subtitle: '白居易 · 苏轼 · 杭州',
     route: '/guide/hangzhou',
+    checkinSlug: 'hangzhou-baidi-baijiuyi',
     style: {
       bg: 'linear-gradient(165deg, #C8E0D4 0%, #90C4A8 100%)',
       border: '#4A7A5A',
@@ -146,6 +160,7 @@ const bookCovers: HomeCover[] = [
     title: '四世同堂',
     subtitle: '老舍 · 北平之秋',
     route: '/guide/beijing',
+    checkinSlug: 'beijing-laoshe-chaguan',
     style: {
       bg: 'linear-gradient(165deg, #E0C8C0 0%, #C09888 100%)',
       border: '#8A4A3A',
@@ -320,6 +335,7 @@ const filmCovers: HomeCover[] = [
     title: '茶馆',
     subtitle: '老舍 · 北京人艺经典',
     route: '/guide/beijing',
+    checkinSlug: 'beijing-laoshe-chaguan',
     style: {
       bg: 'linear-gradient(165deg, #E0C8C0 0%, #C09888 100%)',
       border: '#8A4A3A',
@@ -340,6 +356,7 @@ const gameCovers: HomeCover[] = [
     title: '原神',
     subtitle: '璃月取景 · 张家界巡礼',
     route: '/guide/zhangjiajie',
+    checkinSlug: 'zhangjiajie-qifeng-ruhua',
     style: {
       bg: 'linear-gradient(165deg, #E0D8F0 0%, #B8A8D8 100%)',
       border: '#6A5A8A',
@@ -642,22 +659,24 @@ const sportCovers: HomeCover[] = [
   },
 ]
 
-/** 首页推荐：文化载体精选 */
-export const featuredCovers: HomeCover[] = [
-  bookCovers[0],
-  filmCovers[0],
-  gameCovers[0],
-  musicCovers[0],
-]
+import { getFeaturedRouteCovers, getRouteBookCovers } from '@/lib/route-home-covers'
+
+/** 首页推荐：直接展示库内可打卡文学路线（与数据库同步） */
+export const featuredCovers: HomeCover[] = getFeaturedRouteCovers(4)
 
 export function getCoversForTab(tab: HomeTab): HomeCover[] {
   switch (tab) {
-    case '📖 书籍': return bookCovers
-    default: return featuredCovers
+    // 书籍 Tab = 数据库里全部可打卡路线，不再用旧的假书单
+    case '📖 书籍':
+      return getRouteBookCovers()
+    case '首页':
+      return getFeaturedRouteCovers(4)
+    default:
+      return featuredCovers
   }
 }
 
-/** 待开发的 Tab：中部显示占位提示，不展示封面 */
-export const underDevelopmentTabs: HomeTab[] = ['🏙️ 城市', '🎮 游戏', '🎵 音乐']
+/** 待开发的 Tab：中部显示占位提示（城市已上线，不再列入） */
+export const underDevelopmentTabs: HomeTab[] = ['🎮 游戏', '🎵 音乐']
 
 export const homeTabs: HomeTab[] = ['首页', '📖 书籍', '🏙️ 城市', '🎮 游戏', '🎵 音乐']

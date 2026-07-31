@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { HomeCover } from '@/lib/home-covers'
+import { HomeCover, resolveCoverHref } from '@/lib/home-covers'
 
 function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color: string }) {
   const stroke = color
@@ -227,7 +227,7 @@ function CoverCard({
             )}
           </div>
 
-          {showExplore && (
+            {showExplore && (
             cover.targetTab ? (
               <button
                 type="button"
@@ -240,15 +240,15 @@ function CoverCard({
                   <span className="opacity-80">→</span>
                 </span>
               </button>
-            ) : cover.category === '书籍' ? (
+            ) : cover.checkinSlug || cover.category === '书籍' ? (
               <Link
                 href={href}
                 onClick={(e) => e.stopPropagation()}
                 className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 animate-fade-in"
-                aria-label={`开始探索${cover.title}`}
+                aria-label={cover.checkinSlug ? `去打卡${cover.title}` : `开始探索${cover.title}`}
               >
                 <span className="xc-explore-btn">
-                  开始探索
+                  {cover.checkinSlug ? '去打卡' : '开始探索'}
                   <span className="opacity-80">→</span>
                 </span>
               </Link>
@@ -344,7 +344,7 @@ export function HomeCoverCarousel({ covers, onExploreCover }: HomeCoverCarouselP
               cover={cover}
               isActive={i === activeIndex}
               showExplore={i === activeIndex && exploreIndex === i}
-              href={`${cover.route}?cat=${cover.category}`}
+              href={resolveCoverHref(cover)}
               onClick={() => {
                 scrollTo(i)
                 setExploreIndex(i)
@@ -366,7 +366,7 @@ export function HomeCoverCarousel({ covers, onExploreCover }: HomeCoverCarouselP
 
       <div className="text-center mt-2 px-4 animate-fade-in" key={activeCover.id}>
         <p className="text-[11px] text-literary-wine tracking-[0.2em] font-serif">
-          {activeCover.category} · 精选
+          {activeCover.checkinSlug ? '可打卡路线' : `${activeCover.category} · 精选`}
         </p>
         <h2 className="mt-1 text-lg sm:text-xl font-serif font-semibold text-literary-ink">
           {activeCover.title}
