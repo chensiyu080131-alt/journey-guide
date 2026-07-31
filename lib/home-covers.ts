@@ -130,7 +130,7 @@ const inspirationCovers: HomeCover[] = [
     id: 'zhangjiajie-qifeng',
     category: '🎐 东方美学',
     title: '张家界 · 奇峰入画来',
-    subtitle: '层叠峰林 · 东方山水画的现实灵感',
+    subtitle: '层叠峰林 · 东方山水画的现实参照',
     route: '/route/zhangjiajie-qifeng-ruhua/',
     style: {
       bg: 'linear-gradient(165deg, #D4E8D4 0%, #A8C8A8 100%)',
@@ -143,8 +143,8 @@ const inspirationCovers: HomeCover[] = [
   {
     id: 'jiangnan-shuixiang-inspiration',
     category: '🎐 东方美学',
-    title: '水乡楼船 · 中式虚构城市的灵感',
-    subtitle: '粉墙黛瓦与水巷 · 现实灵感地',
+    title: '水乡楼船 · 中式城市的江南原型',
+    subtitle: '粉墙黛瓦与水巷 · 苏州杭州',
     route: '/route/jiangnan-shuixiang-inspiration/',
     style: {
       bg: 'linear-gradient(165deg, #E0E8E4 0%, #A8C8B8 100%)',
