@@ -262,22 +262,22 @@ export const routesCatalog: RouteCatalogItem[] = [
     pointsCount: 0,
     blurb: '王家卫镜头下的上海，梧桐树下寻访弄堂烟火。',
   },
-  // ========== 灵感栏目（Task1 去IP化重构） ==========
+  // ========== 东方美学栏目（Task1 去IP化重构） ==========
   {
     slug: 'jiangnan-shuixiang-inspiration',
-    title: '水乡楼船 · 中式虚构城市的现实灵感',
-    book: '灵感·东方水乡原型地',
+    title: '水乡楼船 · 中式城市的江南原型',
+    book: '东方美学·江南水乡原型地',
     city: '苏州/杭州',
     emoji: '🛶',
     status: 'live',
     pointsCount: 5,
     category: 'inspiration',
-    blurb: '粉墙黛瓦、水巷穿城、楼船画舫——江南水乡的城市格局，是无数中式虚构世界最深的灵感源头。',
+    blurb: '粉墙黛瓦、水巷穿城、楼船画舫——江南水乡的城市格局，是中式城市审美最典型的样本。',
   },
   {
     slug: 'guta-changqiao-inspiration',
     title: '古塔长桥 · 中式空间美学',
-    book: '灵感·古塔与长桥美学',
+    book: '东方美学·古塔与长桥',
     city: '杭州/苏州',
     emoji: '🏯',
     status: 'live',
