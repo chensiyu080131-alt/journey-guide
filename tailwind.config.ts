@@ -91,6 +91,16 @@ const config: Config = {
       fontFamily: {
         sans: ['"Noto Sans SC"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
         serif: ['"Noto Serif SC"', '"STSong"', '"SimSun"', 'serif'],
+        // 隶书：自托管子集（报隶风格）+ 系统报隶/隶变兜底
+        lishu: [
+          '"Xunji Lishu"',
+          '"Baoli SC"',
+          '"报隶-简"',
+          '"Libian SC"',
+          '"隶变-简"',
+          '"LiSu"',
+          'cursive',
+        ],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

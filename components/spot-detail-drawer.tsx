@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { Spot } from '@/types'
 import { getSpotMedia } from '@/lib/spot-media'
+import { resolveSpotTrust, TRUST_LABELS } from '@/lib/trust-label'
 import { cn } from '@/lib/utils'
 
 interface SpotDetailDrawerProps {
@@ -28,6 +29,7 @@ export function SpotDetailDrawer({
   const media = getSpotMedia(spot.id)
   const historicalImage = spot.historicalImage || media?.historicalImage
   const realityImage = spot.realityImage || media?.realityImage
+  const trustMeta = TRUST_LABELS[resolveSpotTrust(spot)]
 
   return (
     <>
@@ -63,9 +65,20 @@ export function SpotDetailDrawer({
                 {index + 1}
               </span>
               <div>
-                <h3 className={cn('text-lg font-serif font-bold', isLiterary ? 'text-literary-ink' : 'text-warm-gray')}>
-                  {spot.name}
-                </h3>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className={cn('text-lg font-serif font-bold', isLiterary ? 'text-literary-ink' : 'text-warm-gray')}>
+                    {spot.name}
+                  </h3>
+                  <span
+                    className={cn(
+                      'inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium',
+                      trustMeta.className
+                    )}
+                    title={trustMeta.detail}
+                  >
+                    {trustMeta.short}
+                  </span>
+                </div>
                 <p className={cn('text-xs mt-0.5', isLiterary ? 'text-literary-muted' : 'text-warm-gray-muted')}>
                   {spot.address}
                 </p>

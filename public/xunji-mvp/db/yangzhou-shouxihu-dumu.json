@@ -12,7 +12,12 @@
     "category": "scenic",
     "cover_image": "",
     "source": "human",
-    "note": "坐标为 GCJ-02（高德坐标系）近似最佳值，待在高德地图二次核对。"
+    "note": "坐标为 GCJ-02（高德坐标系）近似最佳值，待在高德地图二次核对。",
+    "duration": "半天",
+    "difficulty": "轻松",
+    "related_books": [
+      "杜牧《寄扬州韩绰判官》+ 郑板桥《瘦西湖》诗"
+    ]
   },
   "points": [
     {
@@ -26,7 +31,21 @@
       "excerpt_confidence": "verified",
       "interpretation": "杜牧这句诗让瘦西湖的桥与月成了千古绝唱。大虹桥是瘦西湖的入口，也是历代诗人写湖的起点。",
       "checkin_task": "在大虹桥上拍一张湖面的全景，背一遍杜牧的诗。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "瘦西湖（大虹桥），位于扬州市邗江区大虹桥路瘦西湖风景名胜区。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与杜牧 / 郑板桥《杜牧《寄扬州韩绰判官》+ 郑板桥《瘦西湖》诗》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 2,
@@ -39,7 +58,21 @@
       "excerpt_confidence": "verified",
       "interpretation": "二十四桥是瘦西湖的灵魂。不论历史上是二十四座桥还是一座桥，杜牧的诗已让它成了扬州最浪漫的坐标。",
       "checkin_task": "在二十四桥看一次月色或灯光，拍下水中桥影，想想玉人何处教吹箫。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "二十四桥景区，位于扬州市邗江区瘦西湖风景名胜区二十四桥景区。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与杜牧 / 郑板桥《杜牧《寄扬州韩绰判官》+ 郑板桥《瘦西湖》诗》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 3,
@@ -52,7 +85,21 @@
       "excerpt_confidence": "derived",
       "interpretation": "五亭桥是瘦西湖最美的建筑，建在湖心，五亭如莲。中国园林虽由人作、宛自天开的典范。",
       "checkin_task": "在五亭桥上找一扇最好的窗框，拍一张框住的湖景。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "五亭桥，位于扬州市邗江区瘦西湖风景名胜区五亭桥。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与杜牧 / 郑板桥《杜牧《寄扬州韩绰判官》+ 郑板桥《瘦西湖》诗》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 4,
@@ -65,7 +112,21 @@
       "excerpt_confidence": "derived",
       "interpretation": "白塔矗立湖畔，倒影入水。传说扬州盐商为迎乾隆一夜仿建——虽是传说，说明扬州昔日富甲天下的气派。",
       "checkin_task": "拍一张白塔与水中倒影的对称构图。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "白塔，位于扬州市邗江区瘦西湖风景名胜区白塔。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与杜牧 / 郑板桥《杜牧《寄扬州韩绰判官》+ 郑板桥《瘦西湖》诗》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 5,
@@ -78,7 +139,21 @@
       "excerpt_confidence": "verified",
       "interpretation": "熙春台是乾隆看戏的地方。春风十里扬州路的繁华，在瘦西湖的这头最盛。杜牧写的扬州，就是这般金粉。",
       "checkin_task": "在熙春台远眺瘦西湖，找出春风十里的方向，拍一张最繁华的湖景。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "熙春台，位于扬州市邗江区瘦西湖风景名胜区熙春台。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与杜牧 / 郑板桥《杜牧《寄扬州韩绰判官》+ 郑板桥《瘦西湖》诗》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     }
   ]
 }

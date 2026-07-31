@@ -272,21 +272,29 @@ const MODIFY_SYSTEM_PROMPT = `你是"寻迹"的AI旅行规划师。用户已有�
 你必须返回合法 JSON，不要包含 markdown 代码块。`
 
 function buildModifyPrompt(currentGuide: Guide, userRequest: string): string {
-  // 序列化完整攻略，让LLM有足够上下文返回完整JSON
-  const guideJson = JSON.stringify(currentGuide, null, 2)
+  // 将当前攻略序列化为参考上下文
+  const guideSummary = JSON.stringify({
+    title: currentGuide.title,
+    city: currentGuide.city,
+    days: currentGuide.days,
+    dayPlans: currentGuide.dayPlans.map(d => ({
+      day: d.day,
+      title: d.title,
+      spotCount: d.spots.length,
+      spotNames: d.spots.map(s => s.name),
+    })),
+    tips: currentGuide.tips,
+  }, null, 2)
 
-  return `用户当前攻略完整数据：
-${guideJson}
+  return `用户当前攻略概要：
+${guideSummary}
 
 用户的修改需求：${userRequest}
 
-请返回修改后的完整攻略 JSON（保持与输入相同的结构）。
-关键要求：
-1. 只修改用户要求的部分，其余字段保持原样
-2. city 保持 "${currentGuide.city}"
-3. 天数根据用户需求调整（如果用户说"加一天"则为 ${currentGuide.days + 1} 天）
-4. 新增的景点必须有 originalText 和 realityNote 字段
-5. 必须返回合法 JSON，不要包含 markdown 代码块标记`
+请返回修改后的完整攻略 JSON，格式与生成时相同（包含 title、subtitle、city、province、dayPlans、dialect、localExperiences、tips 等所有字段）。
+只修改用户要求的部分，其余保持不变。
+city 保持 "${currentGuide.city}"。
+天数根据用户需求调整（如果用户说"加一天"则为 ${currentGuide.days + 1} 天）。`
 }
 
 /** 基于用户反馈修改攻略 */
@@ -365,19 +373,12 @@ export function classifyIntent(
 ): JiluIntent {
   if (!hasCurrentGuide) return 'generate'
 
-  const modifyKeywords = /加.*[个点天项]|减|换成|改为|调整|删.*[掉除]|不要.*[了这个]|去掉|换掉|换[成一]|多.*点|少.*点|延长|缩短|变更|重新[生排]|再[加多来]|换个/
-  const generateKeywords = /想去|去.*[旅游玩逛]|给我|帮我.*[生做写]成|[生做写]成.*攻略|来一份|推荐.*路线|《[^》]+》/
+  const modifyKeywords = /加|减|换|改|调|增加|减少|替换|修改|调整|删|不要|去掉|换掉|多.*点|少.*点|延长|缩短|变更|换成|更|重新|再/
   const chatKeywords = /为什么|什么是|怎么|如何|什么意思|解释|说说|聊聊|介绍一下|讲讲/
 
-  // 1. 修改意图优先（即使包含天数词，"加一天"也是修改）
   if (modifyKeywords.test(message)) return 'modify'
-  // 2. 生成意图（"想去苏州"应生成新攻略，而非修改已有）
-  if (generateKeywords.test(message)) return 'generate'
-  // 3. 聊天意图
   if (chatKeywords.test(message)) return 'chat'
-  // 4. 短输入（≤6字）倾向生成（城市名、书名）
-  if (message.length <= 6) return 'generate'
 
-  // 5. 默认：有攻略时视为修改意图
+  // 默认在有攻略时视为修改意图
   return 'modify'
 }

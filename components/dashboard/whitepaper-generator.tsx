@@ -3,6 +3,32 @@
 import { useState, useCallback } from 'react'
 import { Card } from '@/components/ui'
 import { streamLLM, isMockMode, type LLMMessage } from '@/lib/llm-client'
+import changshuSpotData from '@/src/data/changshu-spots.json'
+
+type ChangshuRouteRecord = {
+  id: string
+  title: string
+  sourceWork: string
+  sourceCreator: string
+  theme: string
+  spotCount: number
+}
+
+type ChangshuSpotRecord = {
+  routeId: string
+  name: string
+  type: '景点' | '美食' | '体验'
+  tags: string[]
+  originalSource?: string
+  interactiveTask?: unknown
+}
+
+const changshuData = changshuSpotData as {
+  routeCount: number
+  spotCount: number
+  routes: ChangshuRouteRecord[]
+  spots: ChangshuSpotRecord[]
+}
 
 /** P1 · 一键生成城市文学白皮书（客户端直连 LLM，流式） */
 export function WhitepaperGenerator() {
@@ -133,6 +159,39 @@ export function WhitepaperGenerator() {
 }
 
 function getMockWhitepaper(city: string): string {
+  if (city.includes('常熟')) {
+    const routeLines = changshuData.routes
+      .map(route => `- **${route.title}**：${route.theme}，关联${route.sourceWork} / ${route.sourceCreator}，已结构化 ${route.spotCount} 个点位`)
+      .join('\n')
+
+    const sourceLines = changshuData.spots
+      .filter(spot => spot.originalSource)
+      .slice(0, 6)
+      .map(spot => `- ${spot.name}：${spot.originalSource}`)
+      .join('\n')
+
+    const foodCount = changshuData.spots.filter(spot => spot.type === '美食').length
+    const experienceCount = changshuData.spots.filter(spot => spot.type === '体验').length
+    const interactiveCount = changshuData.spots.filter(spot => spot.interactiveTask).length
+
+    return `# 常熟 · 文化IP定位
+常熟适合定位为"书香江南的可步行文化样本"：虞山、尚湖、沙家浜、藏书楼、帝师故居与钱柳故事彼此连接。当前结构化数据已覆盖 ${changshuData.routeCount} 条主题路线、${changshuData.spotCount} 个点位，其中包含 ${foodCount} 个美食点、${experienceCount} 个体验点和 ${interactiveCount} 个可用于探险/互动任务的点位。
+---
+# 主题路线资产
+${routeLines}
+---
+# 原文与实景依据
+${sourceLines}
+---
+# 商业估算
+- **C端客群**：亲子研学、文学旅行爱好者、江南周末游用户、城市文化打卡用户
+- **B端场景**：文旅局白皮书、研学路线包装、节庆活动专题、景区联票内容页
+- **内容复用**：同一份点位 JSON 可支撑白皮书生成、地图路线、探险任务、点位卡片与讲解词
+- **近期落地建议**：先以"沙家浜红色经典"和"钱柳乱世情缘"做两条示范路线，再扩展到虞山书香、尚湖运动与常熟美食专题
+
+_（演示数据来自 src/data/changshu-spots.json；配置 API Key 后可在此基础上生成更细的城市白皮书。）_`
+  }
+
   return `# ${city} · 文化IP定位
 ${city}是一座深藏文学记忆的城市，从古典诗词到当代散文，处处可寻文人足迹。最具代表性的文化符号是"书香烟火"，既有庙堂之高，也有市井之暖。
 ---

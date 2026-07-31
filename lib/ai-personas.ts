@@ -39,7 +39,7 @@ function routeBackground(ctx: RouteContext): string {
 ${ctx.intro ? `简介：${ctx.intro}\n` : ''}${spots ? `涉及景点与原文：\n${spots}` : ''}`
 }
 
-const BASE = `你是"寻迹"的 AI 书灵——一个"跟着书本去旅行"平台里的文学向导。
+const BASE = `你是"寻城"的 AI 书灵——一个"跟着书本去旅行"平台里的文学向导。
 原则：结合文学与实景，让"文字照进现实"；推荐本地人真正去的地方，不吹网红店；引用力求真实，不确定时说明性质。`
 
 /** 构建服务端 system prompt */

@@ -1,20 +1,19 @@
 import type { Metadata, Viewport } from 'next'
-import Script from 'next/script'
 import './globals.css'
-import { AmapSecurityBootstrap } from '@/components/amap-security-bootstrap'
-import { JiluFloat } from '@/components/jilu-float'
+import { BookGuideFloat } from '@/components/book-guide-float'
+import { XunjiExploreFooter } from '@/components/xunji-explore-footer'
 
 export const metadata: Metadata = {
-  title: '寻迹 - 有迹可循，寻迹而至',
-  description: 'AI驱动的文化旅行攻略。书籍·东方美学·音乐——跟着文化载体去旅行，让文字照进现实。',
-  keywords: ['跟着书本去旅行', '文学旅行', '文化旅行', '寻迹', 'AI攻略'],
+  title: '寻城 - 跟着书本去旅行',
+  description: 'AI驱动的文学旅行攻略。选一本书，跟着故事走到现场，让文字照进现实。常熟先行落地。',
+  keywords: ['跟着书本去旅行', '文学旅行', '常熟', '沙家浜', '孽海花', '翁同龢', 'AI攻略'],
 }
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#8B4545',
+  themeColor: '#1A1A1A',
 }
 
 export default function RootLayout({
@@ -22,19 +21,26 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // 运行期从 pm2/.env.production 读取，注入客户端（不依赖 build 时 NEXT_PUBLIC_*）
+  const amapKey = process.env.NEXT_PUBLIC_AMAP_KEY || process.env.AMAP_WEB_KEY || ''
+  const amapSecurity = process.env.NEXT_PUBLIC_AMAP_SECURITY || ''
+
+  const runtimeBootstrap =
+    amapKey || amapSecurity
+      ? `window.__XUNCHENG_AMAP_KEY__=${JSON.stringify(amapKey)};window.__XUNCHENG_AMAP_SECURITY__=${JSON.stringify(amapSecurity)};${amapSecurity ? `window._AMapSecurityConfig={securityJsCode:${JSON.stringify(amapSecurity)}};` : ''}`
+      : ''
+
   return (
     <html lang="zh-CN">
       <head>
-        <AmapSecurityBootstrap />
+        {runtimeBootstrap ? (
+          <script id="xuncheng-amap-runtime" dangerouslySetInnerHTML={{ __html: runtimeBootstrap }} />
+        ) : null}
       </head>
-      <body className="min-h-screen bg-paper-warm">
-        {children}
-        <JiluFloat />
-        {/* 51.LA 网站统计 */}
-        <Script id="la-collect" src="https://sdk.51.la/js-sdk-pro.min.js" strategy="afterInteractive" />
-        <Script id="la-init" strategy="afterInteractive">
-          {`LA.init({id:"3QW9srNLaMfs2Lua",ck:"3QW9srNLaMfs2Lua"})`}
-        </Script>
+      <body className="min-h-screen bg-paper-warm flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0">{children}</div>
+        <XunjiExploreFooter />
+        <BookGuideFloat />
       </body>
     </html>
   )

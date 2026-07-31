@@ -12,7 +12,12 @@
     "category": "scenic",
     "cover_image": "",
     "source": "human",
-    "note": "坐标为 GCJ-02（高德坐标系）近似最佳值，待在高德地图二次核对。"
+    "note": "坐标为 GCJ-02（高德坐标系）近似最佳值，待在高德地图二次核对。",
+    "duration": "半天",
+    "difficulty": "轻松",
+    "related_books": [
+      "宋濂《阅江楼记》"
+    ]
   },
   "points": [
     {
@@ -26,7 +31,21 @@
       "excerpt_confidence": "verified",
       "interpretation": "宋濂的《阅江楼记》让它名扬天下，但楼六百年都没建起来。如今登楼，大江仍在，文章的气象还在。",
       "checkin_task": "登阅江楼顶层，找一找宋濂笔下金陵之形胜的方向，拍一张大江。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "阅江楼，位于南京市鼓楼区建宁路202号狮子山巅。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与宋濂《宋濂《阅江楼记》》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 2,
@@ -39,7 +58,21 @@
       "excerpt_confidence": "verified",
       "interpretation": "狮子山扼长江与金陵要冲。宋濂写金陵之形胜，指的就是这种山控大江的格局。",
       "checkin_task": "在城墙上看长江的方向，体会形胜二字。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "狮子山（明城墙段），位于南京市鼓楼区狮子山明城墙。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与宋濂《宋濂《阅江楼记》》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 3,
@@ -52,7 +85,21 @@
       "excerpt_confidence": "derived",
       "interpretation": "仪凤门是明城墙十三门之一，出此门即可望江。宋濂时代的文人就是从这里登狮子山的。",
       "checkin_task": "穿过仪凤门，拍一张门洞框住的长江或山色。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "仪凤门，位于南京市鼓楼区仪凤门。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与宋濂《宋濂《阅江楼记》》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 4,
@@ -65,7 +112,21 @@
       "excerpt_confidence": "derived",
       "interpretation": "天妃宫与阅江楼同时期规划。宋濂在记里劝帝王不要只看江山，也要顾念民生——这是文章的良心。",
       "checkin_task": "在天妃宫故址附近，找一处能看到普通南京人生活的地方，拍一张。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "天妃宫（故址），位于南京市鼓楼区下关天妃宫故址。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与宋濂《宋濂《阅江楼记》》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 5,
@@ -78,7 +139,21 @@
       "excerpt_confidence": "verified",
       "interpretation": "下关滨江是看长江最开阔处。宋濂笔下大江东去的壮阔，在这里看得最满。",
       "checkin_task": "在下关江边拍一张最开阔的长江，配一句宋濂写江山的句子。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "下关滨江风光带，位于南京市鼓楼区下关滨江风光带。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与宋濂《宋濂《阅江楼记》》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     }
   ]
 }

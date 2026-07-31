@@ -13,7 +13,6 @@ export interface CheckinRecord {
   lng: number
   distanceM: number
   synced: boolean // 是否已写入 Supabase checkins 表
-  simulated?: boolean // 体验模式（无真实 GPS）产生的演示数据，不同步后端
 }
 
 const STORAGE_KEY = 'xunji.checkins.v1'
@@ -45,7 +44,7 @@ export function loadCheckins(routeSlug: string): CheckinRecord[] {
 }
 
 /** 追加一条打卡记录（同点位重复打卡以首次为准） */
-export function saveCheckin(record: Omit<CheckinRecord, 'synced'> & { simulated?: boolean }): CheckinRecord {
+export function saveCheckin(record: Omit<CheckinRecord, 'synced'>): CheckinRecord {
   const all = readAll()
   const exists = all.find(
     r => r.routeSlug === record.routeSlug && r.pointSeq === record.pointSeq
@@ -82,7 +81,7 @@ export async function syncPendingToSupabase(): Promise<{ ok: boolean; synced: nu
     return { ok: false, synced: 0, reason: 'SUPABASE_NOT_CONFIGURED' }
   }
   const all = readAll()
-  const pending = all.filter(r => !r.synced && !r.simulated) // 演示数据只留本地
+  const pending = all.filter(r => !r.synced)
   if (!pending.length) return { ok: true, synced: 0 }
 
   const session = await ensureAnonSession()

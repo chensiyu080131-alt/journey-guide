@@ -2,8 +2,10 @@ import { CoverStyle } from './home-covers'
 
 export interface CityBookEntry {
   id: string
-  /** 点击后进入的攻略 id */
+  /** 点击后进入的攻略 id（无 checkinSlug 时使用） */
   guideId: string
+  /** 可打卡路线 slug；有则优先进 /route */
+  checkinSlug?: string
   title: string
   author: string
   intro: string
@@ -45,6 +47,7 @@ export const cityBooksMap: Record<string, CityBooksMeta> = {
       {
         id: 'yangzhou-man',
         guideId: 'yangzhou',
+        checkinSlug: 'yangzhou-man-jiangkui',
         title: '扬州慢',
         author: '姜夔 · 李白',
         intro: '二十四桥仍在，波心荡，冷月无声。跟着诗词游瘦西湖、个园与东关街。',
@@ -58,6 +61,7 @@ export const cityBooksMap: Record<string, CityBooksMeta> = {
       {
         id: 'renjianziwei-gy',
         guideId: 'renjianziwei',
+        checkinSlug: 'yangzhou-wangzengqi-zaocha',
         title: '人间滋味',
         author: '汪曾祺',
         intro: '高邮咸鸭蛋、界首茶干、运河畔烟火——汪曾祺故乡就在扬州城北。',
@@ -66,6 +70,20 @@ export const cityBooksMap: Record<string, CityBooksMeta> = {
           '#8B4545',
           '#6B3333',
           '#8A6A5A'
+        ),
+      },
+      {
+        id: 'yangzhou-shouxihu',
+        guideId: 'yangzhou',
+        checkinSlug: 'yangzhou-shouxihu-dumu',
+        title: '瘦西湖诗画',
+        author: '杜牧',
+        intro: '二十四桥明月夜——可打卡的瘦西湖诗词线。',
+        style: bookStyle(
+          'linear-gradient(165deg, #E0E8E4 0%, #B0C8BC 100%)',
+          '#5A7A6E',
+          '#2E4A42',
+          '#5A7A70'
         ),
       },
     ],
@@ -81,11 +99,26 @@ export const cityBooksMap: Record<string, CityBooksMeta> = {
       {
         id: 'nanjing-qinhuai',
         guideId: 'nanjing',
+        checkinSlug: 'nanjing-qinhuaihe-zhuziqing',
         title: '桨声灯影里的秦淮河',
         author: '朱自清',
         intro: '秦淮河、夫子庙、老门东——跟着散文夜游六朝金陵。',
         style: bookStyle(
           'linear-gradient(165deg, #E0DDD6 0%, #B8B0A4 100%)',
+          '#6B6560',
+          '#3D3832',
+          '#8A8278'
+        ),
+      },
+      {
+        id: 'nanjing-fuzimiao',
+        guideId: 'nanjing',
+        checkinSlug: 'nanjing-fuzimiao-shishuoxinyu',
+        title: '世说新语 · 建康',
+        author: '刘义庆',
+        intro: '六朝烟水，夫子庙一带可对读的人物行旅。',
+        style: bookStyle(
+          'linear-gradient(165deg, #E4E0D8 0%, #C0B8A8 100%)',
           '#6B6560',
           '#3D3832',
           '#8A8278'
@@ -117,6 +150,7 @@ export const cityBooksMap: Record<string, CityBooksMeta> = {
       {
         id: 'suzhou-fusheng',
         guideId: 'suzhou',
+        checkinSlug: 'suzhou-pingjiang-fushengliuji',
         title: '浮生六记',
         author: '沈复 · 张继',
         intro: '园林、水巷、寒山寺——江南生活的细腻与诗意。',
@@ -125,6 +159,34 @@ export const cityBooksMap: Record<string, CityBooksMeta> = {
           '#5A7D78',
           '#3D5550',
           '#6B8480'
+        ),
+      },
+      {
+        id: 'suzhou-hanshan',
+        guideId: 'suzhou',
+        checkinSlug: 'suzhou-hanshansi-fengqiao',
+        title: '枫桥夜泊',
+        author: '张继',
+        intro: '寒山寺钟声，可打卡的夜泊诗路线。',
+        style: bookStyle(
+          'linear-gradient(165deg, #D0DCE0 0%, #A0B8C0 100%)',
+          '#5A7078',
+          '#2E4048',
+          '#5A7078'
+        ),
+      },
+      {
+        id: 'suzhou-zhuozheng',
+        guideId: 'suzhou',
+        checkinSlug: 'suzhou-zhuozhengyuan-wenzhengming',
+        title: '拙政园',
+        author: '文徵明',
+        intro: '园林诗画对照的可打卡线。',
+        style: bookStyle(
+          'linear-gradient(165deg, #D8E8D8 0%, #A8C8A8 100%)',
+          '#5A7A5A',
+          '#2E4A2E',
+          '#5A7A5A'
         ),
       },
       {
@@ -199,6 +261,7 @@ export const cityBooksMap: Record<string, CityBooksMeta> = {
       {
         id: 'fenghuang-biancheng',
         guideId: 'fenghuang',
+        checkinSlug: 'fenghuang-shencongwen-biancheng',
         title: '边城',
         author: '沈从文',
         intro: '翠翠与白塔、渡船与黄狗，湘西最纯美的故事。沱江泛舟、跳岩、虹桥——跟着《边城》走进凤凰。',
@@ -271,11 +334,26 @@ export const cityBooksMap: Record<string, CityBooksMeta> = {
       {
         id: 'hangzhou-baijuyi',
         guideId: 'hangzhou',
+        checkinSlug: 'hangzhou-baidi-baijiuyi',
         title: '钱塘湖春行',
         author: '白居易 · 苏轼',
         intro: '白堤、苏堤、灵隐寺——跟着唐诗宋词漫步西湖。',
         style: bookStyle(
           'linear-gradient(165deg, #C8E0D4 0%, #90C4A8 100%)',
+          '#4A7A5A',
+          '#2E4A38',
+          '#5A7A5A'
+        ),
+      },
+      {
+        id: 'hangzhou-sudi',
+        guideId: 'hangzhou',
+        checkinSlug: 'hangzhou-sudi-sushi',
+        title: '苏堤春晓',
+        author: '苏轼',
+        intro: '可打卡的苏堤西湖线。',
+        style: bookStyle(
+          'linear-gradient(165deg, #D0E4D8 0%, #98C4A8 100%)',
           '#4A7A5A',
           '#2E4A38',
           '#5A7A5A'
@@ -307,9 +385,10 @@ export const cityBooksMap: Record<string, CityBooksMeta> = {
       {
         id: 'beijing-sishitongtang',
         guideId: 'beijing',
-        title: '四世同堂',
+        checkinSlug: 'beijing-laoshe-chaguan',
+        title: '四世同堂 · 茶馆',
         author: '老舍',
-        intro: '小杨家胡同的葫芦形、白塔寺的红墙——老舍笔下最深沉的北平记忆。',
+        intro: '茶馆与胡同——可打卡的老舍北京线；小杨家胡同、白塔寺亦可对照阅读。',
         style: bookStyle(
           'linear-gradient(165deg, #E0C8C0 0%, #C09888 100%)',
           '#8A4A3A',
@@ -400,6 +479,136 @@ export const cityBooksMap: Record<string, CityBooksMeta> = {
           '#7A6A5A',
           '#4A3A28',
           '#7A6A58'
+        ),
+      },
+    ],
+  },
+  shaoxing: {
+    citySlug: 'shaoxing',
+    cityName: '绍兴',
+    province: '浙江',
+    tagline: '鲁迅故里 · 沈园遗恨',
+    intro:
+      '百草园、三味书屋、咸亨酒店，鲁迅把童年写进了中国人的共同记忆；沈园一壁《钗头凤》，陆游与唐琬的故事仍在园中。',
+    books: [
+      {
+        id: 'shaoxing-luxun',
+        guideId: 'shaoxing',
+        checkinSlug: 'shaoxing-luxun-baicaoyuan',
+        title: '从百草园到三味书屋',
+        author: '鲁迅',
+        intro: '5 个点位可打卡：百草园、三味书屋、咸亨酒店……',
+        style: bookStyle(
+          'linear-gradient(165deg, #E8E0D0 0%, #C8B898 100%)',
+          '#7A6A48',
+          '#4A3E28',
+          '#7A6A50'
+        ),
+      },
+      {
+        id: 'shaoxing-luyou',
+        guideId: 'shaoxing',
+        checkinSlug: 'shaoxing-luyou-shenyuan',
+        title: '钗头凤 · 沈园',
+        author: '陆游',
+        intro: '园内走完相遇与凭吊：钗头凤壁、伤心桥、孤鹤亭。',
+        style: bookStyle(
+          'linear-gradient(165deg, #E8DCE0 0%, #C8B0B8 100%)',
+          '#7A5A68',
+          '#4A2E3A',
+          '#7A5A68'
+        ),
+      },
+    ],
+  },
+  harbin: {
+    citySlug: 'harbin',
+    cityName: '哈尔滨',
+    province: '黑龙江',
+    tagline: '呼兰河传 · 萧红',
+    intro: '从呼兰故居的后花园，走到呼兰河畔，再望向中央大街——把《呼兰河传》走成可打卡的北国路线。',
+    books: [
+      {
+        id: 'harbin-xiaohong',
+        guideId: 'harbin',
+        checkinSlug: 'harbin-xiaohong-hulanhe',
+        title: '呼兰河传',
+        author: '萧红',
+        intro: '萧红故居、后花园、呼兰河——童年小城的现场对读。',
+        style: bookStyle(
+          'linear-gradient(165deg, #D0DCE8 0%, #A0B8D0 100%)',
+          '#4A6A8A',
+          '#2E4458',
+          '#5A7088'
+        ),
+      },
+    ],
+  },
+  jinan: {
+    citySlug: 'jinan',
+    cityName: '济南',
+    province: '山东',
+    tagline: '泉城冬天 · 老舍',
+    intro: '趵突泉翻滚、大明湖秋色——跟着老舍把济南的冬天与泉水走一遍。',
+    books: [
+      {
+        id: 'jinan-laoshe',
+        guideId: 'jinan',
+        checkinSlug: 'jinan-laoshe-baotuquan',
+        title: '济南的冬天',
+        author: '老舍',
+        intro: '趵突泉、大明湖等泉城点位可打卡。',
+        style: bookStyle(
+          'linear-gradient(165deg, #D8E4F0 0%, #A8C0D8 100%)',
+          '#5A7A98',
+          '#2E4860',
+          '#5A7890'
+        ),
+      },
+    ],
+  },
+  wuzhen: {
+    citySlug: 'wuzhen',
+    cityName: '乌镇',
+    province: '浙江',
+    tagline: '林家铺子 · 茅盾',
+    intro: '茅盾故居与水乡市镇——《林家铺子》的现场对照（版权待核）。',
+    books: [
+      {
+        id: 'wuzhen-maodun',
+        guideId: 'wuzhen',
+        checkinSlug: 'wuzhen-maodun-linjiapuzi',
+        title: '林家铺子',
+        author: '茅盾',
+        intro: '故居、铺面印象、水乡市镇——5 点可打卡。',
+        style: bookStyle(
+          'linear-gradient(165deg, #E0D8D0 0%, #C0B0A0 100%)',
+          '#7A6A58',
+          '#4A3A2E',
+          '#7A6A58'
+        ),
+      },
+    ],
+  },
+  changshu: {
+    citySlug: 'changshu',
+    cityName: '常熟',
+    province: '江苏',
+    tagline: '沙家浜 · 芦苇荡',
+    intro: '跟着京剧《沙家浜》走常熟芦苇荡——可交付文旅局的可打卡文学线。',
+    books: [
+      {
+        id: 'changshu-shajiabang',
+        guideId: 'shajiabang',
+        checkinSlug: 'changshu-shajiabang-jingju',
+        title: '沙家浜',
+        author: '京剧经典',
+        intro: '芦苇荡现场打卡线。',
+        style: bookStyle(
+          'linear-gradient(165deg, #DDE5DC 0%, #B5C4B0 100%)',
+          '#5C7260',
+          '#3A4A3C',
+          '#6A7A6C'
         ),
       },
     ],

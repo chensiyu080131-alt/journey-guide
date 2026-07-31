@@ -21,6 +21,10 @@ create table if not exists public.routes (
   book        text,                       -- 人间滋味
   summary     text,
   cover_image text,
+  plain_explain text,                     -- 白话：这是干什么的
+  why_worth   text,                       -- 为什么值得去
+  category    text,                       -- scenic / literary / figure
+  season      text,                       -- spring / summer / autumn / winter
   source      text not null default 'human' check (source in ('human','ai')),
   created_at  timestamptz not null default now()
 );
@@ -42,6 +46,10 @@ create table if not exists public.points (
                         check (excerpt_confidence in ('verified','derived','pending')),
   interpretation     text,                 -- 现代解读 ≤100 字
   checkin_task       text,                 -- 打卡任务描述
+  panorama           text,                 -- 360° 全景图 URL（可选）
+  panorama_source    text,                 -- 全景出处/版权
+  photo              text,                 -- 地点照片（文学卡片）
+  illustration       text,                 -- 插图（文学卡片）
   source             text not null default 'human' check (source in ('human','ai')),
   created_at         timestamptz not null default now()
 );

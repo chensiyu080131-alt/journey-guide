@@ -12,7 +12,12 @@
     "category": "scenic",
     "cover_image": "",
     "source": "human",
-    "note": "坐标为 GCJ-02（高德坐标系）近似最佳值，待在高德地图二次核对。"
+    "note": "坐标为 GCJ-02（高德坐标系）近似最佳值，待在高德地图二次核对。",
+    "duration": "半天",
+    "difficulty": "轻松",
+    "related_books": [
+      "骆宾王《灵隐寺》诗"
+    ]
   },
   "points": [
     {
@@ -26,7 +31,21 @@
       "excerpt_confidence": "verified",
       "interpretation": "骆宾王路过灵隐借宿于此，诗开篇即写山寺的高峻与幽静——这是他人生低谷时寻到的一片清净。",
       "checkin_task": "在灵隐寺山门前抬头望飞来峰，拍一张山色的壮阔。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "灵隐寺（天王殿），位于杭州市西湖区灵隐路法云弄1号。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与骆宾王《骆宾王《灵隐寺》诗》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 2,
@@ -39,7 +58,21 @@
       "excerpt_confidence": "verified",
       "interpretation": "飞来峰的石灰岩被雕成了一尊尊佛像。骆宾王看到的奇峰，今天仍奇，造像更添千年佛韵。",
       "checkin_task": "在飞来峰下找一尊你最中意的造像，拍下来并查出它的朝代。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "飞来峰造像，位于杭州市西湖区灵隐景区飞来峰。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与骆宾王《骆宾王《灵隐寺》诗》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 3,
@@ -52,7 +85,21 @@
       "excerpt_confidence": "verified",
       "interpretation": "冷泉亭是灵隐最雅致的一角。白居易专门写过记，骆宾王的诗里也有它的影子——泉冷而意深。",
       "checkin_task": "在冷泉边掬一捧水，感受那股清冽，记一句此刻的安静。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "冷泉亭，位于杭州市西湖区灵隐寺前冷泉。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与骆宾王《骆宾王《灵隐寺》诗》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 4,
@@ -61,11 +108,25 @@
       "lng": 120.098,
       "lat": 30.245,
       "excerpt": "霜薄花更发，冰轻叶未凋。",
-      "excerpt_source": "骆宾王《灵隐寺》诗写山高察勘之意；北高峰为灵隐制高点",
-      "excerpt_confidence": "derived",
+      "excerpt_source": "骆宾王《灵隐寺》诗写山高察勘之意；北高峰为灵隐制高点（引文实据；点位对应见解读）",
+      "excerpt_confidence": "verified",
       "interpretation": "登北高峰可俯瞰灵隐与西湖。骆宾王诗里的壮阔气象，从这一望可见全貌。",
       "checkin_task": "登北高峰远眺，拍一张灵隐寺全景，体会门对浙江潮的方位。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "北高峰，位于杭州市西湖区北高峰。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与骆宾王《骆宾王《灵隐寺》诗》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 5,
@@ -73,12 +134,26 @@
       "address": "杭州市西湖区北高峰半山韬光寺",
       "lng": 120.0985,
       "lat": 30.243,
-      "excerpt": "观沧海日。",
-      "excerpt_source": "骆宾王《灵隐寺》名句；韬光寺观海亭为赏日出胜地",
-      "excerpt_confidence": "derived",
+      "excerpt": "楼观沧海日，门对浙江潮。",
+      "excerpt_source": "骆宾王《灵隐寺》（通行题名；一作宋之问）",
+      "excerpt_confidence": "verified",
       "interpretation": "韬光寺是灵隐后山制高点，观海亭看日出最佳。骆宾王“楼观沧海日”写的便是这种登高的壮阔。",
       "checkin_task": "在韬光寺观海亭等一缕阳光，拍下观沧海日的同款视角。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "韬光寺，位于杭州市西湖区北高峰半山韬光寺。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与骆宾王《骆宾王《灵隐寺》诗》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     }
   ]
 }

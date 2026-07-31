@@ -9,7 +9,7 @@ import { getMockGuide } from './mock-data'
 import { callLLM as callLLMCore, isMockMode, parseJson } from './llm-client'
 import { searchPoi, type PoiSearchResult } from './llm-client'
 
-const SYSTEM = `你是"寻迹"AI 文学旅行规划师——专门把书籍里的地点变成可落地的旅行攻略。
+const SYSTEM = `你是"寻城"AI 文学旅行规划师——专门把书籍里的地点变成可落地的旅行攻略。
 核心原则：
 1. 每个景点必须关联书中真实原文，禁止编造不存在的引文
 2. 行程只能使用已给定的「书中地点对照表」中的地点，不得擅自添加无关网红景点

@@ -1,4 +1,4 @@
-name: Deploy to ECS (static export + nginx)
+name: Deploy to ECS (Node standalone + pm2)
 
 on:
   push:
@@ -8,6 +8,12 @@ on:
 # 目标目录：静态导出产物 out/ 上传到此处，由 nginx 直接托管（无需 Node 运行时）
 env:
   DEPLOY_DIR: /opt/xuncheng
+
+# 目标服务器目录（pm2 运行此处的 server.js）
+env:
+  DEPLOY_DIR: /opt/xuncheng
+  APP_NAME: xuncheng
+  APP_PORT: '3000'
 
 jobs:
   deploy:
@@ -21,27 +27,33 @@ jobs:
 
       - run: npm ci || npm install
 
-      - name: Build (static export)
+      - name: Build (standalone)
         run: npx next build
         env:
           # NEXT_PUBLIC_* 在 build 时写入前端包，必须在 CI 注入
-          # 高德 Key（依据执行者任务书 Turn C · board decision #1 重新启用）：
-          # 现有 Key 注入后，route-map 优先真实高德交互地图；若 Key 失效/域名受限，
-          # 组件侧 4.5s 加载超时 + 6s 兜底自动回退零依赖 SVG 静态图（永不卡死）。
           NEXT_PUBLIC_AMAP_KEY: ${{ secrets.NEXT_PUBLIC_AMAP_KEY }}
           NEXT_PUBLIC_AMAP_SECURITY: ${{ secrets.NEXT_PUBLIC_AMAP_SECURITY }}
           # Supabase（路线数据 + 打卡入库，2026-07-27 新增）
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
 
-      - name: Upload static export to ECS (staging)
+      - name: Assemble standalone bundle
+        run: |
+          # standalone 需要手动带上 static 与 public
+          mkdir -p .next/standalone/.next
+          cp -r .next/static .next/standalone/.next/static
+          if [ -d public ]; then cp -r public .next/standalone/public; fi
+          ls -la .next/standalone
+
+      - name: Upload bundle to ECS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.ECS_HOST }}
           username: root
           key: ${{ secrets.ECS_SSH_KEY }}
-          source: "out"
-          target: /opt/xuncheng-upload
+          source: ".next/standalone/*"
+          target: ${{ env.DEPLOY_DIR }}
+          strip_components: 2   # 去掉 .next/standalone/ 前缀
           overwrite: true
 
       - name: Upload nginx config
@@ -54,86 +66,56 @@ jobs:
           target: "/tmp"
           overwrite: true
 
-      - name: Publish static site + reload nginx
+      - name: Restart with pm2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.ECS_HOST }}
           username: root
           key: ${{ secrets.ECS_SSH_KEY }}
+          envs: LLM_API_KEY,LLM_BASE_URL,LLM_MODEL,AMAP_WEB_KEY,NEXT_PUBLIC_AMAP_KEY,NEXT_PUBLIC_AMAP_SECURITY,APP_NAME,APP_PORT,DEPLOY_DIR
           script: |
             set -e
-            SRC=/opt/xuncheng-upload/out
-            REAL_ROOT=/usr/share/nginx/html/xuncheng
-            # 1) 真实 root（nginx -T 实测 8080 实际 root 即此）：原子替换
-            rm -rf "$REAL_ROOT"
-            mkdir -p "$REAL_ROOT"
-            cp -r "$SRC/." "$REAL_ROOT/"
-            # 2) 兼容：同步到 /opt/xuncheng/out（与新 conf root 一致，防以后切换）
-            rm -rf ${{ env.DEPLOY_DIR }}/out
-            mkdir -p ${{ env.DEPLOY_DIR }}/out
-            cp -r "$SRC/." ${{ env.DEPLOY_DIR }}/out/
-            # 3) 清理历史 standalone 残留（旧部署方式遗留，已不再需要）
-            rm -rf ${{ env.DEPLOY_DIR }}/.next ${{ env.DEPLOY_DIR }}/public ${{ env.DEPLOY_DIR }}/server.js /opt/xuncheng-upload 2>/dev/null || true
-            # 4) 写配置并强制重载（reload 失效时整体重启 nginx，确保新 conf 生效）
+            export LLM_API_KEY="${{ secrets.LLM_API_KEY }}"
+            export LLM_BASE_URL="${{ secrets.LLM_BASE_URL }}"
+            export LLM_MODEL="${{ secrets.LLM_MODEL }}"
+            export AMAP_WEB_KEY="${{ secrets.AMAP_WEB_KEY }}"
+            export NEXT_PUBLIC_AMAP_KEY="${{ secrets.NEXT_PUBLIC_AMAP_KEY }}"
+            export NEXT_PUBLIC_AMAP_SECURITY="${{ secrets.NEXT_PUBLIC_AMAP_SECURITY }}"
+            cd ${{ env.DEPLOY_DIR }}
+
+            # 持久化运行期环境变量（pm2 重启后仍生效）
+            cat > .env.production <<EOF
+            LLM_API_KEY=${LLM_API_KEY}
+            LLM_BASE_URL=${LLM_BASE_URL:-https://api.deepseek.com/v1}
+            LLM_MODEL=${LLM_MODEL:-deepseek-chat}
+            AMAP_WEB_KEY=${AMAP_WEB_KEY:-${NEXT_PUBLIC_AMAP_KEY}}
+            USE_MOCK=false
+            PORT=${{ env.APP_PORT }}
+            HOSTNAME=127.0.0.1
+            NODE_ENV=production
+            EOF
+            chmod 600 .env.production
+
+            if [ -z "$LLM_API_KEY" ]; then
+              echo "ERROR: GitHub Secret LLM_API_KEY 未配置，线上将退回演示模式"
+            fi
+
+            command -v pm2 >/dev/null 2>&1 || npm i -g pm2
+            pm2 delete ${{ env.APP_NAME }} 2>/dev/null || true
+            set -a
+            . ./.env.production
+            set +a
+            pm2 start server.js --name ${{ env.APP_NAME }} --update-env
+            pm2 save
+            pm2 status ${{ env.APP_NAME }}
+
+            # 8080 不能继续指向旧 out 静态目录；必须反代到 Node，API/SSR 才可用。
             if command -v nginx >/dev/null 2>&1; then
               cp /tmp/deploy/nginx-xuncheng.conf /etc/nginx/conf.d/xuncheng.conf
               nginx -t
-              nginx -s reload 2>/dev/null || systemctl reload nginx 2>/dev/null || (pkill -9 nginx 2>/dev/null; nginx)
+              systemctl reload nginx || nginx -s reload
             fi
-            # 5) 品牌404修复：8080 实际由别的 server 块服务（server_name _ + /index.html 回退），
-            #    仓库 conf 未被命中。对含 xuncheng root 的真实配置文件做幂等修补：
-            #    a. try_files 的 /index.html 回退改为 =404（未知路径不再假装成首页）
-            #    b. server 块内注入 error_page 404 /404.html（品牌 404 页）
-            #    安全约束：按 server 块级修补（awk 计大括号深度），同文件内其他项目（careerlens 等）的块不动。
-            echo "--- 诊断：xuncheng root 出现在哪些配置文件 ---"
-            grep -rn "html/xuncheng" /etc/nginx/ 2>/dev/null || true
-            cat > /tmp/patch-xuncheng-404.awk <<'AWKEOF'
-            function flush(  i, line, isx, hasep){
-              isx=0; hasep=0
-              for(i=1;i<=n;i++){ if(buf[i] ~ /root[ \t]+\/usr\/share\/nginx\/html\/xuncheng;/) isx=1; if(buf[i] ~ /error_page[ \t]+404/) hasep=1 }
-              for(i=1;i<=n;i++){
-                line=buf[i]
-                if(isx && line ~ /try_files/){ gsub(/ \/index\.html;/, " =404;", line) }
-                print line
-                if(isx && !hasep && line ~ /root[ \t]+\/usr\/share\/nginx\/html\/xuncheng;/){ print "        error_page 404 /404.html;"; hasep=1 }
-              }
-              n=0
-            }
-            {
-              if(!ins && $0 ~ /^[ \t]*server[ \t]*\{[ \t]*$/){ ins=1; depth=1; n=0; buf[++n]=$0; next }
-              if(ins){
-                t=$0; o=gsub(/\{/,"{",t); c=gsub(/\}/,"}",t); depth+=o-c; buf[++n]=$0
-                if(depth<=0){ flush(); ins=0 }
-                next
-              }
-              print
-            }
-            END{ if(ins) flush() }
-            AWKEOF
-            for f in $(grep -rl "html/xuncheng" /etc/nginx/ 2>/dev/null | grep -v "\.bak"); do
-              cp "$f" "$f.bak-404fix"
-              echo "patching(server块级) $f"
-              awk -f /tmp/patch-xuncheng-404.awk "$f" > "$f.new" && mv "$f.new" "$f"
-              diff "$f.bak-404fix" "$f" || true
-            done
-            if nginx -t; then
-              nginx -s reload 2>/dev/null || systemctl reload nginx 2>/dev/null || (pkill -9 nginx 2>/dev/null; nginx)
-            else
-              echo "nginx -t 失败，回滚本次 404 修补"
-              for f in $(ls /etc/nginx/**/*.bak-404fix /etc/nginx/*.bak-404fix 2>/dev/null); do
-                mv "$f" "${f%.bak-404fix}"
-              done
-              nginx -t && (nginx -s reload 2>/dev/null || systemctl reload nginx 2>/dev/null) || true
-            fi
-            sleep 1
-            echo "--- effective nginx 8080 配置 ---"
-            nginx -T 2>/dev/null | grep -E "root|listen|server_name|error_page|try_files" | head -40 || true
-            echo "--- 品牌404验收（应为 404） ---"
-            curl -s -o /tmp/nf.html -w "unknown route => HTTP %{http_code}\n" "http://127.0.0.1:8080/route/not-exist-route/" || true
-            grep -c "未找到" /tmp/nf.html 2>/dev/null || true
-            curl -s -o /dev/null -w "known route => HTTP %{http_code}\n" "http://127.0.0.1:8080/route/yangzhou-wangzengqi-zaocha/" || true
-            curl -s -o /dev/null -w "homepage => HTTP %{http_code}\n" "http://127.0.0.1:8080/" || true
-            echo "--- 真实 root db 大小（应为 21365 含商户）---"
-            ls -l "$REAL_ROOT/xunji-mvp/db/literary-routes.json" 2>/dev/null || true
-            echo "--- health check ---"
-            curl -sf "http://127.0.0.1:8080/xunji-mvp/db/literary-routes.json" -o /tmp/db_check.json && echo "served db bytes: $(wc -c < /tmp/db_check.json)" || echo "WARN: /xunji-mvp/ 不可达"
+
+            sleep 2
+            echo "--- LLM health check ---"
+            curl -sf "http://127.0.0.1:${{ env.APP_PORT }}/api/book-guide" || echo "WARN: /api/book-guide 不可达"

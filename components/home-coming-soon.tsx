@@ -1,17 +1,17 @@
 'use client'
 
-const tabMeta: Record<'音乐' | '东方美学', { motif: 'note' | 'inspiration'; hint: string }> = {
+const tabMeta: Record<'音乐' | '游戏', { motif: 'note' | 'game'; hint: string }> = {
   音乐: {
     motif: 'note',
     hint: '江南曲调、古琴雅韵与戏曲唱段，即将在此与你相遇',
   },
-  东方美学: {
-    motif: 'inspiration',
-    hint: '东方山水、中式楼阁与古典审美的现实原型地，筹备中',
+  游戏: {
+    motif: 'game',
+    hint: '诗词诵读、古籍寻宝与书法临摹，互动体验筹备中',
   },
 }
 
-function MotifIcon({ type }: { type: 'note' | 'inspiration' }) {
+function MotifIcon({ type }: { type: 'note' | 'game' }) {
   const stroke = '#8B4545'
   const cls = 'w-20 h-20 sm:w-24 sm:h-24 opacity-30'
   if (type === 'note') {
@@ -26,14 +26,16 @@ function MotifIcon({ type }: { type: 'note' | 'inspiration' }) {
   }
   return (
     <svg viewBox="0 0 64 64" className={cls} fill="none">
-      <path d="M8 48 Q20 28 32 48 Q44 28 56 48" stroke={stroke} strokeWidth="1.5" />
-      <path d="M12 44 Q24 32 36 44" stroke={stroke} strokeWidth="1" opacity="0.6" />
+      <rect x="14" y="22" width="36" height="24" rx="4" stroke={stroke} strokeWidth="1.2" />
+      <circle cx="24" cy="34" r="4" stroke={stroke} strokeWidth="1" />
+      <circle cx="40" cy="30" r="2" fill={stroke} opacity="0.5" />
+      <circle cx="44" cy="36" r="2" fill={stroke} opacity="0.5" />
     </svg>
   )
 }
 
 interface HomeComingSoonProps {
-  tab: '音乐' | '东方美学'
+  tab: '音乐' | '游戏'
 }
 
 export function HomeComingSoon({ tab }: HomeComingSoonProps) {

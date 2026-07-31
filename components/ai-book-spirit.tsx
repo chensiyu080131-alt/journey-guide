@@ -286,7 +286,7 @@ export function AIBookSpirit({ guide }: AIBookSpiritProps) {
 }
 
 function buildJournalText(title: string, messages: { role: string; content: string }[]): string {
-  const header = `📜 我的文学手账 · ${title}\n（由寻迹 AI 书灵生成）\n${'—'.repeat(20)}\n`
+  const header = `📜 我的文学手账 · ${title}\n（由寻城 AI 书灵生成）\n${'—'.repeat(20)}\n`
   const body = messages
     .map(m => `${m.role === 'user' ? '【我】' : '【书灵】'} ${m.content}`)
     .join('\n\n')

@@ -1,0 +1,122 @@
+// 寻迹文旅内容库 · PostgreSQL
+// 选型：托管 Postgres（Neon / Supabase）
+// 文档：docs/数据库接入.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// 城市（书单中间页 + 攻略归属）
+model City {
+  id        String     @id // slug: changshu / yangzhou
+  name      String // 常熟
+  province  String
+  tagline   String?
+  intro     String?    @db.Text
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  guides    Guide[]
+  books     CityBook[]
+}
+
+/// 城市书单条目（/guide/[city]/books）
+model CityBook {
+  id        String   @id
+  cityId    String
+  city      City     @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  guideId   String? // 点击进入的攻略 id
+  title     String
+  author    String
+  intro     String   @db.Text
+  styleJson Json // CoverStyle
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([cityId])
+}
+
+/// 一条可走的文学旅行攻略
+model Guide {
+  id               String    @id // shajiabang
+  cityId           String?
+  city             City?     @relation(fields: [cityId], references: [id], onDelete: SetNull)
+  title            String
+  subtitle         String
+  cityName         String // 冗余展示名：常熟
+  province         String
+  days             Int
+  interests        String[] // 文化/美食/…
+  budget           String // 穷游|舒适|轻奢
+  dialectJson      Json?
+  experiencesJson  Json?
+  tipsJson         Json?
+  entryType        String // 书籍|人物|目的地
+  relatedBook      String?
+  relatedAuthor    String?
+  relatedCharacter String?
+  routeIntro       String?   @db.Text
+  trustDefault     String    @default("verified") // verified|ai|unverified
+  source           String    @default("seed") // seed|curated|ai
+  published        Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  dayPlans         DayPlan[]
+
+  @@index([cityId])
+  @@index([cityName])
+  @@index([published])
+}
+
+model DayPlan {
+  id             String  @id @default(cuid())
+  guideId        String
+  guide          Guide   @relation(fields: [guideId], references: [id], onDelete: Cascade)
+  day            Int
+  title          String
+  budgetEstimate String?
+  spots          Spot[]
+
+  @@unique([guideId, day])
+  @@index([guideId])
+}
+
+model Spot {
+  id                String   @id // sjb-1（全局唯一）
+  dayPlanId         String
+  dayPlan           DayPlan  @relation(fields: [dayPlanId], references: [id], onDelete: Cascade)
+  name              String
+  desc              String
+  duration          String
+  tags              String[]
+  timeSlot          String
+  lat               Float?
+  lng               Float?
+  address           String?
+  story             String?  @db.Text
+  type              String // 景点|美食|体验
+  budgetHint        String?
+  emoji             String
+  originalText      String?  @db.Text
+  originalSource    String?
+  realityNote       String?  @db.Text
+  trustLevel        String   @default("verified")
+  culturalTag       String?
+  culturalTagDetail String?
+  essay             String?
+  region            String?
+  historicalImage   String?
+  realityImage      String?
+  extrasJson        Json? // interactiveTask 等扩展
+  sortOrder         Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([dayPlanId])
+  @@index([trustLevel])
+}

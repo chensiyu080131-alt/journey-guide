@@ -3,13 +3,7 @@
 import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { HomeCover } from '@/lib/home-covers'
-
-/** 首页总览封面：背景堆叠层的错位变换（营造多张封面叠放的视觉） */
-const STACK_TRANSFORMS = [
-  'rotate(7deg) translate(11px, 7px)',
-  'rotate(-5deg) translate(-9px, 4px)',
-]
+import { HomeCover, resolveCoverHref } from '@/lib/home-covers'
 
 function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color: string }) {
   const stroke = color
@@ -33,11 +27,13 @@ function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color:
       </svg>
     )
   }
-  if (type === 'inspiration') {
+  if (type === 'game') {
     return (
       <svg viewBox="0 0 64 64" className={cls} fill="none">
-        <path d="M8 48 Q20 28 32 48 Q44 28 56 48" stroke={stroke} strokeWidth="1.5" />
-        <path d="M12 44 Q24 32 36 44" stroke={stroke} strokeWidth="1" opacity="0.6" />
+        <rect x="14" y="22" width="36" height="24" rx="4" stroke={stroke} strokeWidth="1.2" />
+        <circle cx="24" cy="34" r="4" stroke={stroke} strokeWidth="1" />
+        <circle cx="40" cy="30" r="2" fill={stroke} opacity="0.5" />
+        <circle cx="44" cy="36" r="2" fill={stroke} opacity="0.5" />
       </svg>
     )
   }
@@ -49,6 +45,21 @@ function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color:
       </svg>
     )
   }
+  if (type === 'film') {
+    return (
+      <svg viewBox="0 0 64 64" className={cls} fill="none">
+        <rect x="14" y="14" width="36" height="36" rx="2" stroke={stroke} strokeWidth="1.2" />
+        <rect x="10" y="18" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="10" y="28" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="10" y="38" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="50" y="18" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="50" y="28" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <rect x="50" y="38" width="4" height="4" stroke={stroke} strokeWidth="0.8" />
+        <circle cx="32" cy="32" r="8" stroke={stroke} strokeWidth="1.2" />
+        <circle cx="32" cy="32" r="3" fill={stroke} opacity="0.3" />
+      </svg>
+    )
+  }
   if (type === 'sport') {
     return (
       <svg viewBox="0 0 64 64" className={cls} fill="none">
@@ -57,16 +68,6 @@ function CoverMotif({ type, color }: { type: HomeCover['style']['motif']; color:
         <path d="M16 36 L48 36" stroke={stroke} strokeWidth="1" opacity="0.6" />
         <circle cx="32" cy="28" r="4" stroke={stroke} strokeWidth="1" fill="none" />
         <path d="M28 44 L32 52 L36 44" stroke={stroke} strokeWidth="1" opacity="0.5" />
-      </svg>
-    )
-  }
-  if (type === 'search') {
-    return (
-      <svg viewBox="0 0 64 64" className={cls} fill="none">
-        <circle cx="27" cy="27" r="13" stroke={stroke} strokeWidth="1.6" />
-        <line x1="37" y1="37" x2="50" y2="50" stroke={stroke} strokeWidth="2.2" strokeLinecap="round" />
-        <path d="M21 27 Q27 21 33 27" stroke={stroke} strokeWidth="0.9" opacity="0.6" />
-        <circle cx="27" cy="27" r="3" fill={stroke} opacity="0.3" />
       </svg>
     )
   }
@@ -123,37 +124,11 @@ function CoverCard({
           isActive && 'xc-cover-inner-active'
         )}
       >
-        {cover.stack?.map((layer, li) => (
-          <div
-            key={li}
-            aria-hidden
-            className="absolute left-3 sm:left-4 right-0 top-0 rounded-r-md border overflow-hidden"
-            style={{
-              aspectRatio: '3 / 4.2',
-              background: layer.bg,
-              borderColor: `${layer.border}55`,
-              transform: STACK_TRANSFORMS[li] ?? 'none',
-              transformOrigin: 'center',
-              boxShadow: '4px 6px 18px rgba(61, 46, 46, 0.12)',
-              zIndex: 0,
-            }}
-          >
-            {layer.image && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={layer.image}
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover opacity-95"
-              />
-            )}
-          </div>
-        ))}
         <div
           className="absolute left-0 top-2 bottom-2 w-4 sm:w-5 rounded-l-md"
           style={{
             background: isActive && isLiteraryBook ? '#6B3333' : style.border,
             boxShadow: isActive ? 'inset -2px 0 6px rgba(0,0,0,0.15)' : undefined,
-            zIndex: 1,
           }}
         />
         <div
@@ -167,7 +142,6 @@ function CoverCard({
               : style.bg,
             borderColor: isActive && isLiteraryBook ? '#6B333340' : `${style.border}40`,
             aspectRatio: '3 / 4.2',
-            zIndex: 2,
             boxShadow: isActive
               ? '8px 12px 32px rgba(107, 51, 51, 0.2), inset 0 1px 0 rgba(255,255,255,0.15)'
               : '4px 6px 16px rgba(61, 46, 46, 0.08)',
@@ -253,7 +227,7 @@ function CoverCard({
             )}
           </div>
 
-          {showExplore && (
+            {showExplore && (
             cover.targetTab ? (
               <button
                 type="button"
@@ -266,15 +240,15 @@ function CoverCard({
                   <span className="opacity-80">→</span>
                 </span>
               </button>
-            ) : cover.route?.startsWith('/route/') ? (
+            ) : cover.checkinSlug || cover.category === '书籍' ? (
               <Link
                 href={href}
                 onClick={(e) => e.stopPropagation()}
                 className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 animate-fade-in"
-                aria-label={`开始探索${cover.title}`}
+                aria-label={cover.checkinSlug ? `去打卡${cover.title}` : `开始探索${cover.title}`}
               >
                 <span className="xc-explore-btn">
-                  开始探索
+                  {cover.checkinSlug ? '去打卡' : '开始探索'}
                   <span className="opacity-80">→</span>
                 </span>
               </Link>
@@ -353,7 +327,7 @@ export function HomeCoverCarousel({ covers, onExploreCover }: HomeCoverCarouselP
         <button
           type="button"
           onClick={() => scrollTo((activeIndex - 1 + covers.length) % covers.length)}
-          className="xc-cover-arrow absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 z-10 hidden sm:flex"
+          className="xc-cover-arrow absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 z-10"
           aria-label="上一个"
         >
           ‹
@@ -370,7 +344,7 @@ export function HomeCoverCarousel({ covers, onExploreCover }: HomeCoverCarouselP
               cover={cover}
               isActive={i === activeIndex}
               showExplore={i === activeIndex && exploreIndex === i}
-              href={`${cover.route}?cat=${cover.category}`}
+              href={resolveCoverHref(cover)}
               onClick={() => {
                 scrollTo(i)
                 setExploreIndex(i)
@@ -383,7 +357,7 @@ export function HomeCoverCarousel({ covers, onExploreCover }: HomeCoverCarouselP
         <button
           type="button"
           onClick={() => scrollTo((activeIndex + 1) % covers.length)}
-          className="xc-cover-arrow absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 z-10 hidden sm:flex"
+          className="xc-cover-arrow absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 z-10"
           aria-label="下一个"
         >
           ›
@@ -392,7 +366,7 @@ export function HomeCoverCarousel({ covers, onExploreCover }: HomeCoverCarouselP
 
       <div className="text-center mt-2 px-4 animate-fade-in" key={activeCover.id}>
         <p className="text-[11px] text-literary-wine tracking-[0.2em] font-serif">
-          {activeCover.category} · 精选
+          {activeCover.checkinSlug ? '可打卡路线' : `${activeCover.category} · 精选`}
         </p>
         <h2 className="mt-1 text-lg sm:text-xl font-serif font-semibold text-literary-ink">
           {activeCover.title}

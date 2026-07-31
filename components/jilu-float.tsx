@@ -103,15 +103,12 @@ export function JiluFloat() {
   const pathname = usePathname()
   const router = useRouter()
 
-  // 拖拽状态 — 初始置于屏幕外，避免 SSR 静态导出时浮球固定在 (0,0) 压住首页左上角 logo；
-  // mount 后 useEffect 立即定位到右下角。
-  const [pos, setPos] = useState({ x: -9999, y: -9999 })
+  // 拖拽状态
+  const [pos, setPos] = useState({ x: 0, y: 0 })
   const [dragging, setDragging] = useState(false)
   const dragStart = useRef({ x: 0, y: 0, posX: 0, posY: 0 })
   const hasMoved = useRef(false)
   const floatRef = useRef<HTMLDivElement>(null)
-  // 记录打开对话框时的浮窗位置，用于对话框定位
-  const openPosRef = useRef({ x: 0, y: 0 })
 
   // 对话状态
   const [open, setOpen] = useState(false)
@@ -212,7 +209,6 @@ export function JiluFloat() {
   // ── 点击打开 ──
   const handleClick = () => {
     if (hasMoved.current) return
-    openPosRef.current = { ...pos }
     setOpen(true)
   }
 
@@ -540,32 +536,8 @@ _（配置API Key后可获取更详细的实时攻略）_`
       )}
 
       {/* === 对话面板 === */}
-      {open && (() => {
-        // 根据浮窗位置计算对话框位置
-        const panelW = Math.min(380, window.innerWidth - 32)
-        const panelH = Math.min(520, window.innerHeight - 40)
-        const orbCX = openPosRef.current.x + 28  // 浮窗中心x
-        const orbCY = openPosRef.current.y + 28  // 浮窗中心y
-        // 优先在浮窗右侧展开
-        let left = orbCX + 40
-        let top = orbCY - panelH / 2
-        // 右侧放不下则放左侧
-        if (left + panelW > window.innerWidth - 16) {
-          left = orbCX - 40 - panelW
-        }
-        // 左侧也放不下则放下方
-        if (left < 16) {
-          left = Math.max(16, orbCX - panelW / 2)
-          top = orbCY + 50
-        }
-        // 上下边界
-        top = Math.max(16, Math.min(window.innerHeight - panelH - 16, top))
-        left = Math.max(16, Math.min(window.innerWidth - panelW - 16, left))
-
-        return (
-        <div className="jilu-chat-panel" role="dialog" aria-label="迹录员智能对话"
-          style={{ left, top, right: 'auto', bottom: 'auto' }}
-        >
+      {open && (
+        <div className="jilu-chat-panel" role="dialog" aria-label="迹录员智能对话">
           {/* 头部 */}
           <div className="jilu-chat-header">
             <div className="flex items-center gap-2.5">
@@ -739,8 +711,7 @@ _（配置API Key后可获取更详细的实时攻略）_`
             </div>
           </div>
         </div>
-        )
-      })()}
+      )}
     </>
   )
 }

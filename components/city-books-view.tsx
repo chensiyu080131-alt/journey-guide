@@ -18,7 +18,9 @@ function BookCoverCard({
   citySlug: string
 }) {
   const { style } = book
-  const href = `/guide/${book.guideId}?cat=书籍&from=${citySlug}`
+  const href = book.checkinSlug
+    ? `/route/${book.checkinSlug}`
+    : `/guide/${book.guideId}?cat=书籍&from=${citySlug}`
 
   return (
     <Link
@@ -53,7 +55,9 @@ function BookCoverCard({
           </div>
         </div>
         <div className="flex-1 min-w-0 flex flex-col justify-center text-center sm:text-left">
-          <p className="text-[10px] text-celadon-600 tracking-widest uppercase mb-1">书籍 · 路线规划</p>
+          <p className="text-[10px] text-celadon-600 tracking-widest uppercase mb-1">
+            {book.checkinSlug ? '可打卡文学路线' : '书籍 · 路线规划'}
+          </p>
           <h3 className="text-lg font-serif font-bold text-warm-gray group-hover:text-celadon-700 transition-colors">
             {book.title}
           </h3>
@@ -61,7 +65,9 @@ function BookCoverCard({
           <p className="text-sm text-warm-gray-light mt-3 leading-relaxed line-clamp-3">
             {book.intro}
           </p>
-          <p className="mt-4 text-xs text-celadon-600 font-medium">进入路线规划 →</p>
+          <p className="mt-4 text-xs text-celadon-600 font-medium">
+            {book.checkinSlug ? '去现场打卡 →' : '进入路线规划 →'}
+          </p>
         </div>
       </div>
     </Link>

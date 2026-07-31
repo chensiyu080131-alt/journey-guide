@@ -12,6 +12,9 @@ export type TimeSlot = '上午' | '中午' | '下午' | '晚上'
 /** 入口类型 */
 export type EntryType = '书籍' | '人物' | '目的地'
 
+/** 点位可信度（Phase 0 信任标签） */
+export type SpotTrustLevel = 'verified' | 'ai' | 'unverified'
+
 /** 互动任务类型 */
 export type InteractiveTaskType = '诗词诵读' | '知识问答' | '古籍寻宝' | '书法临摹'
 
@@ -83,6 +86,13 @@ export interface Spot {
   culturalTag?: '📖书籍' | '🎬影视' | '🎮游戏' | '🎵音乐' | '🏃运动'
   /** ★ 光影记忆：具体描述，如"🎬 京剧《沙家浜》经典场景拍摄地" */
   culturalTagDetail?: string
+  /**
+   * 可信度标签：
+   * - verified：人工核验预设路线
+   * - ai：AI 生成（可能含引文，待核验）
+   * - unverified：POI/坐标未通过地图验证
+   */
+  trustLevel?: SpotTrustLevel
 }
 
 /** 一天的行程 */

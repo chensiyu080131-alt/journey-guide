@@ -61,5 +61,26 @@
     "title": "沈复生日纪念 · 平江路的烟火日常",
     "description": "《浮生六记》的温情不过时。走一趟平江路，记一段你自己的浮生。",
     "routeSlug": "suzhou-pingjiang-fushengliuji"
+  },
+  {
+    "id": "2026-08-01-a",
+    "date": "2026-08-01",
+    "title": "立秋将至 · 萧红的呼兰河最清凉",
+    "description": "北国的河风先一步入秋。跟着《呼兰河传》走一趟萧红的童年小城。",
+    "routeSlug": "harbin-xiaohong-hulanhe"
+  },
+  {
+    "id": "2026-08-01-b",
+    "date": "2026-08-01",
+    "title": "早茶不打烊 · 汪曾祺的扬州烟火",
+    "description": "一顿早茶走完富春到东关街，解锁五枚文学卡片。",
+    "routeSlug": "yangzhou-wangzengqi-zaocha"
+  },
+  {
+    "id": "2026-08-01-c",
+    "date": "2026-08-01",
+    "title": "百草园的夏天还没走远 · 鲁迅绍兴",
+    "description": "从百草园到三味书屋，把童年课文走成可打卡路线。",
+    "routeSlug": "shaoxing-luxun-baicaoyuan"
   }
 ]

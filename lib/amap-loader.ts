@@ -87,7 +87,6 @@ export function loadAmapScript(): Promise<void> {
       reject(new Error('高德地图脚本加载超时（Key 可能失效/域名受限）'))
     }, 4500)
     script.onload = () => {
-      clearTimeout(timeout)
       waitForAmapNamespace().then(resolve).catch(reject)
     }
     script.onerror = () => {

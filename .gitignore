@@ -24,17 +24,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-node_modules_cache/
 .env.production
 .env.local
-
-# agent/project data (never commit)
-.workbuddy/
+/src/generated/prisma

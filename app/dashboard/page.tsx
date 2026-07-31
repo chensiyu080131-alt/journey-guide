@@ -1,12 +1,12 @@
 import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { WhitepaperGenerator } from '@/components/dashboard/whitepaper-generator'
 import { AssetBoard } from '@/components/dashboard/asset-board'
+import { ContentEditor } from '@/components/dashboard/content-editor'
 import { ContactForm } from '@/components/dashboard/contact-form'
 import Link from 'next/link'
 
 export const metadata = {
-  title: '文旅局工作台 · 寻迹',
+  title: '文旅局工作台 · 寻城',
   description: '为文旅局提供的 AI 文学旅行内容工作台：一键生成城市白皮书、内容资产看板、商务合作。',
 }
 
@@ -33,11 +33,10 @@ export default function DashboardPage() {
 
       <main className="xc-container max-w-5xl py-10 lg:py-14 space-y-10 lg:space-y-12">
         <AssetBoard />
+        <ContentEditor />
         <WhitepaperGenerator />
         <ContactForm />
       </main>
-
-      <SiteFooter />
     </>
   )
 }

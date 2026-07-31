@@ -9,7 +9,10 @@ function buildDayPlans(spots: Spot[], days: number) {
   return Array.from({ length: days }, (_, i) => ({
     day: i + 1,
     title: `第${i + 1}天`,
-    spots: sorted.slice(i * spotsPerDay, (i + 1) * spotsPerDay),
+    spots: sorted.slice(i * spotsPerDay, (i + 1) * spotsPerDay).map(spot => ({
+      ...spot,
+      trustLevel: spot.trustLevel ?? 'verified',
+    })),
     budgetEstimate: i === 0 ? '约150-280元' : '约100-200元',
   }))
 }
@@ -57,7 +60,7 @@ const nanjingSpots: Spot[] = [
     originalText: '烟水寒，枫林老，草枯霜白，月明风清，正是游赏好时节。',
     originalSource: '《金陵景物志》',
     realityNote: '推荐蓝老大糖芋苗、蒋有记牛肉锅贴，比夫子庙人少价实。',
-    culturalTag: '📖书籍', culturalTagDetail: '📖 明清老街巷——老门东历史街区',
+    culturalTag: '🎬影视', culturalTagDetail: '🎬 影视剧取景地——明清老街巷老门东',
   },
   {
     id: 'nj-5', name: '鸭血粉丝汤', desc: '金陵第一小吃，鸭血嫩滑粉丝鲜',

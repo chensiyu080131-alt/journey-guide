@@ -6,13 +6,16 @@
     "city": "南京",
     "book": "刘义庆《世说新语》",
     "summary": "魏晋的建康城，住着一群最会说话的人。从新亭对泣到乌衣巷口，循着《世说新语》的清言与风骨，走一段六朝旧都的烟水路。",
-    "plain_explain": "跟着《世说新语》里记下的那些人和话，去夫子庙、乌衣巷、新亭故址走一遍，看六朝人当年在哪儿说出了那些名句。",
-    "why_worth": "《世说新语》是中国最好看的名士言行录，建康城就是它的舞台——这是一条把书里的清谈落回真实街巷的路线。",
     "cover_image": "",
     "source": "human",
     "note": "坐标为 GCJ-02（高德坐标系）近似最佳值，待在高德地图二次核对。六朝遗址多历毁建，部分点位为故址标识。",
     "category": "literary",
-    "season": "spring"
+    "season": "spring",
+    "duration": "半天",
+    "difficulty": "轻松",
+    "related_books": [
+      "刘义庆《世说新语》"
+    ]
   },
   "points": [
     {
@@ -26,7 +29,21 @@
       "excerpt_confidence": "derived",
       "interpretation": "六朝的建康是南方的学术重心。《世说新语》里那些清谈名士，许多从这条秦淮河边的学宫与宅第走出。今日夫子庙，文脉不绝。",
       "checkin_task": "在夫子庙学宫看一次展览，拍一张“明德堂”或贡院的牌匾，记一位你喜欢的六朝人物。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "夫子庙·学宫（建康太学故地），位于南京市秦淮区夫子庙。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与刘义庆《刘义庆《世说新语》》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 2,
@@ -39,7 +56,21 @@
       "excerpt_confidence": "verified",
       "interpretation": "乌衣巷是东晋王导、谢安两族的居所，南渡士族聚居于此。《世说》里“过江诸人”的家国心事，与刘禹锡笔下的堂前燕，都在这条小巷里。",
       "checkin_task": "在乌衣巷找王导谢安纪念馆，拍一张巷口的“乌衣巷”题字，背一句刘禹锡的诗。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "乌衣巷，位于南京市秦淮区乌衣巷。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与刘义庆《刘义庆《世说新语》》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 3,
@@ -52,7 +83,21 @@
       "excerpt_confidence": "verified",
       "interpretation": "新亭对泣是南渡士人的集体乡愁——风景还是那风景，山河已不是那山河。这是《世说》里最沉痛的一席话，也是六朝南人的精神原点。",
       "checkin_task": "在新亭故址一带远眺，拍一张开阔的风景，写下“风景不殊”四字今日的体会。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "新亭（故址），位于南京市雨花台区新亭一带（近菊花台）。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与刘义庆《刘义庆《世说新语》》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 4,
@@ -65,7 +110,21 @@
       "excerpt_confidence": "derived",
       "interpretation": "同泰寺是南朝四百八十寺之首。梁武帝四次舍身于此，《世说》时代的清谈之风，到梁代结出了佛寺与脂粉并盛的都城气象。",
       "checkin_task": "登鸡鸣寺药师佛塔看一次玄武湖，拍下“南朝四百八十寺”的想象画面。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "鸡鸣寺（同泰寺故址），位于南京市玄武区鸡鸣寺路1号。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与刘义庆《刘义庆《世说新语》》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     },
     {
       "seq": 5,
@@ -78,7 +137,21 @@
       "excerpt_confidence": "derived",
       "interpretation": "台城是六朝宫城，“无情最是台城柳”写的便是这里。城墙下是玄武湖，湖那边是钟山——建康的格局，从台城一眼望尽。",
       "checkin_task": "在台城墙上走一段，拍一张城墙、湖、山同框的照片，背一句韦庄《台城》。",
-      "source": "human"
+      "source": "human",
+      "baike_summary": "台城（明城墙·玄武湖段），位于南京市玄武区台城（解放门至太平门段城墙）。文学路线点位，详情以现场公示为准。",
+      "history": "待补充沿革。",
+      "cultural_status": "与刘义庆《刘义庆《世说新语》》相关的实地节点。",
+      "cultural_tag": "文学遗迹",
+      "open_info": "以景区当日公示为准。",
+      "transport": "导航至点位名称；建议步行或公交。",
+      "nearby": "见路线其他点位。",
+      "best_time": "春秋晴日更佳。",
+      "scene_match": "对照点位摘录，在现场寻找对应景观。",
+      "pitfall_guide": "核对开放时间与预约要求。",
+      "tips": "预留拍照与朗读原文的时间。",
+      "food_recommend": "附近餐饮以当地口碑为准。",
+      "photo_spots": "正门牌匾与代表性景观各一张。",
+      "visit_duration": "30–60分钟"
     }
   ]
 }
