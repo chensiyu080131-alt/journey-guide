@@ -14,6 +14,7 @@ const tabImages: Record<HomeTab, string> = {
   '🏙️ 城市': '/images/tab-city.png',
   '🎮 游戏': '/images/tab-game.png',
   '🎵 音乐': '/images/tab-music.png',
+  '🎐 东方美学': '/images/tab-book.png',
 }
 
 const tabAlts: Record<HomeTab, string> = {
@@ -22,6 +23,7 @@ const tabAlts: Record<HomeTab, string> = {
   '🏙️ 城市': '城市',
   '🎮 游戏': '游戏',
   '🎵 音乐': '音乐',
+  '🎐 东方美学': '东方美学',
 }
 
 export function HomeNav({ active, onChange }: HomeNavProps) {

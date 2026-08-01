@@ -1,5 +1,10 @@
 import { Guide, InterestTag, BudgetLevel } from '@/types'
-import { getMockGuideById } from './mock-data'
+import { getMockGuideById, getMockGuide } from './mock-data'
+import { isMockMode } from './llm-client'
+
+function simulateDelay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
 
 /**
  * 通过路线 ID 获取攻略。
