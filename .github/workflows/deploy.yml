@@ -5,8 +5,8 @@ on:
     branches: [main]
   workflow_dispatch: {}
 
-# 目标目录：静态导出产物 out/ 上传到此处，由 nginx 直接托管（无需 Node 运行时）
 # 目标服务器目录（pm2 运行此处的 server.js）
+env:
   DEPLOY_DIR: /opt/xuncheng
   APP_NAME: xuncheng
   APP_PORT: '3000'
