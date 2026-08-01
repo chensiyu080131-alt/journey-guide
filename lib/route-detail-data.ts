@@ -29,6 +29,16 @@ import rawWuzhenMaodun from '@/public/xunji-mvp/db/wuzhen-maodun-linjiapuzi.json
 import rawYananLuyao from '@/public/xunji-mvp/db/yanan-luyao-pingfan.json'
 import rawGaoyouWangzengqi from '@/public/xunji-mvp/db/gaoyou-wangzengqi-duck.json'
 import rawCambridgeXuzhimo from '@/public/xunji-mvp/db/cambridge-xuzhimo-kangqiao.json'
+// ========== PR#14 恢复的 9 条路线（东方美学 2 + 北上广深 7） ==========
+import rawJiangnanShuixiang from '@/public/xunji-mvp/db/jiangnan-shuixiang-inspiration.json'
+import rawGutaChangqiao from '@/public/xunji-mvp/db/guta-changqiao-inspiration.json'
+import rawBeijingHonglou from '@/public/xunji-mvp/db/beijing-hongloumeng-yixiang.json'
+import rawBeijingXishan from '@/public/xunji-mvp/db/beijing-xishan-wenren.json'
+import rawShanghaiSongjiang from '@/public/xunji-mvp/db/shanghai-songjiang-yunjian.json'
+import rawShanghaiYuyuan from '@/public/xunji-mvp/db/shanghai-yuyuan-mingqing.json'
+import rawGuangzhouLingnan from '@/public/xunji-mvp/db/guangzhou-lingnan-shiwen.json'
+import rawGuangzhouXiguan from '@/public/xunji-mvp/db/guangzhou-xiguan-shenghuo.json'
+import rawShenzhenDapeng from '@/public/xunji-mvp/db/shenzhen-dapeng-haifang.json'
 
 export type ExcerptConfidence = 'verified' | 'derived' | 'pending'
 
@@ -263,6 +273,16 @@ const MOCK_ROUTES: RouteDetail[] = [
   normalize(rawYananLuyao as RawRouteFile),
   normalize(rawGaoyouWangzengqi as RawRouteFile),
   normalize(rawCambridgeXuzhimo as RawRouteFile),
+  // ========== PR#14 恢复的 9 条路线 ==========
+  normalize(rawJiangnanShuixiang as RawRouteFile),
+  normalize(rawGutaChangqiao as RawRouteFile),
+  normalize(rawBeijingHonglou as RawRouteFile),
+  normalize(rawBeijingXishan as RawRouteFile),
+  normalize(rawShanghaiSongjiang as RawRouteFile),
+  normalize(rawShanghaiYuyuan as RawRouteFile),
+  normalize(rawGuangzhouLingnan as RawRouteFile),
+  normalize(rawGuangzhouXiguan as RawRouteFile),
+  normalize(rawShenzhenDapeng as RawRouteFile),
 ]
 
 export function getAllRouteSlugs(): string[] {
