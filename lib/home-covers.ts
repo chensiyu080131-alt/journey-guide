@@ -24,8 +24,6 @@ export interface HomeCover {
   /** 首页总览封面：点击「开始探索」后切换到的 Tab */
   targetTab?: HomeTab
   style: CoverStyle
-  /** 覆盖封面上方的分类小标签展示文案 */
-  eyebrow?: string
   /** 首页总览封面：背景堆叠的其它封面缩影，营造「多张封面」的视觉 */
   stack?: Array<{ bg: string; border: string; image?: string }>
 }
