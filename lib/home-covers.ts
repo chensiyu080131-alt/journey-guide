@@ -1,5 +1,5 @@
-export type HomeTab = '首页' | '📖 书籍' | '🏙️ 城市' | '🎮 游戏' | '🎵 音乐'
-export type CoverCategory = '书籍' | '🎬 影视' | '🎮 游戏' | '🎵 音乐' | '🏃 运动'
+export type HomeTab = '首页' | '📖 书籍' | '🏙️ 城市' | '🎐 东方美学' | '🎮 游戏' | '🎵 音乐'
+export type CoverCategory = '书籍' | '🎬 影视' | '🎐 东方美学' | '🎮 游戏' | '🎵 音乐' | '🏃 运动' | '🏙️ 城市' | '🔍 搜索'
 
 export interface CoverStyle {
   bg: string
@@ -690,4 +690,4 @@ export function getCoversForTab(tab: HomeTab): HomeCover[] {
 /** 待开发的 Tab：中部显示占位提示（城市已上线，不再列入） */
 export const underDevelopmentTabs: HomeTab[] = ['🎮 游戏', '🎵 音乐']
 
-export const homeTabs: HomeTab[] = ['首页', '📖 书籍', '🏙️ 城市', '🎮 游戏', '🎵 音乐']
+export const homeTabs: HomeTab[] = ['首页', '📖 书籍', '🏙️ 城市', '🎐 东方美学', '🎵 音乐']
